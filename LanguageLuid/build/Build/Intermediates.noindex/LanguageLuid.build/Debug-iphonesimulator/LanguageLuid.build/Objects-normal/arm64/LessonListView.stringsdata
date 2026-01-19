@@ -1,0 +1,52 @@
+{
+  "source": "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Lessons/LessonListView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "%@ Lessons"
+      },
+      {
+        "comment": "",
+        "key": "Error"
+      },
+      {
+        "comment": "",
+        "key": "OK"
+      },
+      {
+        "comment": "",
+        "key": "Loading lessons..."
+      },
+      {
+        "comment": "",
+        "key": "No Lessons Found"
+      },
+      {
+        "comment": "",
+        "key": "No lessons available for this level yet."
+      },
+      {
+        "comment": "",
+        "key": "No lessons match the selected filter."
+      },
+      {
+        "comment": "",
+        "key": "%lld"
+      },
+      {
+        "comment": "",
+        "key": "Progress"
+      },
+      {
+        "comment": "",
+        "key": "%lld%%"
+      },
+      {
+        "comment": "",
+        "key": "L%lld"
+      }
+    ]
+  },
+  "version": 1
+}

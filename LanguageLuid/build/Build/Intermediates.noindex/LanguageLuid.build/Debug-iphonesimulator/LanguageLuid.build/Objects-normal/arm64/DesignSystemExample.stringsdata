@@ -1,0 +1,76 @@
+{
+  "source": "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/DesignSystem/DesignSystemExample.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Welcome to Language Luid"
+      },
+      {
+        "comment": "",
+        "key": "Learn languages naturally"
+      },
+      {
+        "comment": "",
+        "key": "or"
+      },
+      {
+        "comment": "",
+        "key": "Don't have an account?"
+      },
+      {
+        "comment": "",
+        "key": "Sign Up"
+      },
+      {
+        "comment": "",
+        "key": "Choose Your Language"
+      },
+      {
+        "comment": "",
+        "key": "Select a language to start learning"
+      },
+      {
+        "comment": "",
+        "key": "Lesson 5"
+      },
+      {
+        "comment": "",
+        "key": "Basic Greetings"
+      },
+      {
+        "comment": "",
+        "key": "Buenos días"
+      },
+      {
+        "comment": "",
+        "key": "Good morning"
+      },
+      {
+        "comment": "",
+        "key": "Speak this phrase"
+      },
+      {
+        "comment": "",
+        "key": "Repeat after the audio"
+      },
+      {
+        "comment": "",
+        "key": "Recent Achievements"
+      },
+      {
+        "comment": "",
+        "key": "JD"
+      },
+      {
+        "comment": "",
+        "key": "John Doe"
+      },
+      {
+        "comment": "",
+        "key": "john.doe@example.com"
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,0 +1,48 @@
+{
+  "source": "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Languages/CEFRLevelCardView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "%lld lessons"
+      },
+      {
+        "comment": "",
+        "key": "~%lldh"
+      },
+      {
+        "comment": "",
+        "key": "Progress"
+      },
+      {
+        "comment": "",
+        "key": "%lld/%lld"
+      },
+      {
+        "comment": "",
+        "key": "What you'll learn:"
+      },
+      {
+        "comment": "",
+        "key": "+%lld more skills..."
+      },
+      {
+        "comment": "",
+        "key": "Complete Previous Level"
+      },
+      {
+        "comment": "",
+        "key": "Review Lessons"
+      },
+      {
+        "comment": "",
+        "key": "Continue (%lld%%)"
+      },
+      {
+        "comment": "",
+        "key": "Start Learning"
+      }
+    ]
+  },
+  "version": 1
+}

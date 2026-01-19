@@ -1,0 +1,48 @@
+{
+  "source": "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Auth/VerifyEmailView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Verify Email"
+      },
+      {
+        "comment": "",
+        "key": "Cancel"
+      },
+      {
+        "comment": "",
+        "key": "Check Your Email"
+      },
+      {
+        "comment": "",
+        "key": "We've sent a 6-digit verification code to:"
+      },
+      {
+        "comment": "",
+        "key": "Enter Verification Code"
+      },
+      {
+        "comment": "",
+        "key": ""
+      },
+      {
+        "comment": "",
+        "key": "Didn't receive the code?"
+      },
+      {
+        "comment": "",
+        "key": "Resend code in %llds"
+      },
+      {
+        "comment": "",
+        "key": "Resend Code"
+      },
+      {
+        "comment": "",
+        "key": "Email Verified!"
+      }
+    ]
+  },
+  "version": 1
+}

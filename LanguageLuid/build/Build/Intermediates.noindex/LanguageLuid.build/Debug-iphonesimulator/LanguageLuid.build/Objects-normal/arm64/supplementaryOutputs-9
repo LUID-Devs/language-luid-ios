@@ -1,0 +1,36 @@
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Auth/LoginView.swift":
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView.dia"
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView.swiftdeps"
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView.o"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView.d"
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView.swiftconstvalues"
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Languages/LanguageDetailView.swift":
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView.swiftconstvalues"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView.d"
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView.dia"
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView.swiftdeps"
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView.o"
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Services/SubscriptionService.swift":
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService.swiftdeps"
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService.swiftconstvalues"
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService.o"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService.d"
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService.dia"
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/Audio/AudioRecorder.swift":
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder.dia"
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder.o"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder.d"
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder.swiftdeps"
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder.swiftconstvalues"
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/SpeechValidation.swift":
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation.swiftdeps"
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation.dia"
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation.swiftconstvalues"
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation.o"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation.d"
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/RegionalVariant.swift":
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant.swiftconstvalues"
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant.o"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant.d"
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant.swiftdeps"
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant.dia"

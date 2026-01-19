@@ -1,0 +1,44 @@
+{
+  "source": "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Dashboard/CreditBalanceCard.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Unable to load credits"
+      },
+      {
+        "comment": "",
+        "key": "Credits"
+      },
+      {
+        "comment": "",
+        "key": "%lld available"
+      },
+      {
+        "comment": "",
+        "key": "%lld"
+      },
+      {
+        "comment": "",
+        "key": "Total Credits"
+      },
+      {
+        "comment": "",
+        "key": "Hide Breakdown"
+      },
+      {
+        "comment": "",
+        "key": "Show Breakdown"
+      },
+      {
+        "comment": "",
+        "key": "Active"
+      },
+      {
+        "comment": "",
+        "key": "Resets:"
+      }
+    ]
+  },
+  "version": 1
+}

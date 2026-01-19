@@ -1,0 +1,42 @@
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Lessons/LessonListView.swift":
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView.swiftconstvalues"
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView.dia"
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView.o"
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView.swiftdeps"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView.d"
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/ViewModels/LanguagesViewModel.swift":
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel.dia"
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel.swiftdeps"
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel.swiftconstvalues"
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel.o"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel.d"
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Lessons/LessonPhaseView.swift":
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView.swiftconstvalues"
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView.o"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView.d"
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView.swiftdeps"
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView.dia"
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Services/LanguageService.swift":
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService.swiftdeps"
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService.dia"
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService.swiftconstvalues"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService.d"
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService.o"
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Components/AudioPlayerControl.swift":
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl.o"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl.d"
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl.dia"
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl.swiftdeps"
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl.swiftconstvalues"
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/Roadmap.swift":
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap.swiftconstvalues"
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap.dia"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap.d"
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap.o"
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap.swiftdeps"
+"/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Auth/RegisterView.swift":
+  swift-dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView.swiftdeps"
+  object: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView.o"
+  const-values: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView.swiftconstvalues"
+  diagnostics: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView.dia"
+  dependencies: "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView.d"

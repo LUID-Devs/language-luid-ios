@@ -1,0 +1,16 @@
+{
+  "source": "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/LanguageLuidApp.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Language Luid"
+      },
+      {
+        "comment": "",
+        "key": "Learn languages naturally"
+      }
+    ]
+  },
+  "version": 1
+}

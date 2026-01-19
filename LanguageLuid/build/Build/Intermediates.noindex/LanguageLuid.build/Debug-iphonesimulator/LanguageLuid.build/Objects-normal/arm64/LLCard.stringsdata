@@ -1,0 +1,16 @@
+{
+  "source": "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/DesignSystem/Components/LLCard.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "%lld%%"
+      },
+      {
+        "comment": "",
+        "key": "%lld lessons"
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,0 +1,285 @@
+CREDITS & SUBSCRIPTION SYSTEM ARCHITECTURE
+===========================================
+
+┌─────────────────────────────────────────────────────────────────┐
+│                          SwiftUI Views                           │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
+│  │CreditsDetail │  │Subscription  │  │Transaction History   │  │
+│  │    View      │  │Management    │  │       View           │  │
+│  └──────┬───────┘  └──────┬───────┘  └──────────┬───────────┘  │
+└─────────┼──────────────────┼──────────────────────┼──────────────┘
+          │                  │                      │
+          │         @Published Properties           │
+          │         Reactive Binding                │
+          └──────────────────┼──────────────────────┘
+                             │
+          ┌──────────────────▼──────────────────┐
+          │      CreditsViewModel               │
+          │      (@MainActor)                   │
+          ├─────────────────────────────────────┤
+          │ @Published Properties:              │
+          │  - credits: CreditBalance?          │
+          │  - subscription: Subscription?      │
+          │  - transactions: [Transaction]      │
+          │  - isLoading, errorMessage          │
+          │                                     │
+          │ Methods:                            │
+          │  - loadCredits() async              │
+          │  - loadSubscription() async         │
+          │  - loadTransactions() async         │
+          │  - purchaseCredits(amount:) async   │
+          │  - upgradeToPro() async             │
+          │  - cancelSubscription() async       │
+          └────────────────┬────────────────────┘
+                           │
+                           │ async/await calls
+                           │
+          ┌────────────────▼────────────────────┐
+          │    SubscriptionService              │
+          │    (Singleton)                      │
+          ├─────────────────────────────────────┤
+          │ Dependencies:                       │
+          │  - apiClient: APIClient             │
+          │  - logger: OSLog                    │
+          │                                     │
+          │ Methods:                            │
+          │  - fetchCredits() -> CreditBalance  │
+          │  - fetchSubscription() -> Sub?      │
+          │  - createCheckoutSession(plan:)     │
+          │  - cancelSubscription()             │
+          │  - fetchTransactionHistory()        │
+          │  - purchaseCredits(amount:)         │
+          └────────────────┬────────────────────┘
+                           │
+                           │ HTTP requests
+                           │
+          ┌────────────────▼────────────────────┐
+          │        APIClient                    │
+          │        (Existing)                   │
+          ├─────────────────────────────────────┤
+          │ Methods:                            │
+          │  - get<T>(_ endpoint)               │
+          │  - post<T>(_ endpoint, params)      │
+          │  - Automatic token injection        │
+          │  - Error handling                   │
+          │  - Snake_case conversion            │
+          └────────────────┬────────────────────┘
+                           │
+                           │ URLSession
+                           │
+          ┌────────────────▼────────────────────┐
+          │     Backend API (Python/Flask)      │
+          ├─────────────────────────────────────┤
+          │ Endpoints:                          │
+          │  GET  /users/credits                │
+          │  GET  /users/credits/transactions   │
+          │  POST /users/credits/purchase       │
+          │  GET  /subscriptions/my-sub         │
+          │  POST /subscriptions/checkout       │
+          │  POST /subscriptions/cancel         │
+          │  POST /subscriptions/reactivate     │
+          │  POST /subscriptions/billing-portal │
+          └────────────────┬────────────────────┘
+                           │
+                           │ Database queries
+                           │
+          ┌────────────────▼────────────────────┐
+          │       Database (PostgreSQL)         │
+          ├─────────────────────────────────────┤
+          │ Tables:                             │
+          │  - users (credit columns)           │
+          │  - subscriptions                    │
+          │  - credit_transactions              │
+          │  - subscription_plans               │
+          └─────────────────────────────────────┘
+
+
+DATA MODELS (Credits.swift)
+============================
+
+┌─────────────────────────────────────────────────────────────────┐
+│                         CreditBalance                            │
+├─────────────────────────────────────────────────────────────────┤
+│ - totalCredits: Int                                             │
+│ - subscriptionCredits: Int  ◄── Monthly allocation from plan   │
+│ - purchasedCredits: Int     ◄── One-time purchases              │
+│ - promotionalCredits: Int   ◄── Bonuses, promos, rewards        │
+│ - plan: SubscriptionPlan                                        │
+│ - nextReset: Date?                                              │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                         Subscription                             │
+├─────────────────────────────────────────────────────────────────┤
+│ - id, userId: String                                            │
+│ - plan: SubscriptionPlan                                        │
+│ - status: SubscriptionStatus                                    │
+│ - currentPeriodStart, currentPeriodEnd: Date                    │
+│ - cancelAtPeriodEnd: Bool                                       │
+│ - cancelledAt, trialEnd: Date?                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                      CreditTransaction                           │
+├─────────────────────────────────────────────────────────────────┤
+│ - id, userId: String                                            │
+│ - type: CreditTransactionType                                   │
+│ - amount: Int                                                   │
+│ - balanceBefore, balanceAfter: Int                              │
+│ - description: String                                           │
+│ - metadata: [String: String]?                                   │
+│ - createdAt: Date                                               │
+└─────────────────────────────────────────────────────────────────┘
+
+
+ENUMS
+=====
+
+SubscriptionPlan          SubscriptionStatus      CreditTransactionType
+┌───────────┐            ┌──────────────┐        ┌──────────────┐
+│ - free    │            │ - active     │        │ - purchase   │
+│ - pro     │            │ - cancelled  │        │ - subscription│
+│ - yearly  │            │ - past_due   │        │ - promotional│
+└───────────┘            │ - trialing   │        │ - usage      │
+                         │ - incomplete │        │ - refund     │
+                         │ - unpaid     │        │ - bonus      │
+                         └──────────────┘        │ - reset      │
+                                                 └──────────────┘
+
+
+CREDIT FLOW EXAMPLES
+====================
+
+1. NEW USER SIGNUP
+   Free Plan → 10 subscription credits
+   
+   CreditBalance {
+     totalCredits: 10
+     subscriptionCredits: 10
+     purchasedCredits: 0
+     promotionalCredits: 0
+     plan: .free
+   }
+
+2. UPGRADE TO PRO
+   User upgrades → Gets 1000 credits/month
+   
+   CreditBalance {
+     totalCredits: 1010
+     subscriptionCredits: 1000
+     purchasedCredits: 0
+     promotionalCredits: 10  (welcome bonus)
+     plan: .pro
+   }
+
+3. COMPLETE LESSON
+   User completes lesson → Deduct 5 credits
+   
+   CreditTransaction {
+     type: .usage
+     amount: -5
+     balanceBefore: 1010
+     balanceAfter: 1005
+     description: "Completed lesson: Spanish Basics"
+   }
+
+4. PURCHASE CREDITS
+   User buys 100 credits
+   
+   CreditTransaction {
+     type: .purchase
+     amount: 100
+     balanceBefore: 1005
+     balanceAfter: 1105
+     description: "Purchased 100 credits"
+     metadata: ["amount": "9.99", "currency": "USD"]
+   }
+
+5. MONTHLY RESET
+   New billing period → Refresh subscription credits
+   
+   CreditTransaction {
+     type: .reset
+     amount: 1000
+     balanceBefore: 105
+     balanceAfter: 1205  (100 purchased + 5 promo + 1000 new sub)
+     description: "Monthly credit refresh"
+   }
+
+
+PAYMENT FLOW (Stripe)
+=====================
+
+1. User clicks "Upgrade to Pro"
+   ↓
+2. ViewModel calls subscriptionService.createCheckoutSession(plan: .pro)
+   ↓
+3. Service makes POST to /subscriptions/create-checkout-session
+   ↓
+4. Backend creates Stripe Checkout Session
+   ↓
+5. Backend returns checkout URL
+   ↓
+6. iOS opens URL in Safari
+   ↓
+7. User completes payment in Stripe
+   ↓
+8. Stripe redirects to: languageluid://subscription/success
+   ↓
+9. App catches deep link
+   ↓
+10. Calls viewModel.handlePaymentSuccess()
+    ↓
+11. Refreshes credits and subscription from backend
+    ↓
+12. UI updates automatically via @Published
+
+
+THREAD SAFETY
+==============
+
+@MainActor ensures all ViewModel operations happen on main thread
+├─ All @Published property updates are main-thread safe
+├─ All UI updates are synchronized
+└─ No race conditions possible
+
+SubscriptionService uses APIClient which is also @MainActor
+└─ All network operations properly dispatched
+
+
+ERROR HANDLING CHAIN
+=====================
+
+Backend Error
+    ↓
+APIError (from APIClient)
+    ↓
+SubscriptionError (mapped by Service)
+    ↓
+errorMessage @Published property
+    ↓
+SwiftUI Alert shown to user
+
+
+TESTING STRATEGY
+=================
+
+1. Unit Tests
+   - Test all ViewModel methods with mock service
+   - Test credit calculations
+   - Test subscription status logic
+
+2. SwiftUI Previews
+   - Use mock() factory methods
+   - Test all UI states (loading, error, success)
+   - Test different plan tiers
+
+3. Integration Tests
+   - Test with mock backend
+   - Test Stripe checkout flow
+   - Test deep link handling
+
+4. Manual Testing
+   - Test on real device
+   - Test payment flow
+   - Test subscription cancellation

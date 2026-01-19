@@ -1,0 +1,76 @@
+{
+  "source": "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Languages/LanguageDetailView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "%lld lessons loaded from backend API | %lld curriculum groups | %lld regional variants"
+      },
+      {
+        "comment": "",
+        "key": "Overall Progress"
+      },
+      {
+        "comment": "",
+        "key": "%lld%%"
+      },
+      {
+        "comment": "",
+        "key": "Regional Variant"
+      },
+      {
+        "comment": "",
+        "key": "Default"
+      },
+      {
+        "comment": "",
+        "key": "Learning Path"
+      },
+      {
+        "comment": "",
+        "key": "Progress through CEFR levels from beginner to proficient"
+      },
+      {
+        "comment": "",
+        "key": "CEFR Aligned"
+      },
+      {
+        "comment": "",
+        "key": "Overall Course Progress"
+      },
+      {
+        "comment": "",
+        "key": "%lld / %lld lessons"
+      },
+      {
+        "comment": "",
+        "key": "Curriculum Overview"
+      },
+      {
+        "comment": "",
+        "key": "+%lld more curriculum groups"
+      },
+      {
+        "comment": "",
+        "key": "%lld lessons"
+      },
+      {
+        "comment": "",
+        "key": "How It Works"
+      },
+      {
+        "comment": "",
+        "key": "%lld."
+      },
+      {
+        "comment": "",
+        "key": "Loading language data..."
+      },
+      {
+        "comment": "",
+        "key": "Language Not Found"
+      }
+    ]
+  },
+  "version": 1
+}

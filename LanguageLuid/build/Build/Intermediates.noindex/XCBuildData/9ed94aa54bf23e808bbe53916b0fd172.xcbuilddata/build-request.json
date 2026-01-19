@@ -1,0 +1,73 @@
+{
+  "buildCommand" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildOnly"
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "c5a3707ecff42b4bc005579acb4ff48aeb26dcf05616579c4064206782592980"
+    }
+  ],
+  "containerPath" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/LanguageLuid.xcodeproj",
+  "continueBuildingAfterErrors" : false,
+  "dependencyScope" : "workspace",
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "arm64",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : false,
+      "platform" : "iphonesimulator",
+      "sdk" : "iphonesimulator17.5",
+      "sdkVariant" : "iphonesimulator",
+      "supportedArchitectures" : [
+        "arm64",
+        "x86_64"
+      ],
+      "targetArchitecture" : "arm64"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Products",
+      "derivedDataPath" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build",
+      "indexDataStoreFolderPath" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Index.noindex/PrecompiledHeaders",
+      "pchPath" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "commandLine" : {
+        "table" : {
+
+        }
+      },
+      "synthesized" : {
+        "table" : {
+          "ACTION" : "build",
+          "ASSETCATALOG_FILTER_FOR_DEVICE_MODEL" : "iPhone15,4",
+          "ASSETCATALOG_FILTER_FOR_DEVICE_OS_VERSION" : "17.5",
+          "ASSETCATALOG_FILTER_FOR_THINNING_DEVICE_CONFIGURATION" : "iPhone15,4",
+          "BUILD_ACTIVE_RESOURCES_ONLY" : "YES",
+          "CLANG_COVERAGE_MAPPING" : "YES",
+          "CLANG_PROFILE_DATA_DIRECTORY" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/ProfileData",
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "NO",
+          "ONLY_ACTIVE_ARCH" : "YES",
+          "TARGET_DEVICE_IDENTIFIER" : "DF8FF94B-72C6-419F-B0DF-971594C09C64",
+          "TARGET_DEVICE_MODEL" : "iPhone15,4",
+          "TARGET_DEVICE_OS_VERSION" : "17.5",
+          "TARGET_DEVICE_PLATFORM_NAME" : "iphonesimulator"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}

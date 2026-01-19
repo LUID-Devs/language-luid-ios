@@ -1,0 +1,56 @@
+{
+  "source": "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Lessons/LessonPhaseView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Exit Phase"
+      },
+      {
+        "comment": "",
+        "key": "Exit"
+      },
+      {
+        "comment": "",
+        "key": "Keep Learning"
+      },
+      {
+        "comment": "",
+        "key": "Are you sure you want to exit? Your progress will be saved."
+      },
+      {
+        "comment": "",
+        "key": "Phase %lld"
+      },
+      {
+        "comment": "",
+        "key": "%lld"
+      },
+      {
+        "comment": "",
+        "key": "Question %lld of %lld"
+      },
+      {
+        "comment": "",
+        "key": "Hint"
+      },
+      {
+        "comment": "",
+        "key": "+%lld XP"
+      },
+      {
+        "comment": "",
+        "key": "Phase %lld Complete!"
+      },
+      {
+        "comment": "",
+        "key": "Loading exercises..."
+      },
+      {
+        "comment": "",
+        "key": "No Exercises Available"
+      }
+    ]
+  },
+  "version": 1
+}

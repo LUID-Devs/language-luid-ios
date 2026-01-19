@@ -1,0 +1,628 @@
+{
+  "" : {
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageLuid-master.dia",
+    "emit-module-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageLuid-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageLuid-master-emit-module.dia",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageLuid-master.swiftdeps"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/Audio/AudioExample.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioExample.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioExample.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioExample.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioExample.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioExample.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioExample.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioExample.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioExample~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/Audio/AudioManager.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioManager.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioManager.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioManager.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioManager.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioManager.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioManager.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioManager.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioManager~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/Audio/AudioPlayer.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayer.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayer.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayer.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayer.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayer.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayer.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayer.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayer~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/Audio/AudioRecorder.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioRecorder~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/Audio/CodeSnippets.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CodeSnippets.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CodeSnippets.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CodeSnippets.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CodeSnippets.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CodeSnippets.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CodeSnippets.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CodeSnippets.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CodeSnippets~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/Auth/AuthService.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthService.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthService.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthService.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthService.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthService.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthService.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthService.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthService~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/Config/AppConfig.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AppConfig.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AppConfig.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AppConfig.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AppConfig.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AppConfig.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AppConfig.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AppConfig.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AppConfig~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/DesignSystem/Components/LLBadge.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLBadge.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLBadge.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLBadge.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLBadge.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLBadge.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLBadge.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLBadge.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLBadge~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/DesignSystem/Components/LLButton.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLButton.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLButton.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLButton.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLButton.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLButton.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLButton.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLButton.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLButton~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/DesignSystem/Components/LLCard.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLCard.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLCard.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLCard.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLCard.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLCard.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLCard.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLCard.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLCard~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/DesignSystem/Components/LLLoadingView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLLoadingView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLLoadingView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLLoadingView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLLoadingView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLLoadingView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLLoadingView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLLoadingView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLLoadingView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/DesignSystem/Components/LLTextField.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTextField.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTextField.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTextField.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTextField.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTextField.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTextField.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTextField.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTextField~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/DesignSystem/DesignSystemExample.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DesignSystemExample.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DesignSystemExample.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DesignSystemExample.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DesignSystemExample.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DesignSystemExample.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DesignSystemExample.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DesignSystemExample.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DesignSystemExample~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/DesignSystem/LLColors.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLColors.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLColors.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLColors.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLColors.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLColors.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLColors.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLColors.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLColors~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/DesignSystem/LLSpacing.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLSpacing.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLSpacing.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLSpacing.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLSpacing.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLSpacing.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLSpacing.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLSpacing.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLSpacing~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/DesignSystem/LLTypography.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTypography.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTypography.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTypography.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTypography.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTypography.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTypography.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTypography.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LLTypography~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/Network/APIClient.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/APIClient.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/APIClient.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/APIClient.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/APIClient.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/APIClient.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/APIClient.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/APIClient.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/APIClient~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/Storage/KeychainManager.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/KeychainManager.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/KeychainManager.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/KeychainManager.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/KeychainManager.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/KeychainManager.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/KeychainManager.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/KeychainManager.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/KeychainManager~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/LanguageLuidApp.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageLuidApp.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageLuidApp.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageLuidApp.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageLuidApp.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageLuidApp.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageLuidApp.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageLuidApp.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageLuidApp~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/Credits.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Credits.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Credits.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Credits.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Credits.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Credits.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Credits.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Credits.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Credits~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/CurriculumGroup.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CurriculumGroup.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CurriculumGroup.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CurriculumGroup.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CurriculumGroup.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CurriculumGroup.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CurriculumGroup.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CurriculumGroup.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CurriculumGroup~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/Exercise.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Exercise.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Exercise.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Exercise.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Exercise.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Exercise.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Exercise.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Exercise.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Exercise~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/Language.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Language.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Language.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Language.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Language.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Language.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Language.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Language.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Language~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/Lesson.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Lesson.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Lesson.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Lesson.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Lesson.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Lesson.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Lesson.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Lesson.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Lesson~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/LessonPhase.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhase.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhase.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhase.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhase.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhase.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhase.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhase.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhase~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/Progress.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Progress.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Progress.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Progress.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Progress.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Progress.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Progress.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Progress.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Progress~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/RegionalVariant.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegionalVariant~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/Roadmap.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/Roadmap~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/SpeechValidation.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidation~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Models/User.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/User.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/User.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/User.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/User.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/User.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/User.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/User.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/User~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Services/LanguageService.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageService~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Services/LessonService.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonService.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonService.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonService.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonService.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonService.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonService.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonService.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonService~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Services/SpeechValidationService.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationService.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationService.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationService.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationService.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationService.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationService.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationService.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationService~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Services/SubscriptionService.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SubscriptionService~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Services/TTSService.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TTSService.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TTSService.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TTSService.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TTSService.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TTSService.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TTSService.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TTSService.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TTSService~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/ViewModels/AuthViewModel.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthViewModel.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthViewModel.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthViewModel.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthViewModel.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthViewModel.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthViewModel.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthViewModel.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthViewModel~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/ViewModels/CreditsViewModel.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditsViewModel.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditsViewModel.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditsViewModel.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditsViewModel.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditsViewModel.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditsViewModel.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditsViewModel.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditsViewModel~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/ViewModels/LanguagesViewModel.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesViewModel~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/ViewModels/LessonViewModel.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonViewModel.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonViewModel.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonViewModel.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonViewModel.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonViewModel.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonViewModel.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonViewModel.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonViewModel~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Auth/AuthenticationView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthenticationView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthenticationView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthenticationView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthenticationView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthenticationView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthenticationView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthenticationView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AuthenticationView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Auth/ForgotPasswordView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ForgotPasswordView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ForgotPasswordView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ForgotPasswordView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ForgotPasswordView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ForgotPasswordView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ForgotPasswordView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ForgotPasswordView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ForgotPasswordView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Auth/LanguageSelectionView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageSelectionView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageSelectionView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageSelectionView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageSelectionView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageSelectionView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageSelectionView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageSelectionView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageSelectionView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Auth/LoginView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LoginView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Auth/RegisterView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/RegisterView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Auth/VerifyEmailView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/VerifyEmailView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/VerifyEmailView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/VerifyEmailView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/VerifyEmailView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/VerifyEmailView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/VerifyEmailView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/VerifyEmailView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/VerifyEmailView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Components/AudioPlayerControl.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioPlayerControl~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Dashboard/CreditBalanceCard.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditBalanceCard.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditBalanceCard.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditBalanceCard.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditBalanceCard.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditBalanceCard.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditBalanceCard.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditBalanceCard.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CreditBalanceCard~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Dashboard/DashboardView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DashboardView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DashboardView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DashboardView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DashboardView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DashboardView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DashboardView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DashboardView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/DashboardView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Dashboard/ProgressStatsCard.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ProgressStatsCard.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ProgressStatsCard.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ProgressStatsCard.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ProgressStatsCard.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ProgressStatsCard.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ProgressStatsCard.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ProgressStatsCard.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ProgressStatsCard~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Dashboard/QuickActionsCard.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/QuickActionsCard.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/QuickActionsCard.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/QuickActionsCard.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/QuickActionsCard.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/QuickActionsCard.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/QuickActionsCard.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/QuickActionsCard.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/QuickActionsCard~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Languages/CEFRLevelCardView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CEFRLevelCardView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CEFRLevelCardView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CEFRLevelCardView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CEFRLevelCardView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CEFRLevelCardView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CEFRLevelCardView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CEFRLevelCardView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/CEFRLevelCardView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Languages/LanguageDetailView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguageDetailView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Languages/LanguagesListView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesListView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesListView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesListView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesListView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesListView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesListView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesListView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LanguagesListView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Lessons/ExerciseView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ExerciseView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ExerciseView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ExerciseView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ExerciseView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ExerciseView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ExerciseView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ExerciseView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/ExerciseView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Lessons/LessonDetailView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonDetailView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonDetailView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonDetailView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonDetailView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonDetailView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonDetailView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonDetailView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonDetailView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Lessons/LessonListView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonListView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Lessons/LessonPhaseView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/LessonPhaseView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Navigation/TabBarView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TabBarView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TabBarView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TabBarView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TabBarView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TabBarView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TabBarView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TabBarView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/TabBarView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Speech/AudioVisualizerView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioVisualizerView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioVisualizerView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioVisualizerView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioVisualizerView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioVisualizerView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioVisualizerView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioVisualizerView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/AudioVisualizerView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Speech/SpeechRecorderView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechRecorderView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechRecorderView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechRecorderView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechRecorderView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechRecorderView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechRecorderView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechRecorderView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechRecorderView~partial.swiftmodule"
+  },
+  "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Speech/SpeechValidationResultView.swift" : {
+    "const-values" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationResultView.swiftconstvalues",
+    "dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationResultView.d",
+    "diagnostics" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationResultView.dia",
+    "index-unit-output-path" : "/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationResultView.o",
+    "llvm-bc" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationResultView.bc",
+    "object" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationResultView.o",
+    "swift-dependencies" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationResultView.swiftdeps",
+    "swiftmodule" : "/Users/alaindimabuyo/luid_projects/language-luid-ios/LanguageLuid/build/Build/Intermediates.noindex/LanguageLuid.build/Debug-iphonesimulator/LanguageLuid.build/Objects-normal/arm64/SpeechValidationResultView~partial.swiftmodule"
+  }
+}

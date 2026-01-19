@@ -1,0 +1,44 @@
+{
+  "source": "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Core/DesignSystem/Components/LLLoadingView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "%lld%%"
+      },
+      {
+        "comment": "",
+        "key": "Spinners"
+      },
+      {
+        "comment": "",
+        "key": "Progress Bars"
+      },
+      {
+        "comment": "",
+        "key": "Circular Progress"
+      },
+      {
+        "comment": "",
+        "key": "Skeleton Loading"
+      },
+      {
+        "comment": "",
+        "key": "Skeleton Card"
+      },
+      {
+        "comment": "",
+        "key": "Skeleton List"
+      },
+      {
+        "comment": "",
+        "key": "Empty State"
+      },
+      {
+        "comment": "",
+        "key": "Content Behind Overlay"
+      }
+    ]
+  },
+  "version": 1
+}

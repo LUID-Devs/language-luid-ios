@@ -1,0 +1,32 @@
+{
+  "source": "/Users/alaindimabuyo/luid_projects/language-luid-ios/Source/Views/Auth/LanguageSelectionView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Cancel"
+      },
+      {
+        "comment": "",
+        "key": "Done"
+      },
+      {
+        "comment": "",
+        "key": "Search languages"
+      },
+      {
+        "comment": "",
+        "key": "No Languages Found"
+      },
+      {
+        "comment": "",
+        "key": "Try adjusting your search"
+      },
+      {
+        "comment": "",
+        "key": "Select language"
+      }
+    ]
+  },
+  "version": 1
+}
