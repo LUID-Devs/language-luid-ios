@@ -614,7 +614,7 @@ private struct OptionButton: View {
 
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.white)
+                        .foregroundColor(LLColors.primaryForeground.color(for: colorScheme))
                 }
             }
             .padding(LLSpacing.md)

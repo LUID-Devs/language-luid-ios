@@ -2,17 +2,53 @@
 //  TabBarView.swift
 //  LanguageLuid
 //
-//  Main tab bar navigation with 5 tabs
+//  Main tab bar navigation with 4 tabs
 //  Custom styled tab bar using Language Luid design system
 //
 
 import SwiftUI
 
-/// Main tab bar view with 5 navigation tabs
+@MainActor
+final class TabRouter: ObservableObject {
+    @Published var selectedTab: TabBarView.Tab = .dashboard
+}
+
+@MainActor
+final class DrawerRouter: ObservableObject {
+    @Published var isOpen = false
+    @Published var sheet: DrawerSheet?
+}
+
+enum DrawerSheet: Identifiable {
+    case settings
+    case pricing
+    case howItWorks
+    case about
+    case contact
+    case privacy
+    case terms
+    case cookies
+
+    var id: String {
+        switch self {
+        case .settings: return "settings"
+        case .pricing: return "pricing"
+        case .howItWorks: return "how-it-works"
+        case .about: return "about"
+        case .contact: return "contact"
+        case .privacy: return "privacy"
+        case .terms: return "terms"
+        case .cookies: return "cookies"
+        }
+    }
+}
+
+/// Main tab bar view with 4 navigation tabs
 struct TabBarView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.colorScheme) var colorScheme
-    @State private var selectedTab: Tab = .dashboard
+    @StateObject private var tabRouter = TabRouter()
+    @StateObject private var drawerRouter = DrawerRouter()
 
     // MARK: - Tab Definition
 
@@ -21,7 +57,6 @@ struct TabBarView: View {
         case languages
         case lessons
         case profile
-        case settings
 
         var title: String {
             switch self {
@@ -29,7 +64,6 @@ struct TabBarView: View {
             case .languages: return "Languages"
             case .lessons: return "Lessons"
             case .profile: return "Profile"
-            case .settings: return "Settings"
             }
         }
 
@@ -39,7 +73,6 @@ struct TabBarView: View {
             case .languages: return "globe"
             case .lessons: return "book"
             case .profile: return "person"
-            case .settings: return "gearshape"
             }
         }
 
@@ -49,7 +82,6 @@ struct TabBarView: View {
             case .languages: return "globe"
             case .lessons: return "book.fill"
             case .profile: return "person.fill"
-            case .settings: return "gearshape.fill"
             }
         }
     }
@@ -60,7 +92,7 @@ struct TabBarView: View {
         ZStack(alignment: .bottom) {
             // Main Content
             Group {
-                switch selectedTab {
+                switch tabRouter.selectedTab {
                 case .dashboard:
                     DashboardView()
                 case .languages:
@@ -69,16 +101,75 @@ struct TabBarView: View {
                     LessonsView()
                 case .profile:
                     ProfileView()
-                case .settings:
-                    SettingsView()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             // Custom Tab Bar
-            CustomTabBar(selectedTab: $selectedTab)
+            CustomTabBar(selectedTab: $tabRouter.selectedTab)
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        .environmentObject(tabRouter)
+        .environmentObject(drawerRouter)
+        .safeAreaInset(edge: .top) {
+            HStack {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        drawerRouter.isOpen = true
+                    }
+                } label: {
+                    Image(systemName: "line.3.horizontal")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                        .padding(12)
+                        .background(
+                            Circle()
+                                .fill(LLColors.card.color(for: colorScheme))
+                                .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 2)
+                        )
+                }
+
+                Spacer()
+            }
+            .padding(.horizontal, LLSpacing.lg)
+            .padding(.top, LLSpacing.sm)
+            .padding(.bottom, LLSpacing.sm)
+            .background(LLColors.background.color(for: colorScheme))
+        }
+        .overlay {
+            DrawerOverlay(
+                authViewModel: authViewModel,
+                tabRouter: tabRouter,
+                drawerRouter: drawerRouter
+            )
+        }
+        .sheet(item: $drawerRouter.sheet) { sheet in
+            NavigationStack {
+                drawerSheetView(sheet)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func drawerSheetView(_ sheet: DrawerSheet) -> some View {
+        switch sheet {
+        case .settings:
+            SettingsView()
+        case .pricing:
+            PricingInfoView()
+        case .howItWorks:
+            HowItWorksView()
+        case .about:
+            AboutView()
+        case .contact:
+            ContactView()
+        case .privacy:
+            PrivacyPolicyView()
+        case .terms:
+            TermsOfServiceView()
+        case .cookies:
+            CookiePolicyView()
+        }
     }
 }
 
@@ -213,11 +304,11 @@ struct BadgeView: View {
                 if count <= 99 {
                     Text("\(count)")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(LLColors.destructiveForeground.color(for: colorScheme))
                 } else {
                     Text("99+")
                         .font(.system(size: 8, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(LLColors.destructiveForeground.color(for: colorScheme))
                 }
             }
         }
@@ -283,6 +374,8 @@ struct LanguagesView: View {
 /// Lessons placeholder view
 struct LessonsView: View {
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var tabRouter: TabRouter
+    @EnvironmentObject var drawerRouter: DrawerRouter
 
     var body: some View {
         NavigationStack {
@@ -302,6 +395,14 @@ struct LessonsView: View {
                                 .font(LLTypography.body())
                                 .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
                                 .multilineTextAlignment(.center)
+
+                            LLButton("Browse Languages", style: .primary, size: .sm) {
+                                tabRouter.selectedTab = .languages
+                            }
+
+                            LLButton("Open Settings", style: .outline, size: .sm) {
+                                drawerRouter.sheet = .settings
+                            }
                         }
                         .padding(LLSpacing.xl)
                     }
@@ -321,6 +422,8 @@ struct LessonsView: View {
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var tabRouter: TabRouter
+    @EnvironmentObject var drawerRouter: DrawerRouter
 
     var body: some View {
         NavigationStack {
@@ -371,10 +474,17 @@ struct ProfileView: View {
                     }
                     .padding(.horizontal, LLSpacing.lg)
 
-                    // Placeholder
-                    Text("Profile features coming soon")
-                        .font(LLTypography.body())
-                        .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                    // Quick links
+                    VStack(spacing: LLSpacing.sm) {
+                        LLButton("Manage Languages", style: .outline, size: .sm) {
+                            tabRouter.selectedTab = .languages
+                        }
+
+                        LLButton("Account Settings", style: .outline, size: .sm) {
+                            drawerRouter.sheet = .settings
+                        }
+                    }
+                    .padding(.horizontal, LLSpacing.lg)
                 }
                 .padding(.top, LLSpacing.lg)
                 .padding(.bottom, 80) // Tab bar padding
@@ -391,6 +501,15 @@ struct SettingsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.colorScheme) var colorScheme
     @State private var showingLogoutAlert = false
+    private let moreLinks: [MoreLink] = [
+        MoreLink(title: "Pricing", destination: AnyView(PricingInfoView())),
+        MoreLink(title: "How It Works", destination: AnyView(HowItWorksView())),
+        MoreLink(title: "About", destination: AnyView(AboutView())),
+        MoreLink(title: "Contact", destination: AnyView(ContactView())),
+        MoreLink(title: "Privacy Policy", destination: AnyView(PrivacyPolicyView())),
+        MoreLink(title: "Terms of Service", destination: AnyView(TermsOfServiceView())),
+        MoreLink(title: "Cookies", destination: AnyView(CookiePolicyView()))
+    ]
 
     var body: some View {
         NavigationStack {
@@ -412,6 +531,34 @@ struct SettingsView: View {
                                 .multilineTextAlignment(.center)
                         }
                         .padding(LLSpacing.xl)
+                    }
+                    .padding(.horizontal, LLSpacing.lg)
+
+                    LLCard(style: .standard, padding: .lg) {
+                        VStack(alignment: .leading, spacing: LLSpacing.md) {
+                            Text("More")
+                                .font(LLTypography.h4())
+                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
+
+                            VStack(spacing: LLSpacing.sm) {
+                                ForEach(moreLinks) { link in
+                                    NavigationLink(destination: link.destination) {
+                                        HStack {
+                                            Text(link.title)
+                                                .font(LLTypography.body())
+                                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
+
+                                            Spacer()
+
+                                            Image(systemName: "chevron.right")
+                                                .font(.system(size: 14))
+                                                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                                        }
+                                        .padding(.vertical, 8)
+                                    }
+                                }
+                            }
+                        }
                     }
                     .padding(.horizontal, LLSpacing.lg)
 
@@ -441,6 +588,192 @@ struct SettingsView: View {
             } message: {
                 Text("Are you sure you want to log out?")
             }
+        }
+    }
+}
+
+private struct MoreLink: Identifiable {
+    let id = UUID()
+    let title: String
+    let destination: AnyView
+}
+
+private struct DrawerOverlay: View {
+    @ObservedObject var authViewModel: AuthViewModel
+    @ObservedObject var tabRouter: TabRouter
+    @ObservedObject var drawerRouter: DrawerRouter
+    @Environment(\.colorScheme) var colorScheme
+
+    private let width: CGFloat = 280
+
+    var body: some View {
+        ZStack(alignment: .leading) {
+            if drawerRouter.isOpen {
+                Color.black.opacity(0.35)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        closeDrawer()
+                    }
+
+                drawerContent
+                    .frame(width: width)
+                    .transition(.move(edge: .leading))
+            }
+        }
+        .animation(.easeInOut(duration: 0.2), value: drawerRouter.isOpen)
+    }
+
+    private var drawerContent: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: LLSpacing.lg) {
+                HStack(spacing: LLSpacing.sm) {
+                    Circle()
+                        .fill(LLColors.primary.color(for: colorScheme))
+                        .frame(width: 44, height: 44)
+                        .overlay(
+                            Text(authViewModel.userDisplayName.prefix(2))
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(LLColors.primaryForeground.color(for: colorScheme))
+                        )
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(authViewModel.userDisplayName)
+                            .font(LLTypography.bodyMedium())
+                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                        Text(authViewModel.userEmail)
+                            .font(LLTypography.captionSmall())
+                            .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                    }
+
+                    Spacer()
+                }
+                .padding(.bottom, LLSpacing.sm)
+
+                drawerSectionTitle("Main")
+                drawerButton(
+                    title: "Dashboard",
+                    icon: "house",
+                    isActive: tabRouter.selectedTab == .dashboard
+                ) {
+                    tabRouter.selectedTab = .dashboard
+                    closeDrawer()
+                }
+                drawerButton(
+                    title: "Languages",
+                    icon: "globe",
+                    isActive: tabRouter.selectedTab == .languages
+                ) {
+                    tabRouter.selectedTab = .languages
+                    closeDrawer()
+                }
+                drawerButton(
+                    title: "Lessons",
+                    icon: "book",
+                    isActive: tabRouter.selectedTab == .lessons
+                ) {
+                    tabRouter.selectedTab = .lessons
+                    closeDrawer()
+                }
+                drawerButton(
+                    title: "Profile",
+                    icon: "person",
+                    isActive: tabRouter.selectedTab == .profile
+                ) {
+                    tabRouter.selectedTab = .profile
+                    closeDrawer()
+                }
+
+                drawerSectionTitle("Account")
+                drawerButton(title: "Settings", icon: "gearshape") {
+                    drawerRouter.sheet = .settings
+                    closeDrawer()
+                }
+                drawerButton(title: "Pricing", icon: "dollarsign.circle") {
+                    drawerRouter.sheet = .pricing
+                    closeDrawer()
+                }
+
+                drawerSectionTitle("Info")
+                drawerButton(title: "How It Works", icon: "book.closed") {
+                    drawerRouter.sheet = .howItWorks
+                    closeDrawer()
+                }
+                drawerButton(title: "About", icon: "info.circle") {
+                    drawerRouter.sheet = .about
+                    closeDrawer()
+                }
+                drawerButton(title: "Contact", icon: "envelope") {
+                    drawerRouter.sheet = .contact
+                    closeDrawer()
+                }
+
+                drawerSectionTitle("Legal")
+                drawerButton(title: "Privacy Policy", icon: "hand.raised") {
+                    drawerRouter.sheet = .privacy
+                    closeDrawer()
+                }
+                drawerButton(title: "Terms of Service", icon: "doc.text") {
+                    drawerRouter.sheet = .terms
+                    closeDrawer()
+                }
+                drawerButton(title: "Cookies", icon: "tray.full") {
+                    drawerRouter.sheet = .cookies
+                    closeDrawer()
+                }
+
+                Divider()
+                    .padding(.top, LLSpacing.md)
+
+                LLButton("Log Out", style: .destructive, size: .sm, fullWidth: true) {
+                    Task {
+                        await authViewModel.logout()
+                    }
+                    closeDrawer()
+                }
+            }
+            .padding(LLSpacing.lg)
+        }
+        .frame(maxHeight: .infinity, alignment: .top)
+        .background(LLColors.card.color(for: colorScheme))
+        .ignoresSafeArea()
+    }
+
+    private func drawerSectionTitle(_ title: String) -> some View {
+        Text(title.uppercased())
+            .font(LLTypography.captionSmall())
+            .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+            .tracking(LLTypography.letterSpacingWide)
+            .padding(.top, LLSpacing.xs)
+    }
+
+    private func drawerButton(
+        title: String,
+        icon: String,
+        isActive: Bool = false,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            HStack(spacing: LLSpacing.sm) {
+                Image(systemName: icon)
+                    .frame(width: 20)
+                Text(title)
+                    .font(LLTypography.body())
+                Spacer()
+            }
+            .foregroundColor(LLColors.foreground.color(for: colorScheme))
+            .padding(.vertical, 8)
+            .padding(.horizontal, LLSpacing.sm)
+            .background(
+                RoundedRectangle(cornerRadius: LLSpacing.radiusMD)
+                    .fill(isActive ? LLColors.muted.color(for: colorScheme) : Color.clear)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func closeDrawer() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            drawerRouter.isOpen = false
         }
     }
 }

@@ -75,12 +75,12 @@ struct SpeechValidationResultView: View {
                     .fontWeight(.medium)
             }
             .font(.subheadline)
-            .foregroundColor(result.passed ? .green : LLColors.destructive.color(for: colorScheme))
+            .foregroundColor(result.passed ? LLColors.success.color(for: colorScheme) : LLColors.destructive.color(for: colorScheme))
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
             .background(
                 Capsule()
-                    .fill(result.passed ? Color.green.opacity(0.1) : LLColors.destructive.color(for: colorScheme).opacity(0.1))
+                    .fill(result.passed ? LLColors.success.color(for: colorScheme).opacity(0.12) : LLColors.destructive.color(for: colorScheme).opacity(0.12))
             )
         }
         .padding(.vertical)
@@ -137,7 +137,7 @@ struct SpeechValidationResultView: View {
                         HStack(alignment: .top, spacing: 8) {
                             Image(systemName: "lightbulb.fill")
                                 .font(.caption)
-                                .foregroundColor(LLColors.primary.color(for: colorScheme))
+                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
 
                             Text(suggestion)
                                 .font(.caption)
@@ -157,7 +157,7 @@ struct SpeechValidationResultView: View {
             if let encouragement = result.feedback.encouragement, !encouragement.isEmpty {
                 HStack(spacing: 8) {
                     Image(systemName: "heart.fill")
-                        .foregroundColor(.pink)
+                        .foregroundColor(LLColors.foreground.color(for: colorScheme))
                     Text(encouragement)
                         .font(.caption)
                         .foregroundColor(LLColors.foreground.color(for: colorScheme))
@@ -197,7 +197,7 @@ struct SpeechValidationResultView: View {
             // Checkmark or X
             Image(systemName: word.correct ? "checkmark.circle.fill" : "xmark.circle.fill")
                 .font(.title3)
-                .foregroundColor(word.correct ? .green : .red)
+                .foregroundColor(word.correct ? LLColors.success.color(for: colorScheme) : LLColors.destructive.color(for: colorScheme))
 
             // Score if available
             if let score = word.score {
@@ -214,7 +214,12 @@ struct SpeechValidationResultView: View {
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(word.correct ? Color.green.opacity(0.3) : Color.red.opacity(0.3), lineWidth: 2)
+                .stroke(
+                    word.correct
+                        ? LLColors.success.color(for: colorScheme).opacity(0.3)
+                        : LLColors.destructive.color(for: colorScheme).opacity(0.3),
+                    lineWidth: 2
+                )
         )
     }
 
@@ -297,7 +302,7 @@ struct SpeechValidationResultView: View {
                         Text("Try Again")
                     }
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(LLColors.primaryForeground.color(for: colorScheme))
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(
@@ -316,12 +321,12 @@ struct SpeechValidationResultView: View {
                         Image(systemName: "arrow.right")
                     }
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(LLColors.successForeground.color(for: colorScheme))
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.green)
+                            .fill(LLColors.success.color(for: colorScheme))
                     )
                 }
                 .buttonStyle(.plain)
@@ -333,23 +338,23 @@ struct SpeechValidationResultView: View {
 
     private var ratingColor: Color {
         switch result.rating {
-        case .excellent: return .green
-        case .good: return .blue
-        case .acceptable: return .yellow
-        case .needsImprovement: return .orange
-        case .poor: return .red
+        case .excellent: return LLColors.success.color(for: colorScheme)
+        case .good: return LLColors.info.color(for: colorScheme)
+        case .acceptable: return LLColors.warning.color(for: colorScheme)
+        case .needsImprovement: return LLColors.mutedForeground.color(for: colorScheme)
+        case .poor: return LLColors.destructive.color(for: colorScheme)
         }
     }
 
     private func metricColor(_ value: Double) -> Color {
         if value >= 0.9 {
-            return .green
+            return LLColors.foreground.color(for: colorScheme)
         } else if value >= 0.7 {
-            return .blue
+            return LLColors.info.color(for: colorScheme)
         } else if value >= 0.5 {
-            return .yellow
+            return LLColors.warning.color(for: colorScheme)
         } else {
-            return .red
+            return LLColors.destructive.color(for: colorScheme)
         }
     }
 }

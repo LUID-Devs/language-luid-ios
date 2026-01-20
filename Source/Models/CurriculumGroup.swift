@@ -27,6 +27,14 @@ enum GroupType: String, Codable, CaseIterable {
     case complexGrammar = "complex_grammar"
     case professional
     case nuancedCommunication = "nuanced_communication"
+    case regionalVarieties = "regional_varieties"
+    case literaryMedia = "literary_media"
+    case nearNative = "near_native"
+    case idiomaticMastery = "idiomatic_mastery"
+    case academicProfessional = "academic_professional"
+    case culturalDeepDives = "cultural_deep_dives"
+    case dialectalVariations = "dialectal_variations"
+    case creativeExpression = "creative_expression"
     case mastery
     case assessment
     case review
@@ -68,6 +76,22 @@ enum GroupType: String, Codable, CaseIterable {
             return "Professional"
         case .nuancedCommunication:
             return "Nuanced Communication"
+        case .regionalVarieties:
+            return "Regional Varieties"
+        case .literaryMedia:
+            return "Literary & Media"
+        case .nearNative:
+            return "Near-Native Fluency"
+        case .idiomaticMastery:
+            return "Idiomatic Mastery"
+        case .academicProfessional:
+            return "Academic & Professional"
+        case .culturalDeepDives:
+            return "Cultural Deep Dives"
+        case .dialectalVariations:
+            return "Dialectal Variations"
+        case .creativeExpression:
+            return "Creative Expression"
         case .mastery:
             return "Mastery"
         case .assessment:
@@ -115,6 +139,22 @@ enum GroupType: String, Codable, CaseIterable {
             return "briefcase.fill"
         case .nuancedCommunication:
             return "bubble.left.and.text.bubble.right"
+        case .regionalVarieties:
+            return "globe.europe.africa"
+        case .literaryMedia:
+            return "text.book.closed"
+        case .nearNative:
+            return "sparkles"
+        case .idiomaticMastery:
+            return "quote.bubble"
+        case .academicProfessional:
+            return "briefcase"
+        case .culturalDeepDives:
+            return "theatermasks"
+        case .dialectalVariations:
+            return "waveform"
+        case .creativeExpression:
+            return "pencil.and.outline"
         case .mastery:
             return "star.fill"
         case .assessment:

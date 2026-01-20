@@ -17,6 +17,7 @@ struct LanguageDetailView: View {
     @State private var isLoading = true
     @State private var showError = false
     @State private var errorMessage: String?
+    @State private var selectedLevel: CEFRLevel?
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.colorScheme) var colorScheme
 
@@ -25,14 +26,17 @@ struct LanguageDetailView: View {
     private var cefrLevels: [CEFRLevelData] {
         guard !viewModel.curriculumGroups.isEmpty else { return [] }
 
-        return roadmap.cefrLevelsSupported.enumerated().map { index, level in
-            let isUnlocked = index == 0 || isPreviousLevelComplete(at: index - 1)
-            return CEFRLevelData.from(
+        var levels: [CEFRLevelData] = []
+        for level in roadmap.cefrLevelsSupported {
+            let isUnlocked = levels.last.map { $0.completedLessons >= $0.lessonCount } ?? true
+            let levelData = CEFRLevelData.from(
                 level: level,
                 groups: viewModel.curriculumGroups,
                 isUnlocked: isUnlocked
             )
+            levels.append(levelData)
         }
+        return levels
     }
 
     private var overallProgress: Double {
@@ -60,11 +64,6 @@ struct LanguageDetailView: View {
         Array(viewModel.curriculumGroups.prefix(6))
     }
 
-    private func isPreviousLevelComplete(at index: Int) -> Bool {
-        guard index >= 0 && index < cefrLevels.count else { return false }
-        let previousLevel = cefrLevels[index]
-        return previousLevel.completedLessons >= previousLevel.lessonCount
-    }
 
     // MARK: - Grid Layout
 
@@ -96,6 +95,31 @@ struct LanguageDetailView: View {
             } else {
                 contentView
             }
+
+            NavigationLink(
+                destination: Group {
+                    if let level = selectedLevel {
+                        LessonListView(
+                            roadmapId: roadmap.id,
+                            cefrLevel: level,
+                            languageName: roadmap.languageName
+                        )
+                    } else {
+                        EmptyView()
+                    }
+                },
+                isActive: Binding(
+                    get: { selectedLevel != nil },
+                    set: { isActive in
+                        if !isActive {
+                            selectedLevel = nil
+                        }
+                    }
+                )
+            ) {
+                EmptyView()
+            }
+            .hidden()
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -645,8 +669,8 @@ struct LanguageDetailView: View {
     }
 
     private func handleLevelTap(level: CEFRLevelData) {
-        // TODO: Navigate to level detail view
-        print("Tapped on level: \(level.code)")
+        guard let cefrLevel = CEFRLevel(rawValue: level.code) else { return }
+        selectedLevel = cefrLevel
     }
 }
 

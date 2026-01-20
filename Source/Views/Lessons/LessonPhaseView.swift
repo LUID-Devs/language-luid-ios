@@ -625,6 +625,7 @@ private struct StatRow: View {
 
 private struct ConfettiView: View {
     @State private var confettiPieces: [ConfettiPiece] = []
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         ZStack {
@@ -640,11 +641,17 @@ private struct ConfettiView: View {
     }
 
     private func generateConfetti() {
+        let palette = [
+            LLColors.foreground.color(for: colorScheme),
+            LLColors.mutedForeground.color(for: colorScheme),
+            LLColors.border.color(for: colorScheme),
+            LLColors.primary.color(for: colorScheme)
+        ]
         confettiPieces = (0..<50).map { _ in
             ConfettiPiece(
                 x: Double.random(in: 0...UIScreen.main.bounds.width),
                 y: -20,
-                color: [Color.red, Color.blue, Color.green, Color.yellow, Color.orange, Color.purple].randomElement()!,
+                color: palette.randomElement() ?? LLColors.foreground.color(for: colorScheme),
                 rotation: Double.random(in: 0...360)
             )
         }

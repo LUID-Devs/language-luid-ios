@@ -14,6 +14,8 @@ struct DashboardView: View {
     // MARK: - Environment & ViewModels
 
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var tabRouter: TabRouter
+    @EnvironmentObject var drawerRouter: DrawerRouter
     @StateObject private var creditsViewModel = CreditsViewModel()
     @Environment(\.colorScheme) var colorScheme
 
@@ -45,7 +47,7 @@ struct DashboardView: View {
                 }
             }
             .padding(LLSpacing.screenPaddingHorizontal)
-            .padding(.top, LLSpacing.md)
+            .padding(.top, LLSpacing.xl)
             .padding(.bottom, LLSpacing.xxl)
         }
         .background(LLColors.background.adaptive)
@@ -269,8 +271,7 @@ struct DashboardView: View {
                 Spacer()
 
                 LLButton("Get More Credits", style: .outline, size: .sm) {
-                    // Navigate to pricing
-                    print("Navigate to pricing")
+                    drawerRouter.sheet = .pricing
                 }
             }
         }
@@ -368,7 +369,7 @@ struct DashboardView: View {
                         title: "Browse Languages",
                         subtitle: "Explore available languages",
                         action: {
-                            print("Navigate to languages")
+                            tabRouter.selectedTab = .languages
                         }
                     )
 
@@ -379,7 +380,7 @@ struct DashboardView: View {
                             title: "Continue Learning",
                             subtitle: user.targetLanguage.uppercased(),
                             action: {
-                                print("Navigate to active language")
+                                tabRouter.selectedTab = .lessons
                             }
                         )
                     }
@@ -389,7 +390,7 @@ struct DashboardView: View {
                         title: "View Profile",
                         subtitle: "See your progress",
                         action: {
-                            print("Navigate to profile")
+                            tabRouter.selectedTab = .profile
                         }
                     )
                 }
@@ -553,7 +554,7 @@ struct DashboardView: View {
                     Spacer()
 
                     LLButton("Upgrade Now", style: .primary, size: .md) {
-                        print("Navigate to pricing")
+                        drawerRouter.sheet = .pricing
                     }
                 }
             }

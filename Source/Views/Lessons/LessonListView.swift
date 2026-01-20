@@ -119,6 +119,7 @@ struct LessonListView: View {
                 listView
             }
         }
+        .padding(.bottom, LLSpacing.xxl)
     }
 
     private var listView: some View {
@@ -430,7 +431,7 @@ private struct LessonNumberBadge: View {
         Text("L\(number)")
             .font(LLTypography.h4())
             .fontWeight(.bold)
-            .foregroundColor(.white)
+            .foregroundColor(badgeForeground)
             .frame(width: 48, height: 48)
             .background(
                 Circle()
@@ -438,7 +439,7 @@ private struct LessonNumberBadge: View {
             )
             .overlay(
                 Circle()
-                    .strokeBorder(Color.white.opacity(0.2), lineWidth: 2)
+                    .strokeBorder(LLColors.border.color(for: colorScheme).opacity(0.6), lineWidth: 2)
             )
     }
 
@@ -452,6 +453,19 @@ private struct LessonNumberBadge: View {
             return LLColors.primary.color(for: colorScheme)
         case .locked:
             return LLColors.mutedForeground.color(for: colorScheme)
+        }
+    }
+
+    private var badgeForeground: Color {
+        switch status {
+        case .completed:
+            return LLColors.successForeground.color(for: colorScheme)
+        case .inProgress:
+            return LLColors.warningForeground.color(for: colorScheme)
+        case .available:
+            return LLColors.primaryForeground.color(for: colorScheme)
+        case .locked:
+            return LLColors.primaryForeground.color(for: colorScheme)
         }
     }
 }

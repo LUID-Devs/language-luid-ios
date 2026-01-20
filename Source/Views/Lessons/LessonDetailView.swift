@@ -33,6 +33,31 @@ struct LessonDetailView: View {
             } else if let lesson = viewModel.selectedLesson {
                 lessonContent(lesson: lesson)
             }
+
+            NavigationLink(
+                destination: Group {
+                    if let phase = selectedPhase {
+                        LessonPhaseView(
+                            roadmapId: roadmapId,
+                            lessonId: lessonId,
+                            phase: phase
+                        )
+                    } else {
+                        EmptyView()
+                    }
+                },
+                isActive: Binding(
+                    get: { selectedPhase != nil },
+                    set: { isActive in
+                        if !isActive {
+                            selectedPhase = nil
+                        }
+                    }
+                )
+            ) {
+                EmptyView()
+            }
+            .hidden()
         }
         .navigationBarTitleDisplayMode(.inline)
         .task {
@@ -95,6 +120,7 @@ struct LessonDetailView: View {
                 actionButtonsSection(lesson)
             }
             .padding(LLSpacing.md)
+            .padding(.bottom, LLSpacing.xxl)
         }
     }
 

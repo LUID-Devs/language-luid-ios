@@ -327,7 +327,7 @@ struct ForgotPasswordView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 50, height: 50)
-                        .foregroundColor(.white)
+                        .foregroundColor(LLColors.successForeground.color(for: colorScheme))
                         .fontWeight(.bold)
                 }
                 .scaleEffect(showResetSuccess ? 1.0 : 0.5)
@@ -336,11 +336,11 @@ struct ForgotPasswordView: View {
                 VStack(spacing: LLSpacing.sm) {
                     Text("Password Reset!")
                         .font(LLTypography.h3())
-                        .foregroundColor(.white)
+                        .foregroundColor(LLColors.primaryForeground.color(for: colorScheme))
 
                     Text("You can now login with your new password")
                         .font(LLTypography.body())
-                        .foregroundColor(.white.opacity(0.9))
+                        .foregroundColor(LLColors.primaryForeground.color(for: colorScheme).opacity(0.85))
                         .multilineTextAlignment(.center)
                 }
             }

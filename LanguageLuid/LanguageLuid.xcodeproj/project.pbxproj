@@ -73,6 +73,7 @@
 		4D8B68872F1E801E00E005B2 /* SpeechRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68442F1E801D00E005B2 /* SpeechRecorderView.swift */; };
 		4D8B68882F1E801E00E005B2 /* SpeechValidationResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68452F1E801D00E005B2 /* SpeechValidationResultView.swift */; };
 		4D8B688A2F1E801E00E005B2 /* LanguageLuidApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68492F1E801D00E005B2 /* LanguageLuidApp.swift */; };
+		4D8B68B22F1E8ABC00E005B2 /* InfoScreens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68B12F1E8ABC00E005B2 /* InfoScreens.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -166,6 +167,7 @@
 		4D8B68452F1E801D00E005B2 /* SpeechValidationResultView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechValidationResultView.swift; sourceTree = "<group>"; };
 		4D8B68482F1E801D00E005B2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../Source/Info.plist; sourceTree = "<group>"; };
 		4D8B68492F1E801D00E005B2 /* LanguageLuidApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LanguageLuidApp.swift; path = ../../Source/LanguageLuidApp.swift; sourceTree = "<group>"; };
+		4D8B68B12F1E8ABC00E005B2 /* InfoScreens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoScreens.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -458,6 +460,14 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		4D8B68B02F1E8ABC00E005B2 /* More */ = {
+			isa = PBXGroup;
+			children = (
+				4D8B68B12F1E8ABC00E005B2 /* InfoScreens.swift */,
+			);
+			path = More;
+			sourceTree = "<group>";
+		};
 		4D8B68462F1E801D00E005B2 /* Speech */ = {
 			isa = PBXGroup;
 			children = (
@@ -476,6 +486,7 @@
 				4D8B68352F1E801D00E005B2 /* Dashboard */,
 				4D8B68392F1E801D00E005B2 /* Languages */,
 				4D8B683E2F1E801D00E005B2 /* Lessons */,
+				4D8B68B02F1E8ABC00E005B2 /* More */,
 				4D8B68402F1E801D00E005B2 /* Navigation */,
 				4D8B68412F1E801D00E005B2 /* Profile */,
 				4D8B68422F1E801D00E005B2 /* Settings */,
@@ -616,6 +627,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D8B68B22F1E8ABC00E005B2 /* InfoScreens.swift in Sources */,
 				4D8B68842F1E801E00E005B2 /* LessonPhaseView.swift in Sources */,
 				4D8B68772F1E801E00E005B2 /* RegisterView.swift in Sources */,
 				4D8B68712F1E801E00E005B2 /* LanguagesViewModel.swift in Sources */,

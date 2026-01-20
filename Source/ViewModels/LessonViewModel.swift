@@ -98,6 +98,15 @@ class LessonViewModel: ObservableObject {
                 cefrLevel: cefrLevel,
                 category: category
             )
+            if lessons.isEmpty {
+                NSLog("⚠️ No lessons returned. Retrying without publishedOnly filter...")
+                lessons = try await lessonService.fetchLessons(
+                    roadmapId: roadmapId,
+                    cefrLevel: cefrLevel,
+                    category: category,
+                    publishedOnly: false
+                )
+            }
             filteredLessons = lessons
             NSLog("✅ Loaded \(lessons.count) lessons")
         } catch {

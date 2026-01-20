@@ -303,7 +303,7 @@ struct LLNotificationBadge: View {
             Text(countText)
                 .font(size.font)
                 .fontWeight(.bold)
-                .foregroundColor(.white)
+                .foregroundColor(LLColors.destructiveForeground.color(for: colorScheme))
                 .padding(.horizontal, horizontalPadding)
                 .frame(minWidth: minWidth, minHeight: minWidth)
                 .background(

@@ -165,7 +165,7 @@ struct SpeechRecorderView: View {
         VStack(spacing: 8) {
             HStack(spacing: 8) {
                 Circle()
-                    .fill(Color.red)
+                    .fill(LLColors.destructive.color(for: colorScheme))
                     .frame(width: 8, height: 8)
                     .opacity(audioRecorder.isRecording ? 1.0 : 0.3)
 
@@ -197,7 +197,7 @@ struct SpeechRecorderView: View {
                             .font(isCompact ? .caption : .subheadline)
                             .fontWeight(.medium)
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(LLColors.primaryForeground.color(for: colorScheme))
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(
@@ -217,7 +217,7 @@ struct SpeechRecorderView: View {
                             .font(isCompact ? .caption : .subheadline)
                             .fontWeight(.medium)
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(LLColors.destructiveForeground.color(for: colorScheme))
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(

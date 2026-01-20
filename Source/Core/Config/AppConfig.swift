@@ -23,6 +23,7 @@ enum AppConfig {
     /// File upload timeout (for audio files)
     static let uploadTimeout: TimeInterval = 60
 
+
     // MARK: - App Configuration
 
     /// App version

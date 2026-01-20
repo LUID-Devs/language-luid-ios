@@ -226,7 +226,7 @@ struct VerifyEmailView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 50, height: 50)
-                        .foregroundColor(.white)
+                        .foregroundColor(LLColors.successForeground.color(for: colorScheme))
                         .fontWeight(.bold)
                 }
                 .scaleEffect(showSuccess ? 1.0 : 0.5)
@@ -234,7 +234,7 @@ struct VerifyEmailView: View {
 
                 Text("Email Verified!")
                     .font(LLTypography.h3())
-                    .foregroundColor(.white)
+                    .foregroundColor(LLColors.primaryForeground.color(for: colorScheme))
             }
         }
     }

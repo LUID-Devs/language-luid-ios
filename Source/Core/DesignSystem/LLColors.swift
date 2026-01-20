@@ -103,46 +103,46 @@ struct LLColors {
 
     /// Destructive/Error color - for dangerous actions and errors
     static let destructive = ColorSet(
-        light: Color(oklch: OKLCH(l: 0.577, c: 0.245, h: 27.325)),
-        dark: Color(oklch: OKLCH(l: 0.704, c: 0.191, h: 22.216))
+        light: Color(oklch: OKLCH(l: 0.145, c: 0, h: 0)),
+        dark: Color(oklch: OKLCH(l: 0.9, c: 0, h: 0))
     )
 
     static let destructiveForeground = ColorSet(
         light: Color(oklch: OKLCH(l: 0.985, c: 0, h: 0)),
-        dark: Color(oklch: OKLCH(l: 0.985, c: 0, h: 0))
+        dark: Color(oklch: OKLCH(l: 0.205, c: 0, h: 0))
     )
 
     /// Success color - for positive feedback and completed states
     static let success = ColorSet(
-        light: Color(red: 0.063, green: 0.725, blue: 0.506), // #10b981
-        dark: Color(red: 0.133, green: 0.804, blue: 0.580)
+        light: Color(oklch: OKLCH(l: 0.24, c: 0, h: 0)),
+        dark: Color(oklch: OKLCH(l: 0.82, c: 0, h: 0))
     )
 
     static let successForeground = ColorSet(
-        light: .white,
-        dark: Color(oklch: OKLCH(l: 0.145, c: 0, h: 0))
+        light: Color(oklch: OKLCH(l: 0.985, c: 0, h: 0)),
+        dark: Color(oklch: OKLCH(l: 0.205, c: 0, h: 0))
     )
 
     /// Warning color - for caution and attention-needed states
     static let warning = ColorSet(
-        light: Color(red: 0.961, green: 0.620, blue: 0.043), // #f59e0b
-        dark: Color(red: 0.988, green: 0.706, blue: 0.227)
+        light: Color(oklch: OKLCH(l: 0.32, c: 0, h: 0)),
+        dark: Color(oklch: OKLCH(l: 0.7, c: 0, h: 0))
     )
 
     static let warningForeground = ColorSet(
-        light: .white,
-        dark: Color(oklch: OKLCH(l: 0.145, c: 0, h: 0))
+        light: Color(oklch: OKLCH(l: 0.985, c: 0, h: 0)),
+        dark: Color(oklch: OKLCH(l: 0.205, c: 0, h: 0))
     )
 
     /// Info color - for informational messages
     static let info = ColorSet(
-        light: Color(red: 0.231, green: 0.561, blue: 0.988), // #3b8ef8
-        dark: Color(red: 0.345, green: 0.659, blue: 1.0)
+        light: Color(oklch: OKLCH(l: 0.4, c: 0, h: 0)),
+        dark: Color(oklch: OKLCH(l: 0.6, c: 0, h: 0))
     )
 
     static let infoForeground = ColorSet(
-        light: .white,
-        dark: Color(oklch: OKLCH(l: 0.145, c: 0, h: 0))
+        light: Color(oklch: OKLCH(l: 0.985, c: 0, h: 0)),
+        dark: Color(oklch: OKLCH(l: 0.205, c: 0, h: 0))
     )
 
     // MARK: - Border & Input Colors
@@ -168,16 +168,16 @@ struct LLColors {
     // MARK: - Pronunciation Score Colors
 
     /// Color for excellent pronunciation scores (90-100%)
-    static let pronunciationExcellent = Color(red: 0.063, green: 0.725, blue: 0.506) // #10b981
+    static let pronunciationExcellent = Color(white: 0.15)
 
     /// Color for good pronunciation scores (70-89%)
-    static let pronunciationGood = Color(red: 0.518, green: 0.800, blue: 0.086) // #84cc16
+    static let pronunciationGood = Color(white: 0.25)
 
     /// Color for fair pronunciation scores (50-69%)
-    static let pronunciationFair = Color(red: 0.961, green: 0.620, blue: 0.043) // #f59e0b
+    static let pronunciationFair = Color(white: 0.35)
 
     /// Color for poor pronunciation scores (0-49%)
-    static let pronunciationPoor = Color(red: 0.937, green: 0.267, blue: 0.267) // #ef4444
+    static let pronunciationPoor = Color(white: 0.45)
 }
 
 // MARK: - Color Set Helper

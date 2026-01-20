@@ -121,12 +121,16 @@ struct AudioPlayerControl: View {
 
                 if isLoading {
                     ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .progressViewStyle(
+                            CircularProgressViewStyle(
+                                tint: LLColors.primaryForeground.color(for: colorScheme)
+                            )
+                        )
                         .scaleEffect(isCompact ? 0.8 : 1.0)
                 } else {
                     Image(systemName: playButtonIcon)
                         .font(.system(size: isCompact ? 18 : 22))
-                        .foregroundColor(.white)
+                        .foregroundColor(LLColors.primaryForeground.color(for: colorScheme))
                 }
             }
         }

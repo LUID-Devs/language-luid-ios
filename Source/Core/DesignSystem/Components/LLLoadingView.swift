@@ -94,7 +94,7 @@ struct LLLoadingOverlay: View {
                 if let message = message {
                     Text(message)
                         .font(LLTypography.body())
-                        .foregroundColor(.white)
+                        .foregroundColor(LLColors.foreground.color(for: colorScheme))
                 }
             }
             .padding(LLSpacing.xl)
