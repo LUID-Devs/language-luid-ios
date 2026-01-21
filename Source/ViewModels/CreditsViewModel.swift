@@ -166,6 +166,15 @@ class CreditsViewModel: ObservableObject {
 
     /// Refresh all data (credits, subscription, and transactions)
     func refreshAll() async {
+        NSLog("🔄 CreditsViewModel: Starting refreshAll()")
+
+        // Debug: Check keychain state before making requests
+        if let token = KeychainManager.shared.getAccessToken() {
+            NSLog("🔐 CreditsViewModel: Token available (length: \(token.count))")
+        } else {
+            NSLog("❌ CreditsViewModel: NO TOKEN AVAILABLE")
+        }
+
         print("🔄 CreditsViewModel: Refreshing all data...")
 
         isLoading = true
@@ -176,14 +185,20 @@ class CreditsViewModel: ObservableObject {
         async let subscriptionTask = subscriptionService.fetchSubscription()
 
         do {
+            NSLog("📡 CreditsViewModel: Awaiting parallel tasks...")
             credits = try await creditsTask
+            NSLog("✅ CreditsViewModel: Credits task completed - \(credits?.totalCredits ?? 0) total credits")
+
             subscription = try await subscriptionTask
+            NSLog("✅ CreditsViewModel: Subscription task completed - \(subscription?.plan.displayName ?? "none")")
 
             print("✅ CreditsViewModel: All data refreshed successfully")
         } catch let error as SubscriptionError {
+            NSLog("❌ CreditsViewModel: SubscriptionError - \(error)")
             handleError(error)
             print("❌ CreditsViewModel: Failed to refresh data - \(error.localizedDescription)")
         } catch {
+            NSLog("❌ CreditsViewModel: Unknown error - \(error)")
             errorMessage = "Failed to refresh data"
             print("❌ CreditsViewModel: Unexpected error refreshing data - \(error)")
         }

@@ -34,7 +34,19 @@ class KeychainManager {
 
     /// Get access token from Keychain
     func getAccessToken() -> String? {
-        return get(forKey: Keys.accessToken)
+        let token = get(forKey: Keys.accessToken)
+
+        if let token = token {
+            if token.isEmpty {
+                NSLog("⚠️ KeychainManager: Token is EMPTY STRING")
+                return nil
+            }
+            NSLog("✅ KeychainManager: Token retrieved (length: \(token.count))")
+        } else {
+            NSLog("❌ KeychainManager: No token found in keychain")
+        }
+
+        return token
     }
 
     /// Delete access token from Keychain

@@ -41,6 +41,24 @@ struct UserLessonProgressResponse: Codable {
     let data: UserLessonProgress
 }
 
+struct StartLessonData: Codable {
+    let progress: UserLessonProgress
+    let lesson: PartialLesson
+}
+
+struct PartialLesson: Codable {
+    let id: String
+    let lessonNumber: Int
+    let lessonCode: String
+    let title: String
+}
+
+struct StartLessonResponse: Codable {
+    let success: Bool
+    let message: String?
+    let data: StartLessonData
+}
+
 struct PhaseProgressSummaryResponse: Codable {
     let success: Bool
     let data: PhaseProgressSummary
@@ -117,7 +135,7 @@ class LessonService {
             let response: LessonsResponse = try await apiClient.get(
                 "\(APIEndpoint.roadmaps)/\(roadmapId)/lessons",
                 parameters: parameters,
-                requiresAuth: false
+                requiresAuth: true
             )
 
             NSLog("✅ Fetched \(response.data.count) lessons")
@@ -164,7 +182,7 @@ class LessonService {
             let response: LessonResponse = try await apiClient.get(
                 "\(APIEndpoint.roadmaps)/\(roadmapId)/lessons/\(lessonId)",
                 parameters: parameters,
-                requiresAuth: false
+                requiresAuth: true
             )
 
             NSLog("✅ Fetched lesson: \(response.data.title)")
@@ -193,7 +211,7 @@ class LessonService {
         do {
             let response: LessonResponse = try await apiClient.get(
                 "\(APIEndpoint.roadmaps)/\(roadmapId)/lessons/number/\(lessonNumber)",
-                requiresAuth: false
+                requiresAuth: true
             )
 
             NSLog("✅ Fetched lesson: \(response.data.title)")
@@ -218,13 +236,15 @@ class LessonService {
         roadmapId: String,
         lessonId: String
     ) async throws -> [LessonPhaseDefinition] {
-        NSLog("📝 Fetching phases for lesson: \(lessonId)...")
+        let url = "\(APIEndpoint.roadmaps)/\(roadmapId)/lessons/\(lessonId)/phases"
+        NSLog("📝 Fetching phases for lesson: \(lessonId)")
+        NSLog("📝 Full URL: \(url)")
         os_log("📝 Fetching lesson phases...", log: logger, type: .info)
 
         do {
             let response: LessonPhasesResponse = try await apiClient.get(
-                "\(APIEndpoint.roadmaps)/\(roadmapId)/lessons/\(lessonId)/phases",
-                requiresAuth: false
+                url,
+                requiresAuth: true
             )
 
             NSLog("✅ Fetched \(response.data.count) phases")
@@ -232,7 +252,9 @@ class LessonService {
 
             return response.data
         } catch {
-            NSLog("❌ Failed to fetch lesson phases: \(error.localizedDescription)")
+            NSLog("❌ Failed to fetch lesson phases: \(error)")
+            NSLog("❌ Error type: \(type(of: error))")
+            NSLog("❌ Error description: \(error.localizedDescription)")
             os_log("❌ Failed to fetch lesson phases: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -263,7 +285,7 @@ class LessonService {
             let response: ExercisesResponse = try await apiClient.get(
                 "\(APIEndpoint.roadmaps)/\(roadmapId)/lessons/\(lessonId)/exercises",
                 parameters: parameters,
-                requiresAuth: false
+                requiresAuth: true
             )
 
             NSLog("✅ Fetched \(response.data.count) exercises")
@@ -292,15 +314,15 @@ class LessonService {
         os_log("▶️ Starting lesson...", log: logger, type: .info)
 
         do {
-            let response: UserLessonProgressResponse = try await apiClient.post(
+            let response: StartLessonResponse = try await apiClient.post(
                 "\(APIEndpoint.roadmaps)/\(roadmapId)/lessons/\(lessonId)/start",
                 requiresAuth: true
             )
 
-            NSLog("✅ Lesson started")
+            NSLog("✅ Lesson started: \(response.data.lesson.title)")
             os_log("✅ Lesson started", log: logger, type: .info)
 
-            return response.data
+            return response.data.progress
         } catch {
             NSLog("❌ Failed to start lesson: \(error.localizedDescription)")
             os_log("❌ Failed to start lesson: %{public}@", log: logger, type: .error, error.localizedDescription)
@@ -483,7 +505,7 @@ class LessonService {
         do {
             let response: PhaseProgressSummaryResponse = try await apiClient.get(
                 "/lessons/\(lessonId)/phase-progress",
-                requiresAuth: false
+                requiresAuth: true
             )
 
             NSLog("✅ Fetched phase progress - Current phase: \(response.data.currentPhase)")

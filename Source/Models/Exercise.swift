@@ -37,8 +37,9 @@ struct Exercise: Codable, Identifiable, Hashable {
         case id, lessonId, phaseDefinitionId, exerciseType
         case prompt, promptAudioUrl, expectedResponse, acceptableResponses
         case options, hints, explanation, points, partialCreditEnabled
-        case difficulty, order, requiresSpeech, speechConfig, metadata
+        case difficulty, requiresSpeech, speechConfig, metadata
         case isActive, createdAt, updatedAt
+        case order = "displayOrder"  // Backend uses displayOrder
     }
 
     // Hashable conformance

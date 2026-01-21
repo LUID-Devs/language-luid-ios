@@ -299,12 +299,29 @@ class APIClient {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
 
-        // Add auth token if required
+        // Add auth token
         if requiresAuth {
+            // Required auth - fail if no token
             guard let token = keychainManager.getAccessToken() else {
+                NSLog("❌ APIClient: No token available for authenticated request to \(endpoint)")
                 throw APIError.unauthorized
             }
+
+            if token.isEmpty {
+                NSLog("❌ APIClient: Token is empty for request to \(endpoint)")
+                throw APIError.unauthorized
+            }
+
+            NSLog("🔐 APIClient: Adding required auth header (token length: \(token.count)) for \(endpoint)")
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        } else {
+            // Optional auth - send token if available, but don't fail if missing
+            if let token = keychainManager.getAccessToken(), !token.isEmpty {
+                NSLog("🔐 APIClient: Adding optional auth header (token length: \(token.count)) for \(endpoint)")
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            } else {
+                NSLog("ℹ️ APIClient: No token available for optional auth endpoint \(endpoint)")
+            }
         }
 
         // Add body for POST/PUT/PATCH

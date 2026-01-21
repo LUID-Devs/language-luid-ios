@@ -53,6 +53,7 @@ struct LessonListView: View {
                 }
             }
         }
+        .id("\(roadmapId)-\(cefrLevel.rawValue)")
         .task {
             await viewModel.loadLessons(
                 roadmapId: roadmapId,
@@ -449,7 +450,7 @@ private struct LessonNumberBadge: View {
             return LLColors.success.color(for: colorScheme)
         case .inProgress:
             return LLColors.warning.color(for: colorScheme)
-        case .available:
+        case .available, .notStarted:
             return LLColors.primary.color(for: colorScheme)
         case .locked:
             return LLColors.mutedForeground.color(for: colorScheme)
@@ -462,7 +463,7 @@ private struct LessonNumberBadge: View {
             return LLColors.successForeground.color(for: colorScheme)
         case .inProgress:
             return LLColors.warningForeground.color(for: colorScheme)
-        case .available:
+        case .available, .notStarted:
             return LLColors.primaryForeground.color(for: colorScheme)
         case .locked:
             return LLColors.primaryForeground.color(for: colorScheme)
@@ -487,7 +488,7 @@ private struct StatusIcon: View {
             return LLColors.success.color(for: colorScheme)
         case .inProgress:
             return LLColors.warning.color(for: colorScheme)
-        case .available:
+        case .available, .notStarted:
             return LLColors.primary.color(for: colorScheme)
         case .locked:
             return LLColors.mutedForeground.color(for: colorScheme)

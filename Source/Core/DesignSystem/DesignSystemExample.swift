@@ -191,9 +191,9 @@ struct LanguageSelectionExample: View {
 
             case .error:
                 LLEmptyState(
-                    icon: Image(systemName: "exclamationmark.triangle"),
+                    icon: "exclamationmark.triangle",
                     title: "Unable to Load Languages",
-                    description: "Please check your connection and try again",
+                    message: "Please check your connection and try again",
                     actionTitle: "Retry",
                     action: { loadLanguages() }
                 )

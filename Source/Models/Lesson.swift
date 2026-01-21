@@ -150,6 +150,7 @@ struct Lesson: Codable, Identifiable, Hashable {
 enum LessonStatus: String, Codable {
     case locked
     case available
+    case notStarted = "not_started"  // Backend returns this for lessons without progress
     case inProgress = "in_progress"
     case completed
 
@@ -157,7 +158,7 @@ enum LessonStatus: String, Codable {
         switch self {
         case .locked:
             return "Locked"
-        case .available:
+        case .available, .notStarted:
             return "Available"
         case .inProgress:
             return "In Progress"
@@ -170,7 +171,7 @@ enum LessonStatus: String, Codable {
         switch self {
         case .locked:
             return "lock.fill"
-        case .available:
+        case .available, .notStarted:
             return "circle"
         case .inProgress:
             return "circle.lefthalf.filled"
@@ -183,7 +184,7 @@ enum LessonStatus: String, Codable {
         switch self {
         case .locked:
             return "gray"
-        case .available:
+        case .available, .notStarted:
             return "blue"
         case .inProgress:
             return "orange"

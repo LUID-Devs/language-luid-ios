@@ -136,7 +136,7 @@ struct LessonDetailView: View {
 
                 Spacer()
 
-                StatusBadge(status: lesson.status)
+                StatusBadge(status: viewModel.currentLessonStatus)
             }
 
             Text(lesson.title)
@@ -319,7 +319,14 @@ struct LessonDetailView: View {
                 ForEach(viewModel.lessonPhases) { phase in
                     PhaseCard(
                         phase: phase,
-                        progress: phaseProgress(for: phase.phaseNumber)
+                        progress: phaseProgress(for: phase.phaseNumber),
+                        onTap: {
+                            // Only allow navigation if phase is not locked
+                            let progress = phaseProgress(for: phase.phaseNumber)
+                            if progress?.status != .locked {
+                                selectedPhase = phase
+                            }
+                        }
                     )
                 }
             }
@@ -330,7 +337,7 @@ struct LessonDetailView: View {
 
     private func actionButtonsSection(_ lesson: Lesson) -> some View {
         VStack(spacing: LLSpacing.md) {
-            if lesson.isCompleted {
+            if viewModel.isCurrentLessonCompleted {
                 LLButton(
                     "Review Lesson",
                     icon: Image(systemName: "arrow.clockwise"),
@@ -342,7 +349,7 @@ struct LessonDetailView: View {
                 }
             }
 
-            if lesson.isInProgress {
+            if viewModel.isCurrentLessonInProgress {
                 LLButton(
                     "Continue Learning",
                     icon: Image(systemName: "play.fill"),
@@ -353,7 +360,7 @@ struct LessonDetailView: View {
                 ) {
                     continueLesson()
                 }
-            } else if lesson.canStart {
+            } else if viewModel.canStartCurrentLesson {
                 LLButton(
                     "Start Lesson",
                     icon: Image(systemName: "play.fill"),
@@ -366,7 +373,7 @@ struct LessonDetailView: View {
                 }
             }
 
-            if lesson.isLocked {
+            if viewModel.isCurrentLessonLocked {
                 VStack(spacing: LLSpacing.sm) {
                     Image(systemName: "lock.fill")
                         .font(.system(size: 32))
@@ -414,6 +421,12 @@ struct LessonDetailView: View {
             includePhases: true,
             includeExercises: false
         )
+
+        // Explicitly load phases if they weren't included in the lesson response
+        if viewModel.lessonPhases.isEmpty {
+            await viewModel.loadLessonPhases(roadmapId: roadmapId, lessonId: lessonId)
+        }
+
         await viewModel.loadUserProgress(roadmapId: roadmapId, lessonId: lessonId)
         await viewModel.loadPhaseProgress(lessonId: lessonId)
     }
@@ -425,8 +438,16 @@ struct LessonDetailView: View {
     private func startLesson() {
         Task {
             await viewModel.startLesson(roadmapId: roadmapId, lessonId: lessonId)
-            // Navigate to first phase
-            if let firstPhase = viewModel.lessonPhases.first {
+
+            // Ensure phases are loaded
+            if viewModel.lessonPhases.isEmpty {
+                await viewModel.loadLessonPhases(roadmapId: roadmapId, lessonId: lessonId)
+            }
+
+            // Navigate to first phase (or current phase if set by startLesson)
+            if let currentPhase = viewModel.currentPhase {
+                selectedPhase = currentPhase
+            } else if let firstPhase = viewModel.lessonPhases.first {
                 selectedPhase = firstPhase
             }
         }
@@ -434,8 +455,20 @@ struct LessonDetailView: View {
 
     private func continueLesson() {
         // Navigate to current phase
+        NSLog("🔵 continueLesson() called")
+        NSLog("🔵 viewModel.currentPhase: \(viewModel.currentPhase?.phaseNumber ?? -1)")
+        NSLog("🔵 viewModel.phaseProgressSummary?.currentPhase: \(viewModel.phaseProgressSummary?.currentPhase ?? -1)")
+        NSLog("🔵 viewModel.lessonPhases count: \(viewModel.lessonPhases.count)")
+
         if let currentPhase = viewModel.currentPhase {
+            NSLog("🔵 Setting selectedPhase to phase \(currentPhase.phaseNumber)")
             selectedPhase = currentPhase
+        } else {
+            NSLog("❌ viewModel.currentPhase is nil, falling back to first phase")
+            // Fallback: if currentPhase is nil, use first phase
+            if let firstPhase = viewModel.lessonPhases.first {
+                selectedPhase = firstPhase
+            }
         }
     }
 }
@@ -471,7 +504,7 @@ private struct StatusBadge: View {
             return LLColors.success.color(for: colorScheme)
         case .inProgress:
             return LLColors.warning.color(for: colorScheme)
-        case .available:
+        case .available, .notStarted:
             return LLColors.primary.color(for: colorScheme)
         case .locked:
             return LLColors.mutedForeground.color(for: colorScheme)
@@ -608,6 +641,7 @@ private struct PhrasePreviewCard: View {
 private struct PhaseCard: View {
     let phase: LessonPhaseDefinition
     let progress: PhaseState?
+    let onTap: () -> Void
 
     @Environment(\.colorScheme) var colorScheme
 
@@ -647,11 +681,8 @@ private struct PhaseCard: View {
 
                 HStack(spacing: LLSpacing.lg) {
                     PhaseMetaItem(icon: "clock", text: phase.estimatedDurationFormatted)
-                    PhaseMetaItem(icon: "star.fill", text: "\(phase.pointsValue) XP")
 
-                    if let exerciseCount = phase.exerciseCount {
-                        PhaseMetaItem(icon: "list.bullet", text: "\(exerciseCount) exercises")
-                    }
+                    PhaseMetaItem(icon: "list.bullet", text: "\(phase.exerciseCount) exercises")
 
                     Spacer()
                 }
@@ -689,6 +720,9 @@ private struct PhaseCard: View {
             }
         }
         .opacity(progress?.status == .locked ? 0.6 : 1.0)
+        .onTapGesture {
+            onTap()
+        }
     }
 
     private func scoreColor(_ percentage: Int) -> Color {
@@ -718,7 +752,7 @@ private struct PhaseStatusBadge: View {
         switch status {
         case .completed:
             return LLColors.success.color(for: colorScheme)
-        case .inProgress:
+        case .inProgress, .current:
             return LLColors.warning.color(for: colorScheme)
         case .available:
             return LLColors.primary.color(for: colorScheme)

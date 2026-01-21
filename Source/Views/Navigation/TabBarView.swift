@@ -21,6 +21,7 @@ final class DrawerRouter: ObservableObject {
 
 enum DrawerSheet: Identifiable {
     case settings
+    case credits
     case pricing
     case howItWorks
     case about
@@ -32,6 +33,7 @@ enum DrawerSheet: Identifiable {
     var id: String {
         switch self {
         case .settings: return "settings"
+        case .credits: return "credits"
         case .pricing: return "pricing"
         case .howItWorks: return "how-it-works"
         case .about: return "about"
@@ -155,8 +157,10 @@ struct TabBarView: View {
         switch sheet {
         case .settings:
             SettingsView()
+        case .credits:
+            CreditsDetailView()
         case .pricing:
-            PricingInfoView()
+            SubscriptionManagementView()
         case .howItWorks:
             HowItWorksView()
         case .about:
@@ -208,6 +212,7 @@ struct CustomTabBar: View {
                 }
             }
             .frame(height: 60)
+            .padding(.bottom, 0)
             .background(
                 LLColors.card.color(for: colorScheme)
                     .shadow(
@@ -216,8 +221,13 @@ struct CustomTabBar: View {
                         x: 0,
                         y: -5
                     )
+                    .ignoresSafeArea(edges: .bottom)
             )
         }
+        .background(
+            LLColors.card.color(for: colorScheme)
+                .ignoresSafeArea(edges: .bottom)
+        )
     }
 
     /// Get badge count for specific tab
@@ -476,6 +486,30 @@ struct ProfileView: View {
 
                     // Quick links
                     VStack(spacing: LLSpacing.sm) {
+                        NavigationLink {
+                            CreditsDetailView()
+                        } label: {
+                            HStack {
+                                Image(systemName: "creditcard.fill")
+                                    .foregroundColor(LLColors.primary.color(for: colorScheme))
+                                Text("Credits & Subscription")
+                                    .font(LLTypography.body())
+                                    .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                            }
+                            .padding(LLSpacing.md)
+                            .background(
+                                RoundedRectangle(cornerRadius: LLSpacing.radiusMD)
+                                    .fill(LLColors.card.color(for: colorScheme))
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: LLSpacing.radiusMD)
+                                    .stroke(LLColors.border.color(for: colorScheme), lineWidth: 1)
+                            )
+                        }
+
                         LLButton("Manage Languages", style: .outline, size: .sm) {
                             tabRouter.selectedTab = .languages
                         }
@@ -501,14 +535,18 @@ struct SettingsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.colorScheme) var colorScheme
     @State private var showingLogoutAlert = false
+    private let accountLinks: [MoreLink] = [
+        MoreLink(title: "Credits & Balance", destination: AnyView(CreditsDetailView()), icon: "creditcard"),
+        MoreLink(title: "Subscription", destination: AnyView(SubscriptionManagementView()), icon: "crown")
+    ]
+
     private let moreLinks: [MoreLink] = [
-        MoreLink(title: "Pricing", destination: AnyView(PricingInfoView())),
-        MoreLink(title: "How It Works", destination: AnyView(HowItWorksView())),
-        MoreLink(title: "About", destination: AnyView(AboutView())),
-        MoreLink(title: "Contact", destination: AnyView(ContactView())),
-        MoreLink(title: "Privacy Policy", destination: AnyView(PrivacyPolicyView())),
-        MoreLink(title: "Terms of Service", destination: AnyView(TermsOfServiceView())),
-        MoreLink(title: "Cookies", destination: AnyView(CookiePolicyView()))
+        MoreLink(title: "How It Works", destination: AnyView(HowItWorksView()), icon: "book.closed"),
+        MoreLink(title: "About", destination: AnyView(AboutView()), icon: "info.circle"),
+        MoreLink(title: "Contact", destination: AnyView(ContactView()), icon: "envelope"),
+        MoreLink(title: "Privacy Policy", destination: AnyView(PrivacyPolicyView()), icon: "hand.raised"),
+        MoreLink(title: "Terms of Service", destination: AnyView(TermsOfServiceView()), icon: "doc.text"),
+        MoreLink(title: "Cookies", destination: AnyView(CookiePolicyView()), icon: "tray.full")
     ]
 
     var body: some View {
@@ -536,6 +574,40 @@ struct SettingsView: View {
 
                     LLCard(style: .standard, padding: .lg) {
                         VStack(alignment: .leading, spacing: LLSpacing.md) {
+                            Text("Account")
+                                .font(LLTypography.h4())
+                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
+
+                            VStack(spacing: LLSpacing.sm) {
+                                ForEach(accountLinks) { link in
+                                    NavigationLink(destination: link.destination) {
+                                        HStack {
+                                            if let icon = link.icon {
+                                                Image(systemName: icon)
+                                                    .foregroundColor(LLColors.primary.color(for: colorScheme))
+                                                    .frame(width: 20)
+                                            }
+
+                                            Text(link.title)
+                                                .font(LLTypography.body())
+                                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
+
+                                            Spacer()
+
+                                            Image(systemName: "chevron.right")
+                                                .font(.system(size: 14))
+                                                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                                        }
+                                        .padding(.vertical, 8)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal, LLSpacing.lg)
+
+                    LLCard(style: .standard, padding: .lg) {
+                        VStack(alignment: .leading, spacing: LLSpacing.md) {
                             Text("More")
                                 .font(LLTypography.h4())
                                 .foregroundColor(LLColors.foreground.color(for: colorScheme))
@@ -544,6 +616,12 @@ struct SettingsView: View {
                                 ForEach(moreLinks) { link in
                                     NavigationLink(destination: link.destination) {
                                         HStack {
+                                            if let icon = link.icon {
+                                                Image(systemName: icon)
+                                                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                                                    .frame(width: 20)
+                                            }
+
                                             Text(link.title)
                                                 .font(LLTypography.body())
                                                 .foregroundColor(LLColors.foreground.color(for: colorScheme))
@@ -596,6 +674,13 @@ private struct MoreLink: Identifiable {
     let id = UUID()
     let title: String
     let destination: AnyView
+    let icon: String?
+
+    init(title: String, destination: AnyView, icon: String? = nil) {
+        self.title = title
+        self.destination = destination
+        self.icon = icon
+    }
 }
 
 private struct DrawerOverlay: View {
@@ -626,6 +711,7 @@ private struct DrawerOverlay: View {
     private var drawerContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: LLSpacing.lg) {
+                // User Profile Section
                 HStack(spacing: LLSpacing.sm) {
                     Circle()
                         .fill(LLColors.primary.color(for: colorScheme))
@@ -647,6 +733,7 @@ private struct DrawerOverlay: View {
 
                     Spacer()
                 }
+                .padding(.top, LLSpacing.sm)
                 .padding(.bottom, LLSpacing.sm)
 
                 drawerSectionTitle("Main")
@@ -688,7 +775,11 @@ private struct DrawerOverlay: View {
                     drawerRouter.sheet = .settings
                     closeDrawer()
                 }
-                drawerButton(title: "Pricing", icon: "dollarsign.circle") {
+                drawerButton(title: "Credits", icon: "creditcard") {
+                    drawerRouter.sheet = .credits
+                    closeDrawer()
+                }
+                drawerButton(title: "Subscription", icon: "crown") {
                     drawerRouter.sheet = .pricing
                     closeDrawer()
                 }
@@ -735,7 +826,6 @@ private struct DrawerOverlay: View {
         }
         .frame(maxHeight: .infinity, alignment: .top)
         .background(LLColors.card.color(for: colorScheme))
-        .ignoresSafeArea()
     }
 
     private func drawerSectionTitle(_ title: String) -> some View {

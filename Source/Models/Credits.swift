@@ -104,14 +104,7 @@ struct CreditBalance: Codable, Equatable {
     let plan: SubscriptionPlan
     let nextReset: Date?
 
-    enum CodingKeys: String, CodingKey {
-        case totalCredits = "total_credits"
-        case subscriptionCredits = "subscription_credits"
-        case purchasedCredits = "purchased_credits"
-        case promotionalCredits = "promotional_credits"
-        case plan
-        case nextReset = "next_reset"
-    }
+    // Note: No CodingKeys needed - APIClient uses .convertFromSnakeCase decoder strategy
 
     /// Calculate days until next credit reset
     var daysUntilReset: Int? {
@@ -164,19 +157,7 @@ struct Subscription: Codable, Identifiable, Equatable {
     let createdAt: Date
     let updatedAt: Date
 
-    enum CodingKeys: String, CodingKey {
-        case id
-        case userId = "user_id"
-        case plan
-        case status
-        case currentPeriodStart = "current_period_start"
-        case currentPeriodEnd = "current_period_end"
-        case cancelAtPeriodEnd = "cancel_at_period_end"
-        case cancelledAt = "cancelled_at"
-        case trialEnd = "trial_end"
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
-    }
+    // Note: No CodingKeys needed - APIClient uses .convertFromSnakeCase decoder strategy
 
     /// Check if subscription is currently active
     var isActive: Bool {
@@ -269,17 +250,7 @@ struct CreditTransaction: Codable, Identifiable, Equatable {
     let metadata: [String: String]?
     let createdAt: Date
 
-    enum CodingKeys: String, CodingKey {
-        case id
-        case userId = "user_id"
-        case type
-        case amount
-        case balanceBefore = "balance_before"
-        case balanceAfter = "balance_after"
-        case description
-        case metadata
-        case createdAt = "created_at"
-    }
+    // Note: No CodingKeys needed - APIClient uses .convertFromSnakeCase decoder strategy
 
     /// Format amount with +/- prefix
     var formattedAmount: String {
@@ -309,22 +280,12 @@ struct CreditTransaction: Codable, Identifiable, Equatable {
 struct CreditBalanceResponse: Codable {
     let success: Bool
     let data: CreditBalance
-
-    enum CodingKeys: String, CodingKey {
-        case success
-        case data
-    }
 }
 
 /// Response from fetching subscription
 struct SubscriptionResponse: Codable {
     let success: Bool
     let data: Subscription?
-
-    enum CodingKeys: String, CodingKey {
-        case success
-        case data
-    }
 }
 
 /// Response from creating checkout session
@@ -332,12 +293,6 @@ struct CheckoutSessionResponse: Codable {
     let success: Bool
     let url: String
     let sessionId: String?
-
-    enum CodingKeys: String, CodingKey {
-        case success
-        case url
-        case sessionId = "session_id"
-    }
 }
 
 /// Response from fetching transaction history
@@ -345,12 +300,6 @@ struct TransactionHistoryResponse: Codable {
     let success: Bool
     let data: [CreditTransaction]
     let pagination: PaginationInfo?
-
-    enum CodingKeys: String, CodingKey {
-        case success
-        case data
-        case pagination
-    }
 }
 
 /// Pagination information for transaction history
@@ -359,13 +308,6 @@ struct PaginationInfo: Codable {
     let limit: Int
     let total: Int
     let totalPages: Int
-
-    enum CodingKeys: String, CodingKey {
-        case page
-        case limit
-        case total
-        case totalPages = "total_pages"
-    }
 }
 
 // MARK: - Mock Data

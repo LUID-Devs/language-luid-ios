@@ -11,8 +11,8 @@ import Foundation
 // MARK: - User Lesson Progress
 
 struct UserLessonProgress: Codable, Identifiable, Hashable {
-    let id: String
-    let userId: String
+    let id: String?  // Optional for "not_started" response
+    let userId: String?  // Optional for "not_started" response
     let lessonId: String
     let roadmapId: String?
     let status: LessonStatus
@@ -27,11 +27,11 @@ struct UserLessonProgress: Codable, Identifiable, Hashable {
     let accuracy: Double?
     let consecutiveDays: Int?
     let lastPhaseCompleted: Int?
-    let startedAt: Date
+    let startedAt: Date?  // Optional for "not_started" response
     let completedAt: Date?
-    let lastAccessedAt: Date
-    let createdAt: Date
-    let updatedAt: Date
+    let lastAccessedAt: Date?  // Optional for "not_started" response
+    let createdAt: Date?  // Optional for "not_started" response
+    let updatedAt: Date?  // Optional for "not_started" response
 
     enum CodingKeys: String, CodingKey {
         case id, userId, lessonId, roadmapId, status
@@ -45,11 +45,11 @@ struct UserLessonProgress: Codable, Identifiable, Hashable {
 
     // Hashable conformance
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(id ?? lessonId)  // Use lessonId if id is nil
     }
 
     static func == (lhs: UserLessonProgress, rhs: UserLessonProgress) -> Bool {
-        lhs.id == rhs.id
+        (lhs.id ?? lhs.lessonId) == (rhs.id ?? rhs.lessonId)
     }
 
     // MARK: - Computed Properties
@@ -137,9 +137,10 @@ struct UserLessonProgress: Codable, Identifiable, Hashable {
     }
 
     var lastAccessed: String {
+        guard let date = lastAccessedAt else { return "Never" }
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .short
-        return formatter.localizedString(for: lastAccessedAt, relativeTo: Date())
+        return formatter.localizedString(for: date, relativeTo: Date())
     }
 }
 

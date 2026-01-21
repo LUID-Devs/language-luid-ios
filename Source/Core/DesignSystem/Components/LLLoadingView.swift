@@ -190,83 +190,6 @@ struct LLProgressBar: View {
     }
 }
 
-// MARK: - Circular Progress
-
-/// Circular progress indicator
-struct LLCircularProgress: View {
-    let progress: Double // 0.0 to 1.0
-    let size: CGFloat
-    let lineWidth: CGFloat
-    let backgroundColor: ColorSet?
-    let foregroundColor: ColorSet?
-    let showPercentage: Bool
-
-    @Environment(\.colorScheme) var colorScheme
-    @State private var animatedProgress: Double = 0
-
-    init(
-        progress: Double,
-        size: CGFloat = 60,
-        lineWidth: CGFloat = 6,
-        backgroundColor: ColorSet? = nil,
-        foregroundColor: ColorSet? = nil,
-        showPercentage: Bool = true
-    ) {
-        self.progress = min(max(progress, 0), 1)
-        self.size = size
-        self.lineWidth = lineWidth
-        self.backgroundColor = backgroundColor
-        self.foregroundColor = foregroundColor
-        self.showPercentage = showPercentage
-    }
-
-    var body: some View {
-        ZStack {
-            // Background Circle
-            Circle()
-                .stroke(
-                    bgColor,
-                    lineWidth: lineWidth
-                )
-
-            // Progress Circle
-            Circle()
-                .trim(from: 0, to: animatedProgress)
-                .stroke(
-                    fgColor,
-                    style: StrokeStyle(
-                        lineWidth: lineWidth,
-                        lineCap: .round
-                    )
-                )
-                .rotationEffect(Angle(degrees: -90))
-                .animation(.easeInOut(duration: 0.8), value: animatedProgress)
-
-            // Percentage Text
-            if showPercentage {
-                Text("\(Int(progress * 100))%")
-                    .font(LLTypography.h6())
-                    .foregroundColor(LLColors.foreground.color(for: colorScheme))
-            }
-        }
-        .frame(width: size, height: size)
-        .onAppear {
-            animatedProgress = progress
-        }
-        .onChange(of: progress) { oldValue, newValue in
-            animatedProgress = newValue
-        }
-    }
-
-    private var bgColor: Color {
-        backgroundColor?.color(for: colorScheme) ?? LLColors.muted.color(for: colorScheme)
-    }
-
-    private var fgColor: Color {
-        foregroundColor?.color(for: colorScheme) ?? LLColors.primary.color(for: colorScheme)
-    }
-}
-
 // MARK: - Skeleton Loading
 
 /// Skeleton loading placeholder
@@ -404,59 +327,6 @@ extension View {
     }
 }
 
-// MARK: - Empty State
-
-/// Empty state view
-struct LLEmptyState: View {
-    let icon: Image
-    let title: String
-    let description: String
-    let actionTitle: String?
-    let action: (() -> Void)?
-
-    @Environment(\.colorScheme) var colorScheme
-
-    init(
-        icon: Image,
-        title: String,
-        description: String,
-        actionTitle: String? = nil,
-        action: (() -> Void)? = nil
-    ) {
-        self.icon = icon
-        self.title = title
-        self.description = description
-        self.actionTitle = actionTitle
-        self.action = action
-    }
-
-    var body: some View {
-        VStack(spacing: LLSpacing.lg) {
-            icon
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: LLSpacing.iconXXL, height: LLSpacing.iconXXL)
-                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-
-            VStack(spacing: LLSpacing.sm) {
-                Text(title)
-                    .font(LLTypography.h4())
-                    .foregroundColor(LLColors.foreground.color(for: colorScheme))
-
-                Text(description)
-                    .font(LLTypography.body())
-                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-                    .multilineTextAlignment(.center)
-            }
-
-            if let actionTitle = actionTitle, let action = action {
-                LLButton(actionTitle, style: .primary, action: action)
-            }
-        }
-        .padding(LLSpacing.xl)
-    }
-}
-
 // MARK: - Loading State Enum
 
 /// Loading state for views
@@ -498,9 +368,9 @@ extension View {
         @ViewBuilder placeholder: @escaping () -> some View = { LLSkeletonCard() },
         @ViewBuilder error: @escaping (Error) -> some View = { _ in
             LLEmptyState(
-                icon: Image(systemName: "exclamationmark.triangle"),
+                icon: "exclamationmark.triangle",
                 title: "Something went wrong",
-                description: "Please try again later"
+                message: "Please try again later"
             )
         }
     ) -> some View {
@@ -550,20 +420,6 @@ extension View {
 
             Divider()
 
-            // Circular Progress
-            VStack(alignment: .leading, spacing: LLSpacing.sm) {
-                Text("Circular Progress")
-                    .font(LLTypography.h4())
-
-                HStack(spacing: LLSpacing.lg) {
-                    LLCircularProgress(progress: 0.25, size: 60)
-                    LLCircularProgress(progress: 0.65, size: 80, lineWidth: 8)
-                    LLCircularProgress(progress: 1.0, size: 60)
-                }
-            }
-
-            Divider()
-
             // Skeletons
             VStack(alignment: .leading, spacing: LLSpacing.sm) {
                 Text("Skeleton Loading")
@@ -604,9 +460,9 @@ extension View {
                     .font(LLTypography.h4())
 
                 LLEmptyState(
-                    icon: Image(systemName: "tray"),
+                    icon: "tray",
                     title: "No lessons yet",
-                    description: "Start learning by selecting a language",
+                    message: "Start learning by selecting a language",
                     actionTitle: "Browse Languages",
                     action: { print("Browse tapped") }
                 )

@@ -205,6 +205,21 @@ class LessonViewModel: ObservableObject {
                 lessonId: lessonId
             )
             NSLog("✅ Loaded phase progress - Current: \(phaseProgressSummary?.currentPhase ?? 0)")
+            NSLog("✅ lessonPhases count: \(lessonPhases.count)")
+            NSLog("✅ lessonPhases: \(lessonPhases.map { $0.phaseNumber })")
+
+            // Update currentPhase based on progress
+            if let currentPhaseNum = phaseProgressSummary?.currentPhase {
+                NSLog("✅ Looking for phase number: \(currentPhaseNum)")
+                currentPhase = lessonPhases.first { $0.phaseNumber == currentPhaseNum }
+                if let currentPhase = currentPhase {
+                    NSLog("✅ Set current phase to: \(currentPhase.phaseNumber)")
+                } else {
+                    NSLog("❌ Could not find phase with number \(currentPhaseNum)")
+                }
+            } else {
+                NSLog("⚠️ phaseProgressSummary.currentPhase is nil")
+            }
         } catch {
             NSLog("⚠️ Error loading phase progress: \(error)")
             // Don't show error to user - this is optional data
@@ -307,6 +322,10 @@ class LessonViewModel: ObservableObject {
             successMessage = "Lesson started!"
             showSuccess = true
             phaseStartTime = Date()
+
+            // Reload phase progress to update currentPhase
+            await loadPhaseProgress(lessonId: lessonId)
+
             NSLog("✅ Lesson started")
         } catch {
             errorMessage = "Failed to start lesson: \(error.localizedDescription)"
@@ -552,6 +571,45 @@ class LessonViewModel: ObservableObject {
     var phaseProgress: Double {
         guard let summary = phaseProgressSummary else { return 0 }
         return summary.progressPercentage
+    }
+
+    // MARK: - Current Lesson Status (with userProgress override)
+
+    /// Get the current lesson status with userProgress override
+    /// This prevents the race condition where lesson defaults to locked
+    /// before userProgress loads
+    var currentLessonStatus: LessonStatus {
+        // If we have separate userProgress loaded, use it
+        if let progress = userProgress {
+            return progress.status
+        }
+        // Otherwise fall back to lesson's own userProgress
+        return selectedLesson?.status ?? .locked
+    }
+
+    /// Check if current lesson is locked (respects userProgress override)
+    var isCurrentLessonLocked: Bool {
+        currentLessonStatus == .locked
+    }
+
+    /// Check if current lesson is completed (respects userProgress override)
+    var isCurrentLessonCompleted: Bool {
+        currentLessonStatus == .completed
+    }
+
+    /// Check if current lesson is in progress (respects userProgress override)
+    var isCurrentLessonInProgress: Bool {
+        currentLessonStatus == .inProgress
+    }
+
+    /// Check if current lesson is available (respects userProgress override)
+    var isCurrentLessonAvailable: Bool {
+        currentLessonStatus == .available
+    }
+
+    /// Check if current lesson can be started (not locked and published)
+    var canStartCurrentLesson: Bool {
+        !isCurrentLessonLocked && (selectedLesson?.isPublished ?? false || AppConfig.isDevelopment)
     }
 
     /// Reset state

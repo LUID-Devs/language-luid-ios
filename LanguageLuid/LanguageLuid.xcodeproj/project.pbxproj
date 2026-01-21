@@ -37,6 +37,10 @@
 		4D8B68622F1E801E00E005B2 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68102F1E801D00E005B2 /* AppConfig.swift */; };
 		4D8B68632F1E801E00E005B2 /* LLBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68122F1E801D00E005B2 /* LLBadge.swift */; };
 		4D8B68642F1E801E00E005B2 /* LLButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68132F1E801D00E005B2 /* LLButton.swift */; };
+		16A2BA8AB5CAD905AAAB3715 /* LLToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = E825DC1378252D87C39A4551 /* LLToast.swift */; };
+		2098EB116B0DCA23EE3F5FE6 /* LLProgressIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EC33EE1604FFDD25DFA3DC /* LLProgressIndicator.swift */; };
+		816FCB56FCF1AFEA48DE764E /* LLSkeletonLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66EA505A847026CFC9C787D /* LLSkeletonLoader.swift */; };
+		FF8E20FB5CBEA17139704267 /* LLEmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1C79EF460B55C3F1CB70AA /* LLEmptyState.swift */; };
 		4D8B68652F1E801E00E005B2 /* LLCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68142F1E801D00E005B2 /* LLCard.swift */; };
 		4D8B68662F1E801E00E005B2 /* LLLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68152F1E801D00E005B2 /* LLLoadingView.swift */; };
 		4D8B68672F1E801E00E005B2 /* LLTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68162F1E801D00E005B2 /* LLTextField.swift */; };
@@ -74,6 +78,9 @@
 		4D8B68882F1E801E00E005B2 /* SpeechValidationResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68452F1E801D00E005B2 /* SpeechValidationResultView.swift */; };
 		4D8B688A2F1E801E00E005B2 /* LanguageLuidApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68492F1E801D00E005B2 /* LanguageLuidApp.swift */; };
 		4D8B68B22F1E8ABC00E005B2 /* InfoScreens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B68B12F1E8ABC00E005B2 /* InfoScreens.swift */; };
+		7DEB0B6212CABA18948282E1 /* TransactionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B449430BDE0CEC0057FAE7 /* TransactionHistoryView.swift */; };
+		1CFF1ACBA39E8B8C222CF38C /* SubscriptionManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894FD65AE605C5BDE523D4A0 /* SubscriptionManagementView.swift */; };
+		8267B73C5C9E1936E0FDE66A /* CreditsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3920AD779F877FAC98200C /* CreditsDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,6 +136,10 @@
 		4D8B68102F1E801D00E005B2 /* AppConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		4D8B68122F1E801D00E005B2 /* LLBadge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLBadge.swift; sourceTree = "<group>"; };
 		4D8B68132F1E801D00E005B2 /* LLButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLButton.swift; sourceTree = "<group>"; };
+		E825DC1378252D87C39A4551 /* LLToast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLToast.swift; sourceTree = "<group>"; };
+		F6EC33EE1604FFDD25DFA3DC /* LLProgressIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLProgressIndicator.swift; sourceTree = "<group>"; };
+		D66EA505A847026CFC9C787D /* LLSkeletonLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLSkeletonLoader.swift; sourceTree = "<group>"; };
+		0D1C79EF460B55C3F1CB70AA /* LLEmptyState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLEmptyState.swift; sourceTree = "<group>"; };
 		4D8B68142F1E801D00E005B2 /* LLCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLCard.swift; sourceTree = "<group>"; };
 		4D8B68152F1E801D00E005B2 /* LLLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLLoadingView.swift; sourceTree = "<group>"; };
 		4D8B68162F1E801D00E005B2 /* LLTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLTextField.swift; sourceTree = "<group>"; };
@@ -168,6 +179,9 @@
 		4D8B68482F1E801D00E005B2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../Source/Info.plist; sourceTree = "<group>"; };
 		4D8B68492F1E801D00E005B2 /* LanguageLuidApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LanguageLuidApp.swift; path = ../../Source/LanguageLuidApp.swift; sourceTree = "<group>"; };
 		4D8B68B12F1E8ABC00E005B2 /* InfoScreens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoScreens.swift; sourceTree = "<group>"; };
+		B3B449430BDE0CEC0057FAE7 /* TransactionHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionHistoryView.swift; sourceTree = "<group>"; };
+		894FD65AE605C5BDE523D4A0 /* SubscriptionManagementView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionManagementView.swift; sourceTree = "<group>"; };
+		8E3920AD779F877FAC98200C /* CreditsDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditsDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -323,6 +337,10 @@
 			children = (
 				4D8B68122F1E801D00E005B2 /* LLBadge.swift */,
 				4D8B68132F1E801D00E005B2 /* LLButton.swift */,
+				E825DC1378252D87C39A4551 /* LLToast.swift */,
+				F6EC33EE1604FFDD25DFA3DC /* LLProgressIndicator.swift */,
+				D66EA505A847026CFC9C787D /* LLSkeletonLoader.swift */,
+				0D1C79EF460B55C3F1CB70AA /* LLEmptyState.swift */,
 				4D8B68142F1E801D00E005B2 /* LLCard.swift */,
 				4D8B68152F1E801D00E005B2 /* LLLoadingView.swift */,
 				4D8B68162F1E801D00E005B2 /* LLTextField.swift */,
@@ -464,6 +482,9 @@
 			isa = PBXGroup;
 			children = (
 				4D8B68B12F1E8ABC00E005B2 /* InfoScreens.swift */,
+				B3B449430BDE0CEC0057FAE7 /* TransactionHistoryView.swift */,
+				894FD65AE605C5BDE523D4A0 /* SubscriptionManagementView.swift */,
+				8E3920AD779F877FAC98200C /* CreditsDetailView.swift */,
 			);
 			path = More;
 			sourceTree = "<group>";
@@ -628,6 +649,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D8B68B22F1E8ABC00E005B2 /* InfoScreens.swift in Sources */,
+				7DEB0B6212CABA18948282E1 /* TransactionHistoryView.swift in Sources */,
+				1CFF1ACBA39E8B8C222CF38C /* SubscriptionManagementView.swift in Sources */,
+				8267B73C5C9E1936E0FDE66A /* CreditsDetailView.swift in Sources */,
 				4D8B68842F1E801E00E005B2 /* LessonPhaseView.swift in Sources */,
 				4D8B68772F1E801E00E005B2 /* RegisterView.swift in Sources */,
 				4D8B68712F1E801E00E005B2 /* LanguagesViewModel.swift in Sources */,
@@ -638,6 +662,10 @@
 				4D8B68782F1E801E00E005B2 /* VerifyEmailView.swift in Sources */,
 				4D8B68662F1E801E00E005B2 /* LLLoadingView.swift in Sources */,
 				4D8B68642F1E801E00E005B2 /* LLButton.swift in Sources */,
+				16A2BA8AB5CAD905AAAB3715 /* LLToast.swift in Sources */,
+				2098EB116B0DCA23EE3F5FE6 /* LLProgressIndicator.swift in Sources */,
+				816FCB56FCF1AFEA48DE764E /* LLSkeletonLoader.swift in Sources */,
+				FF8E20FB5CBEA17139704267 /* LLEmptyState.swift in Sources */,
 				4D8B68812F1E801E00E005B2 /* ExerciseView.swift in Sources */,
 				4D8B685E2F1E801E00E005B2 /* CodeSnippets.swift in Sources */,
 				4D8B687A2F1E801E00E005B2 /* CreditBalanceCard.swift in Sources */,

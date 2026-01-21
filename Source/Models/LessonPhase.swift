@@ -19,21 +19,32 @@ struct LessonPhaseDefinition: Codable, Identifiable, Hashable {
     let description: String?
     let instructions: String?
     let estimatedMinutes: Int
-    let pointsValue: Int
-    let requiredScore: Double
-    let exerciseCount: Int?
+    let minExercises: Int
+    let maxExercises: Int
+    let passingScore: Double
+    let allowRetry: Bool
+    let maxRetries: Int?
+    let requiresSpeech: Bool
+    let speechExerciseCount: Int
+    let aiConversationEnabled: Bool
+    let aiConversationConfig: [String: AnyCodable]?
+    let content: [String: AnyCodable]?
     let displayOrder: Int
     let isActive: Bool
-    let createdAt: Date
-    let updatedAt: Date
+    let metadata: [String: AnyCodable]?
+    let createdAt: Date?
+    let updatedAt: Date?
 
     // Optional relationships
     let exercises: [Exercise]?
 
     enum CodingKeys: String, CodingKey {
         case id, lessonId, phaseNumber, phaseName, phaseType
-        case description, instructions, estimatedMinutes, pointsValue
-        case requiredScore, exerciseCount, displayOrder, isActive
+        case description, instructions, estimatedMinutes
+        case minExercises, maxExercises, passingScore
+        case allowRetry, maxRetries, requiresSpeech, speechExerciseCount
+        case aiConversationEnabled, aiConversationConfig, content
+        case displayOrder, isActive, metadata
         case createdAt, updatedAt, exercises
     }
 
@@ -57,7 +68,11 @@ struct LessonPhaseDefinition: Codable, Identifiable, Hashable {
     }
 
     var requiredScorePercentage: Int {
-        Int(requiredScore * 100)
+        Int(passingScore * 100)
+    }
+
+    var exerciseCount: Int {
+        maxExercises
     }
 
     var estimatedDurationFormatted: String {
@@ -226,7 +241,7 @@ struct LessonPhaseProgress: Codable, Identifiable, Hashable {
     }
 
     var isAvailable: Bool {
-        status == .available || status == .inProgress
+        status == .available || status == .inProgress || status == .current
     }
 
     var isPassed: Bool {
@@ -244,6 +259,7 @@ enum PhaseStatus: String, Codable {
     case locked
     case available
     case inProgress = "in_progress"
+    case current  // Backend uses "current" for active phase
     case completed
 
     var displayName: String {
@@ -252,7 +268,7 @@ enum PhaseStatus: String, Codable {
             return "Locked"
         case .available:
             return "Available"
-        case .inProgress:
+        case .inProgress, .current:
             return "In Progress"
         case .completed:
             return "Completed"
@@ -265,7 +281,7 @@ enum PhaseStatus: String, Codable {
             return "lock.fill"
         case .available:
             return "play.circle"
-        case .inProgress:
+        case .inProgress, .current:
             return "circle.lefthalf.filled"
         case .completed:
             return "checkmark.circle.fill"
@@ -278,7 +294,7 @@ enum PhaseStatus: String, Codable {
             return "gray"
         case .available:
             return "blue"
-        case .inProgress:
+        case .inProgress, .current:
             return "orange"
         case .completed:
             return "green"
@@ -361,11 +377,19 @@ extension LessonPhaseDefinition {
         description: "Learn to recognize cognate patterns",
         instructions: "Identify words that follow the -ous → -oso pattern",
         estimatedMinutes: 10,
-        pointsValue: 25,
-        requiredScore: 0.7,
-        exerciseCount: 8,
+        minExercises: 6,
+        maxExercises: 8,
+        passingScore: 0.7,
+        allowRetry: true,
+        maxRetries: 3,
+        requiresSpeech: false,
+        speechExerciseCount: 0,
+        aiConversationEnabled: false,
+        aiConversationConfig: nil,
+        content: nil,
         displayOrder: 1,
         isActive: true,
+        metadata: nil,
         createdAt: Date(),
         updatedAt: Date(),
         exercises: nil
@@ -380,11 +404,19 @@ extension LessonPhaseDefinition {
         description: "Build sentences using cognates",
         instructions: "Construct sentences with the patterns you learned",
         estimatedMinutes: 15,
-        pointsValue: 30,
-        requiredScore: 0.7,
-        exerciseCount: 10,
+        minExercises: 8,
+        maxExercises: 10,
+        passingScore: 0.7,
+        allowRetry: true,
+        maxRetries: 3,
+        requiresSpeech: false,
+        speechExerciseCount: 0,
+        aiConversationEnabled: false,
+        aiConversationConfig: nil,
+        content: nil,
         displayOrder: 2,
         isActive: true,
+        metadata: nil,
         createdAt: Date(),
         updatedAt: Date(),
         exercises: nil
@@ -399,11 +431,19 @@ extension LessonPhaseDefinition {
         description: "Translate sentences using cognates",
         instructions: "Translate between English and Spanish",
         estimatedMinutes: 12,
-        pointsValue: 35,
-        requiredScore: 0.7,
-        exerciseCount: 12,
+        minExercises: 10,
+        maxExercises: 12,
+        passingScore: 0.7,
+        allowRetry: true,
+        maxRetries: 3,
+        requiresSpeech: false,
+        speechExerciseCount: 0,
+        aiConversationEnabled: false,
+        aiConversationConfig: nil,
+        content: nil,
         displayOrder: 3,
         isActive: true,
+        metadata: nil,
         createdAt: Date(),
         updatedAt: Date(),
         exercises: nil
@@ -418,11 +458,19 @@ extension LessonPhaseDefinition {
         description: "Practice in conversation context",
         instructions: "Use cognates in realistic conversations",
         estimatedMinutes: 8,
-        pointsValue: 10,
-        requiredScore: 0.7,
-        exerciseCount: 5,
+        minExercises: 3,
+        maxExercises: 5,
+        passingScore: 0.7,
+        allowRetry: true,
+        maxRetries: 3,
+        requiresSpeech: true,
+        speechExerciseCount: 5,
+        aiConversationEnabled: true,
+        aiConversationConfig: nil,
+        content: nil,
         displayOrder: 4,
         isActive: true,
+        metadata: nil,
         createdAt: Date(),
         updatedAt: Date(),
         exercises: nil
