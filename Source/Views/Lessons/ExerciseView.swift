@@ -159,8 +159,23 @@ struct ExerciseView: View {
             SpeechExercise(
                 exercise: exercise,
                 languageCode: languageCode,
+                isSubmitted: isAnswerSubmitted,
                 onRecognize: { text in
+                    NSLog("🎯 [ExerciseView] onRecognize called with text: \(text)")
                     userResponse = .string(text)
+                    NSLog("🎯 [ExerciseView] userResponse set to: \(text)")
+                },
+                onAutoSubmit: {
+                    NSLog("🎯 [ExerciseView] onAutoSubmit called")
+                    NSLog("🎯 [ExerciseView] userResponse is \(userResponse != nil ? "SET" : "NIL")")
+                    if let response = userResponse {
+                        NSLog("🎯 [ExerciseView] Submitting response: \(response)")
+                        isAnswerSubmitted = true
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        onSubmit(response)
+                    } else {
+                        NSLog("❌ [ExerciseView] userResponse is nil, cannot submit!")
+                    }
                 }
             )
 
@@ -192,8 +207,23 @@ struct ExerciseView: View {
             SpeechResponseExercise(
                 exercise: exercise,
                 languageCode: languageCode,
+                isSubmitted: isAnswerSubmitted,
                 onRecognize: { text in
+                    NSLog("🎯 [ExerciseView] onRecognize (speechResponse) called with text: \(text)")
                     userResponse = .string(text)
+                    NSLog("🎯 [ExerciseView] userResponse set to: \(text)")
+                },
+                onAutoSubmit: {
+                    NSLog("🎯 [ExerciseView] onAutoSubmit (speechResponse) called")
+                    NSLog("🎯 [ExerciseView] userResponse is \(userResponse != nil ? "SET" : "NIL")")
+                    if let response = userResponse {
+                        NSLog("🎯 [ExerciseView] Submitting response: \(response)")
+                        isAnswerSubmitted = true
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        onSubmit(response)
+                    } else {
+                        NSLog("❌ [ExerciseView] userResponse is nil, cannot submit!")
+                    }
                 }
             )
         }
@@ -396,34 +426,63 @@ private struct TranslationExercise: View {
 private struct SpeechExercise: View {
     let exercise: Exercise
     let languageCode: String
+    let isSubmitted: Bool
     let onRecognize: (String) -> Void
+    let onAutoSubmit: () -> Void
 
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         VStack(spacing: LLSpacing.lg) {
-            // Instruction
-            Text(exercise.exerciseType == .speechRepeat ? "Tap the microphone and repeat:" : "Speak your answer:")
-                .font(LLTypography.bodySmall())
-                .foregroundColor(LLColors.mutedForeground.adaptive)
+            if isSubmitted {
+                // Show success message after submission
+                VStack(spacing: LLSpacing.md) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 48))
+                        .foregroundColor(LLColors.success.color(for: colorScheme))
 
-            // Real Speech Recorder with Validation
-            if let expectedText = exercise.expectedResponse {
-                SpeechRecorderView(
-                    lessonId: exercise.lessonId,
-                    stepIndex: exercise.order,
-                    expectedText: expectedText,
-                    languageCode: languageCode,
-                    onValidationPassed: { validationResponse in
-                        // Pass the transcription back
-                        onRecognize(validationResponse.transcription ?? "")
-                    }
-                )
+                    Text("Answer Submitted!")
+                        .font(LLTypography.h4())
+                        .foregroundColor(LLColors.foreground.color(for: colorScheme))
+
+                    Text("Check the feedback below and tap Next to continue")
+                        .font(LLTypography.bodySmall())
+                        .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                        .multilineTextAlignment(.center)
+                }
+                .padding(LLSpacing.xl)
             } else {
-                // Fallback if no expected response
-                Text("No expected response configured for this exercise")
+                // Instruction
+                Text(exercise.exerciseType == .speechRepeat ? "Tap the microphone and repeat:" : "Speak your answer:")
                     .font(LLTypography.bodySmall())
-                    .foregroundColor(LLColors.warning.color(for: colorScheme))
+                    .foregroundColor(LLColors.mutedForeground.adaptive)
+
+                // Real Speech Recorder with Validation
+                if let expectedText = exercise.expectedResponse {
+                    SpeechRecorderView(
+                        lessonId: exercise.lessonId,
+                        stepIndex: exercise.order,
+                        expectedText: expectedText,
+                        languageCode: languageCode,
+                        onValidationPassed: { validationResponse in
+                            NSLog("🎯 [SpeechExercise] onValidationPassed called")
+                            NSLog("🎯 [SpeechExercise] Transcription: \(validationResponse.validation.transcription)")
+                            // Pass the transcription back and auto-submit
+                            onRecognize(validationResponse.validation.transcription)
+                            // Auto-submit after a brief delay to ensure state is updated
+                            NSLog("🎯 [SpeechExercise] Scheduling auto-submit in 0.1s")
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                NSLog("🎯 [SpeechExercise] Calling onAutoSubmit now")
+                                onAutoSubmit()
+                            }
+                        }
+                    )
+                } else {
+                    // Fallback if no expected response
+                    Text("No expected response configured for this exercise")
+                        .font(LLTypography.bodySmall())
+                        .foregroundColor(LLColors.warning.color(for: colorScheme))
+                }
             }
         }
     }
@@ -561,33 +620,62 @@ private struct FreeResponseExercise: View {
 private struct SpeechResponseExercise: View {
     let exercise: Exercise
     let languageCode: String
+    let isSubmitted: Bool
     let onRecognize: (String) -> Void
+    let onAutoSubmit: () -> Void
 
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         VStack(spacing: LLSpacing.lg) {
-            Text("Speak your response:")
-                .font(LLTypography.bodySmall())
-                .foregroundColor(LLColors.mutedForeground.adaptive)
+            if isSubmitted {
+                // Show success message after submission
+                VStack(spacing: LLSpacing.md) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 48))
+                        .foregroundColor(LLColors.success.color(for: colorScheme))
 
-            // Real Speech Recorder with Validation
-            if let expectedText = exercise.expectedResponse {
-                SpeechRecorderView(
-                    lessonId: exercise.lessonId,
-                    stepIndex: exercise.order,
-                    expectedText: expectedText,
-                    languageCode: languageCode,
-                    onValidationPassed: { validationResponse in
-                        // Pass the transcription back
-                        onRecognize(validationResponse.transcription ?? "")
-                    }
-                )
+                    Text("Answer Submitted!")
+                        .font(LLTypography.h4())
+                        .foregroundColor(LLColors.foreground.color(for: colorScheme))
+
+                    Text("Check the feedback below and tap Next to continue")
+                        .font(LLTypography.bodySmall())
+                        .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                        .multilineTextAlignment(.center)
+                }
+                .padding(LLSpacing.xl)
             } else {
-                // Fallback if no expected response
-                Text("No expected response configured for this exercise")
+                Text("Speak your response:")
                     .font(LLTypography.bodySmall())
-                    .foregroundColor(LLColors.warning.color(for: colorScheme))
+                    .foregroundColor(LLColors.mutedForeground.adaptive)
+
+                // Real Speech Recorder with Validation
+                if let expectedText = exercise.expectedResponse {
+                    SpeechRecorderView(
+                        lessonId: exercise.lessonId,
+                        stepIndex: exercise.order,
+                        expectedText: expectedText,
+                        languageCode: languageCode,
+                        onValidationPassed: { validationResponse in
+                            NSLog("🎯 [SpeechResponseExercise] onValidationPassed called")
+                            NSLog("🎯 [SpeechResponseExercise] Transcription: \(validationResponse.validation.transcription)")
+                            // Pass the transcription back and auto-submit
+                            onRecognize(validationResponse.validation.transcription)
+                            // Auto-submit after a brief delay to ensure state is updated
+                            NSLog("🎯 [SpeechResponseExercise] Scheduling auto-submit in 0.1s")
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                NSLog("🎯 [SpeechResponseExercise] Calling onAutoSubmit now")
+                                onAutoSubmit()
+                            }
+                        }
+                    )
+                } else {
+                    // Fallback if no expected response
+                    Text("No expected response configured for this exercise")
+                        .font(LLTypography.bodySmall())
+                        .foregroundColor(LLColors.warning.color(for: colorScheme))
+                }
             }
         }
     }

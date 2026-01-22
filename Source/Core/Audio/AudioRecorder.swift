@@ -41,6 +41,9 @@ enum AudioRecordingError: Error, LocalizedError {
     case noActiveRecording
     case fileNotFound
     case invalidState(String)
+    case recordingTooShort
+    case recordingTooQuiet
+    case fileTooSmall
 
     var errorDescription: String? {
         switch self {
@@ -54,6 +57,12 @@ enum AudioRecordingError: Error, LocalizedError {
             return "Recording file not found."
         case .invalidState(let reason):
             return "Invalid recording state: \(reason)"
+        case .recordingTooShort:
+            return "Recording is too short. Please speak for at least 0.5 seconds."
+        case .recordingTooQuiet:
+            return "No speech detected. Please speak louder and try again."
+        case .fileTooSmall:
+            return "Recording file is too small. Please record again and speak clearly."
         }
     }
 }
@@ -71,6 +80,10 @@ final class AudioRecorder: NSObject, ObservableObject {
     @Published private(set) var audioLevel: Float = 0.0 // -160.0 to 0.0 dB
     @Published private(set) var recordedFileURL: URL?
     @Published private(set) var error: Error?
+
+    // Track peak audio level during recording to detect silence
+    private var peakAudioLevel: Float = 0.0
+    private var audioLevelSamples: [Float] = []
 
     // MARK: - Private Properties
 
@@ -94,6 +107,10 @@ final class AudioRecorder: NSObject, ObservableObject {
     private override init() {
         super.init()
         os_log("AudioRecorder initialized", log: logger, type: .info)
+
+        #if targetEnvironment(simulator)
+        os_log("⚠️ Running on iOS Simulator - recording functionality will not work", log: logger, type: .info)
+        #endif
     }
 
     deinit {
@@ -114,6 +131,15 @@ final class AudioRecorder: NSObject, ObservableObject {
     /// Start recording audio
     func startRecording() async throws {
         os_log("Starting audio recording", log: logger, type: .info)
+
+        // Check if running on simulator
+        #if targetEnvironment(simulator)
+        os_log("⚠️ WARNING: Running on iOS Simulator - microphone recording is not supported", log: logger, type: .error)
+        let errorMsg = "Recording is not available on iOS Simulator. Please test on a real device."
+        state = .error(errorMsg)
+        error = AudioRecordingError.recordingFailed(errorMsg)
+        throw AudioRecordingError.recordingFailed(errorMsg)
+        #endif
 
         // Check permission
         guard await requestMicrophonePermission() else {
@@ -154,6 +180,10 @@ final class AudioRecorder: NSObject, ObservableObject {
             isRecording = true
             recordingTime = 0
             error = nil
+
+            // Reset audio level tracking
+            peakAudioLevel = 0.0
+            audioLevelSamples = []
 
             // Start timers
             startRecordingTimer()
@@ -248,12 +278,18 @@ final class AudioRecorder: NSObject, ObservableObject {
             throw AudioRecordingError.fileNotFound
         }
 
-        // Get file size
-        if let attributes = try? FileManager.default.attributesOfItem(atPath: fileURL.path),
-           let fileSize = attributes[.size] as? Int64 {
-            os_log("Recording stopped successfully. Duration: %.2f seconds, Size: %{public}d bytes",
-                   log: logger, type: .info, recordingTime, fileSize)
+        // Get file size and validate recording
+        guard let attributes = try? FileManager.default.attributesOfItem(atPath: fileURL.path),
+              let fileSize = attributes[.size] as? Int64 else {
+            os_log("Failed to get file attributes", log: logger, type: .error)
+            throw AudioRecordingError.fileNotFound
         }
+
+        os_log("Recording stopped. Duration: %.2f seconds, Size: %{public}d bytes, Peak level: %.2f",
+               log: logger, type: .info, recordingTime, fileSize, peakAudioLevel)
+
+        // Validate recording quality before returning
+        try validateRecordingQuality(duration: recordingTime, fileSize: fileSize, peakLevel: peakAudioLevel)
 
         // Deactivate audio session
         try? await audioManager.deactivateSession()
@@ -397,6 +433,70 @@ final class AudioRecorder: NSObject, ObservableObject {
         let normalizedLevel = max(0.0, min(1.0, (averagePower + 160.0) / 160.0))
 
         audioLevel = normalizedLevel
+
+        // Track peak level and collect samples for validation
+        if normalizedLevel > peakAudioLevel {
+            peakAudioLevel = normalizedLevel
+        }
+
+        // Keep last 100 samples for analysis (5 seconds at 0.05s intervals)
+        audioLevelSamples.append(normalizedLevel)
+        if audioLevelSamples.count > 100 {
+            audioLevelSamples.removeFirst()
+        }
+    }
+
+    /// Validate recording quality
+    /// - Parameters:
+    ///   - duration: Recording duration in seconds
+    ///   - fileSize: File size in bytes
+    ///   - peakLevel: Peak audio level (0.0 to 1.0)
+    /// - Throws: AudioRecordingError if validation fails
+    private func validateRecordingQuality(duration: TimeInterval, fileSize: Int64, peakLevel: Float) throws {
+        // Minimum duration: 0.5 seconds
+        let minimumDuration: TimeInterval = 0.5
+        if duration < minimumDuration {
+            os_log("Recording too short: %.2f seconds (minimum: %.2f)",
+                   log: logger, type: .error, duration, minimumDuration)
+            throw AudioRecordingError.recordingTooShort
+        }
+
+        // Minimum file size: 5KB (typical for 0.5s of AAC audio)
+        // At 128 kbps: 0.5s = 8 KB, using 5KB as minimum to account for variations
+        let minimumFileSize: Int64 = 5_000
+        if fileSize < minimumFileSize {
+            os_log("Recording file too small: %{public}d bytes (minimum: %{public}d)",
+                   log: logger, type: .error, fileSize, minimumFileSize)
+            throw AudioRecordingError.fileTooSmall
+        }
+
+        // RELAXED audio level check - only reject complete silence
+        // Match web frontend behavior: use very low threshold (0.02) for silence detection only
+        // Backend API handles actual pronunciation quality validation
+        // Normalized level 0.0-1.0 where 0.0 = -160dB (silence), 1.0 = 0dB (max)
+        let minimumPeakLevel: Float = 0.02  // Very low threshold - only rejects complete silence
+        if peakLevel < minimumPeakLevel {
+            os_log("Recording appears to be complete silence: peak level %.4f (minimum: %.4f)",
+                   log: logger, type: .error, peakLevel, minimumPeakLevel)
+            throw AudioRecordingError.recordingTooQuiet
+        }
+
+        // Log audio levels for debugging (helpful for users to see actual values)
+        os_log("Recording audio levels - Peak: %.4f, File size: %{public}d bytes, Duration: %.2f seconds",
+               log: logger, type: .info, peakLevel, fileSize, duration)
+
+        // Calculate and log average level for debugging
+        if !audioLevelSamples.isEmpty {
+            let averageLevel = audioLevelSamples.reduce(0, +) / Float(audioLevelSamples.count)
+            os_log("Recording average level: %.4f", log: logger, type: .info, averageLevel)
+
+            // NO longer rejecting based on average level or peak-to-average ratio
+            // Let the backend API handle pronunciation quality validation
+            // This matches the web frontend's approach
+        }
+
+        os_log("Recording quality validation passed - sending to backend for pronunciation validation",
+               log: logger, type: .info)
     }
 }
 

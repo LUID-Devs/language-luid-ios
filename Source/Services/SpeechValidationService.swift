@@ -52,10 +52,11 @@ final class SpeechValidationService {
         os_log("Audio file size: %{public}d bytes", log: logger, type: .info, audioData.count)
 
         // Create request parameters (must be String values for multipart)
+        // NOTE: Backend expects camelCase parameter names!
         let parameters: [String: String] = [
-            "expected_text": expectedText,
-            "step_type": "pattern_recognition", // Default step type
-            "language_code": languageCode
+            "expectedText": expectedText,
+            "stepType": "phrase_practice", // Match backend default
+            "languageCode": languageCode
         ]
 
         // Upload audio file with multipart/form-data
@@ -69,8 +70,8 @@ final class SpeechValidationService {
 
         os_log("Speech validation completed. Passed: %{public}@, Score: %.2f",
                log: logger, type: .info,
-               response.passed ? "YES" : "NO",
-               response.overallScore)
+               response.validation.passed ? "YES" : "NO",
+               response.validation.score)
 
         return response
     }

@@ -50,12 +50,13 @@ final class TTSService {
             return cachedAudio
         }
 
-        // Prepare request
+        // Prepare request (use snake_case to match backend)
         let parameters: [String: Any] = [
             "text": text,
-            "language_code": languageCode,
+            "language_code": languageCode,  // Backend expects snake_case
             "voice_name": voiceName ?? "",
-            "speed": speed
+            "speed": speed,
+            "return_blob": false  // Get base64 encoded audio in JSON
         ]
 
         struct SynthesizeResponse: Codable {
@@ -71,11 +72,15 @@ final class TTSService {
         }
 
         // Make API request
+        os_log("Making TTS request to /speech/synthesize-genai", log: logger, type: .info)
+
         let response: SynthesizeResponse = try await apiClient.post(
             "/speech/synthesize-genai",
             parameters: parameters,
             requiresAuth: false // TTS is public
         )
+
+        os_log("TTS response received: success=%{public}@", log: logger, type: .info, response.success ? "true" : "false")
 
         guard response.success else {
             os_log("TTS synthesis failed", log: logger, type: .error)

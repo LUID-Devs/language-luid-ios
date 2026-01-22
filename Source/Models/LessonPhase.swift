@@ -308,12 +308,13 @@ struct PhaseProgressSummary: Codable {
     let lessonId: String
     let currentPhase: Int
     let phaseStates: [PhaseState]
+    let stepProgress: [String: LessonPhaseProgress]?
     let progressPercentage: Double
     let isLessonCompleted: Bool
     let isAuthenticated: Bool
 
     enum CodingKeys: String, CodingKey {
-        case lessonId, currentPhase, phaseStates
+        case lessonId, currentPhase, phaseStates, stepProgress
         case progressPercentage, isLessonCompleted, isAuthenticated
     }
 

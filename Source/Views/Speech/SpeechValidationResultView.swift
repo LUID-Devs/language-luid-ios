@@ -16,6 +16,11 @@ struct SpeechValidationResultView: View {
 
     @Environment(\.colorScheme) var colorScheme
 
+    // Computed rating from scoreLevel
+    private var rating: ValidationRating {
+        ValidationRating(from: result.validation.scoreLevel)
+    }
+
     // MARK: - Body
 
     var body: some View {
@@ -24,21 +29,16 @@ struct SpeechValidationResultView: View {
             scoreSection
 
             // Transcription
-            if let transcription = result.transcription, !transcription.isEmpty {
-                transcriptionSection(transcription)
+            if !result.validation.transcription.isEmpty {
+                transcriptionSection(result.validation.transcription, expected: result.validation.expectedText)
             }
 
             // Feedback
             feedbackSection
 
             // Word Analysis
-            if let wordAnalysis = result.wordAnalysis, !wordAnalysis.isEmpty {
+            if let wordAnalysis = result.details.wordAnalysis {
                 wordAnalysisSection(wordAnalysis)
-            }
-
-            // Pronunciation Details
-            if let pronunciation = result.pronunciationDetails {
-                pronunciationSection(pronunciation)
             }
 
             // Actions
@@ -52,35 +52,35 @@ struct SpeechValidationResultView: View {
     private var scoreSection: some View {
         VStack(spacing: 12) {
             // Rating Icon
-            Image(systemName: result.rating.systemImageName)
+            Image(systemName: rating.systemImageName)
                 .font(.system(size: 60))
                 .foregroundColor(ratingColor)
 
             // Rating Text
-            Text(result.rating.displayName)
+            Text(rating.displayName)
                 .font(.title2)
                 .fontWeight(.bold)
                 .foregroundColor(ratingColor)
 
             // Score
-            Text("\(Int(result.overallScore * 100))%")
+            Text("\(result.validation.scorePercentage)%")
                 .font(.title3)
                 .fontWeight(.semibold)
                 .foregroundColor(LLColors.foreground.color(for: colorScheme))
 
             // Pass/Fail Badge
             HStack(spacing: 8) {
-                Image(systemName: result.passed ? "checkmark.circle.fill" : "xmark.circle.fill")
-                Text(result.passed ? "Passed" : "Try Again")
+                Image(systemName: result.validation.passed ? "checkmark.circle.fill" : "xmark.circle.fill")
+                Text(result.validation.passed ? "Passed" : "Try Again")
                     .fontWeight(.medium)
             }
             .font(.subheadline)
-            .foregroundColor(result.passed ? LLColors.success.color(for: colorScheme) : LLColors.destructive.color(for: colorScheme))
+            .foregroundColor(result.validation.passed ? LLColors.success.color(for: colorScheme) : LLColors.destructive.color(for: colorScheme))
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
             .background(
                 Capsule()
-                    .fill(result.passed ? LLColors.success.color(for: colorScheme).opacity(0.12) : LLColors.destructive.color(for: colorScheme).opacity(0.12))
+                    .fill(result.validation.passed ? LLColors.success.color(for: colorScheme).opacity(0.12) : LLColors.destructive.color(for: colorScheme).opacity(0.12))
             )
         }
         .padding(.vertical)
@@ -88,21 +88,47 @@ struct SpeechValidationResultView: View {
 
     // MARK: - Transcription Section
 
-    private func transcriptionSection(_ transcription: String) -> some View {
+    private func transcriptionSection(_ transcription: String, expected: String) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Label("What we heard:", systemImage: "waveform")
                 .font(.headline)
                 .foregroundColor(LLColors.foreground.color(for: colorScheme))
 
-            Text(transcription)
-                .font(.body)
-                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(LLColors.card.color(for: colorScheme))
-                )
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("You said:")
+                        .font(.caption)
+                        .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                    Spacer()
+                }
+                Text(transcription)
+                    .font(.body)
+                    .foregroundColor(LLColors.foreground.color(for: colorScheme))
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(LLColors.card.color(for: colorScheme))
+            )
+
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Expected:")
+                        .font(.caption)
+                        .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                    Spacer()
+                }
+                Text(expected)
+                    .font(.body)
+                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(LLColors.muted.color(for: colorScheme).opacity(0.2))
+            )
         }
     }
 
@@ -115,7 +141,7 @@ struct SpeechValidationResultView: View {
                 .font(.headline)
                 .foregroundColor(LLColors.foreground.color(for: colorScheme))
 
-            Text(result.feedback.message)
+            Text(result.feedback.overall)
                 .font(.body)
                 .foregroundColor(LLColors.foreground.color(for: colorScheme))
                 .padding()
@@ -137,11 +163,11 @@ struct SpeechValidationResultView: View {
                         HStack(alignment: .top, spacing: 8) {
                             Image(systemName: "lightbulb.fill")
                                 .font(.caption)
-                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                                .foregroundColor(LLColors.primary.color(for: colorScheme))
 
                             Text(suggestion)
                                 .font(.caption)
-                                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
                         }
                     }
                 }
@@ -170,131 +196,97 @@ struct SpeechValidationResultView: View {
 
     // MARK: - Word Analysis Section
 
-    private func wordAnalysisSection(_ words: [WordAnalysis]) -> some View {
+    private func wordAnalysisSection(_ analysis: WordAnalysisDetails) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Label("Word Analysis", systemImage: "text.word.spacing")
                 .font(.headline)
                 .foregroundColor(LLColors.foreground.color(for: colorScheme))
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(words) { word in
-                        wordAnalysisCard(word)
-                    }
-                }
+            // Stats
+            HStack(spacing: 20) {
+                statCard(label: "Accuracy", value: "\(Int(analysis.accuracy * 100))%", color: LLColors.success.color(for: colorScheme))
+                statCard(label: "Matched", value: "\(analysis.matchCount)/\(analysis.totalExpected)", color: LLColors.info.color(for: colorScheme))
+            }
+
+            // Matches
+            if !analysis.matches.isEmpty {
+                wordListSection(title: "✓ Correct", words: analysis.matches, color: LLColors.success.color(for: colorScheme))
+            }
+
+            // Missing
+            if !analysis.missing.isEmpty {
+                wordListSection(title: "⚠ Missing", words: analysis.missing, color: LLColors.warning.color(for: colorScheme))
+            }
+
+            // Extra
+            if !analysis.extra.isEmpty {
+                wordListSection(title: "➕ Extra", words: analysis.extra, color: LLColors.info.color(for: colorScheme))
+            }
+
+            // Incorrect
+            if !analysis.incorrect.isEmpty {
+                wordListSection(title: "✗ Incorrect", words: analysis.incorrect, color: LLColors.destructive.color(for: colorScheme))
             }
         }
     }
 
-    private func wordAnalysisCard(_ word: WordAnalysis) -> some View {
-        VStack(spacing: 6) {
-            // Word
-            Text(word.word)
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundColor(LLColors.foreground.color(for: colorScheme))
-
-            // Checkmark or X
-            Image(systemName: word.correct ? "checkmark.circle.fill" : "xmark.circle.fill")
+    private func statCard(label: String, value: String, color: Color) -> some View {
+        VStack(spacing: 4) {
+            Text(value)
                 .font(.title3)
-                .foregroundColor(word.correct ? LLColors.success.color(for: colorScheme) : LLColors.destructive.color(for: colorScheme))
-
-            // Score if available
-            if let score = word.score {
-                Text("\(Int(score * 100))%")
-                    .font(.caption2)
-                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-            }
+                .fontWeight(.bold)
+                .foregroundColor(color)
+            Text(label)
+                .font(.caption)
+                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
         }
+        .frame(maxWidth: .infinity)
         .padding()
-        .frame(minWidth: 80)
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(LLColors.card.color(for: colorScheme))
         )
-        .overlay(
+    }
+
+    private func wordListSection(title: String, words: [String], color: Color) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundColor(color)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(words, id: \.self) { word in
+                        Text(word)
+                            .font(.caption)
+                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(color.opacity(0.1))
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(color.opacity(0.3), lineWidth: 1)
+                            )
+                    }
+                }
+            }
+        }
+        .padding()
+        .background(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(
-                    word.correct
-                        ? LLColors.success.color(for: colorScheme).opacity(0.3)
-                        : LLColors.destructive.color(for: colorScheme).opacity(0.3),
-                    lineWidth: 2
-                )
+                .fill(LLColors.card.color(for: colorScheme))
         )
-    }
-
-    // MARK: - Pronunciation Section
-
-    private func pronunciationSection(_ details: PronunciationDetails) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Label("Pronunciation Metrics", systemImage: "speaker.wave.3.fill")
-                .font(.headline)
-                .foregroundColor(LLColors.foreground.color(for: colorScheme))
-
-            VStack(spacing: 10) {
-                if let accuracy = details.accuracy {
-                    pronunciationMetric(label: "Accuracy", value: accuracy, icon: "target")
-                }
-                if let fluency = details.fluency {
-                    pronunciationMetric(label: "Fluency", value: fluency, icon: "waveform")
-                }
-                if let prosody = details.prosody {
-                    pronunciationMetric(label: "Prosody", value: prosody, icon: "music.note")
-                }
-                if let completeness = details.completeness {
-                    pronunciationMetric(label: "Completeness", value: completeness, icon: "checkmark.circle")
-                }
-            }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(LLColors.card.color(for: colorScheme))
-            )
-        }
-    }
-
-    private func pronunciationMetric(label: String, value: Double, icon: String) -> some View {
-        HStack {
-            // Icon and Label
-            HStack(spacing: 8) {
-                Image(systemName: icon)
-                    .foregroundColor(LLColors.primary.color(for: colorScheme))
-                Text(label)
-                    .font(.caption)
-                    .foregroundColor(LLColors.foreground.color(for: colorScheme))
-            }
-
-            Spacer()
-
-            // Progress Bar
-            GeometryReader { geometry in
-                ZStack(alignment: .leading) {
-                    // Background
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(LLColors.mutedForeground.color(for: colorScheme).opacity(0.2))
-
-                    // Progress
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(metricColor(value))
-                        .frame(width: geometry.size.width * CGFloat(value))
-                }
-            }
-            .frame(width: 100, height: 8)
-
-            // Percentage
-            Text("\(Int(value * 100))%")
-                .font(.caption2)
-                .fontWeight(.medium)
-                .foregroundColor(LLColors.foreground.color(for: colorScheme))
-                .frame(width: 40, alignment: .trailing)
-        }
     }
 
     // MARK: - Action Buttons
 
     private var actionButtons: some View {
         HStack(spacing: 16) {
-            if !result.passed && result.canRetry {
+            if !result.validation.passed {
                 // Retry Button
                 Button(action: onRetry) {
                     HStack {
@@ -313,7 +305,7 @@ struct SpeechValidationResultView: View {
                 .buttonStyle(.plain)
             }
 
-            if result.passed, let continueAction = onContinue {
+            if result.validation.passed, let continueAction = onContinue {
                 // Continue Button
                 Button(action: continueAction) {
                     HStack {
@@ -337,106 +329,12 @@ struct SpeechValidationResultView: View {
     // MARK: - Helper Methods
 
     private var ratingColor: Color {
-        switch result.rating {
+        switch rating {
         case .excellent: return LLColors.success.color(for: colorScheme)
         case .good: return LLColors.info.color(for: colorScheme)
         case .acceptable: return LLColors.warning.color(for: colorScheme)
         case .needsImprovement: return LLColors.mutedForeground.color(for: colorScheme)
         case .poor: return LLColors.destructive.color(for: colorScheme)
         }
-    }
-
-    private func metricColor(_ value: Double) -> Color {
-        if value >= 0.9 {
-            return LLColors.foreground.color(for: colorScheme)
-        } else if value >= 0.7 {
-            return LLColors.info.color(for: colorScheme)
-        } else if value >= 0.5 {
-            return LLColors.warning.color(for: colorScheme)
-        } else {
-            return LLColors.destructive.color(for: colorScheme)
-        }
-    }
-}
-
-// MARK: - Preview
-
-#Preview("Excellent Result") {
-    ScrollView {
-        SpeechValidationResultView(
-            result: SpeechValidationResponse(
-                success: true,
-                passed: true,
-                transcription: "Hello, how are you today?",
-                overallScore: 0.96,
-                rating: .excellent,
-                feedback: ValidationFeedback(
-                    message: "Outstanding pronunciation! Your clarity and fluency are exceptional.",
-                    suggestions: [],
-                    encouragement: "Keep up the excellent work!"
-                ),
-                wordAnalysis: [
-                    WordAnalysis(word: "Hello", expected: "Hello", actual: "Hello", correct: true, score: 0.98),
-                    WordAnalysis(word: "how", expected: "how", actual: "how", correct: true, score: 0.95),
-                    WordAnalysis(word: "are", expected: "are", actual: "are", correct: true, score: 0.96),
-                    WordAnalysis(word: "you", expected: "you", actual: "you", correct: true, score: 0.97),
-                    WordAnalysis(word: "today", expected: "today", actual: "today", correct: true, score: 0.94)
-                ],
-                pronunciationDetails: PronunciationDetails(
-                    phonemes: nil,
-                    accuracy: 0.96,
-                    fluency: 0.94,
-                    prosody: 0.92,
-                    completeness: 1.0
-                ),
-                attemptCount: 1,
-                canRetry: false,
-                languageMismatch: false
-            ),
-            onRetry: {},
-            onContinue: {}
-        )
-    }
-}
-
-#Preview("Needs Improvement") {
-    ScrollView {
-        SpeechValidationResultView(
-            result: SpeechValidationResponse(
-                success: true,
-                passed: false,
-                transcription: "Helo, ow ar yu today?",
-                overallScore: 0.65,
-                rating: .needsImprovement,
-                feedback: ValidationFeedback(
-                    message: "Your pronunciation needs some work. Focus on clarity and proper enunciation.",
-                    suggestions: [
-                        "Speak more slowly and clearly",
-                        "Practice the 'h' sound at the beginning of words",
-                        "Work on vowel sounds in 'how' and 'are'"
-                    ],
-                    encouragement: "Don't give up! Practice makes perfect."
-                ),
-                wordAnalysis: [
-                    WordAnalysis(word: "Helo", expected: "Hello", actual: "Helo", correct: false, score: 0.75),
-                    WordAnalysis(word: "ow", expected: "how", actual: "ow", correct: false, score: 0.60),
-                    WordAnalysis(word: "ar", expected: "are", actual: "ar", correct: false, score: 0.55),
-                    WordAnalysis(word: "yu", expected: "you", actual: "yu", correct: false, score: 0.65),
-                    WordAnalysis(word: "today", expected: "today", actual: "today", correct: true, score: 0.90)
-                ],
-                pronunciationDetails: PronunciationDetails(
-                    phonemes: nil,
-                    accuracy: 0.65,
-                    fluency: 0.70,
-                    prosody: 0.60,
-                    completeness: 0.95
-                ),
-                attemptCount: 2,
-                canRetry: true,
-                languageMismatch: false
-            ),
-            onRetry: {},
-            onContinue: nil
-        )
     }
 }

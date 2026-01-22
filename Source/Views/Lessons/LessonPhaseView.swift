@@ -19,8 +19,10 @@ struct LessonPhaseView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
+    @Environment(\.tabBarVisible) private var tabBarVisible
 
     @State private var currentExerciseIndex = 0
+    @State private var completedSteps: [Int] = []
     @State private var startTime = Date()
     @State private var elapsedSeconds = 0
     @State private var score = 0
@@ -32,6 +34,7 @@ struct LessonPhaseView: View {
     @State private var isAnswerCorrect = false
     @State private var feedbackMessage = ""
     @State private var showConfetti = false
+    @State private var isLoadingProgress = true
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -61,11 +64,16 @@ struct LessonPhaseView: View {
                     emptyState
                 }
 
-                // Bottom Navigation
+                Spacer(minLength: 0)
+            }
+
+            // Bottom Navigation - Positioned absolutely at bottom
+            VStack {
+                Spacer()
                 bottomNavigation
             }
 
-            // Feedback Overlay
+            // Feedback Overlay (positioned to not cover bottom nav)
             if showFeedback {
                 feedbackOverlay
             }
@@ -94,6 +102,24 @@ struct LessonPhaseView: View {
                 }
             }
         }
+        .onAppear {
+            // Hide tab bar when entering lesson phase
+            tabBarVisible.wrappedValue = false
+
+            // Load step progress and restore position
+            Task {
+                await loadAndRestoreProgress()
+            }
+        }
+        .onDisappear {
+            // Show tab bar when leaving lesson phase
+            tabBarVisible.wrappedValue = true
+
+            // Save progress when leaving
+            Task {
+                await saveCurrentProgress()
+            }
+        }
         .task {
             await loadExercises()
         }
@@ -103,7 +129,10 @@ struct LessonPhaseView: View {
         .confirmationDialog("Exit Phase", isPresented: $showExitConfirmation, titleVisibility: .visible) {
             Button("Keep Learning", role: .cancel) {}
             Button("Exit", role: .destructive) {
-                dismiss()
+                Task {
+                    await saveCurrentProgress()
+                    dismiss()
+                }
             }
         } message: {
             Text("Are you sure you want to exit? Your progress will be saved.")
@@ -213,6 +242,7 @@ struct LessonPhaseView: View {
                         submitExercise(response)
                     }
                 )
+                .id(exercise.id) // Force view recreation when exercise changes
                 .padding(.horizontal, LLSpacing.md)
             }
             .padding(.bottom, 100) // Space for bottom navigation
@@ -222,103 +252,130 @@ struct LessonPhaseView: View {
     // MARK: - Bottom Navigation
 
     private var bottomNavigation: some View {
-        HStack(spacing: LLSpacing.md) {
-            // Previous Button
-            LLButton(
-                "Previous",
-                icon: Image(systemName: "chevron.left"),
-                style: .outline,
-                size: .md,
-                isDisabled: !viewModel.hasPreviousExercise
-            ) {
-                previousExercise()
-            }
+        let hasResult = viewModel.exerciseResult != nil
+        let _ = NSLog("🎯 [BottomNav] Rendering - exerciseResult is \(hasResult ? "SET" : "NIL")")
 
-            // Skip Button
-            LLButton(
-                "Skip",
-                style: .ghost,
-                size: .md
-            ) {
-                skipExercise()
-            }
-
-            Spacer()
-
-            // Check/Next Button
-            if viewModel.exerciseResult != nil {
+        return VStack(spacing: 0) {
+            HStack(spacing: LLSpacing.md) {
+                // Previous Button
                 LLButton(
-                    viewModel.hasNextExercise ? "Next" : "Complete",
-                    icon: Image(systemName: viewModel.hasNextExercise ? "chevron.right" : "checkmark"),
-                    style: .primary,
+                    "Previous",
+                    icon: Image(systemName: "chevron.left"),
+                    style: .outline,
+                    size: .md,
+                    isDisabled: !viewModel.hasPreviousExercise
+                ) {
+                    previousExercise()
+                }
+
+                // Skip Button
+                LLButton(
+                    "Skip",
+                    style: .ghost,
                     size: .md
                 ) {
-                    nextExerciseOrComplete()
+                    skipExercise()
+                }
+
+                Spacer()
+
+                // Check/Next Button
+                if hasResult {
+                    let _ = NSLog("🎯 [BottomNav] Rendering Next button")
+                    LLButton(
+                        viewModel.hasNextExercise ? "Next" : "Complete",
+                        icon: Image(systemName: viewModel.hasNextExercise ? "chevron.right" : "checkmark"),
+                        style: .primary,
+                        size: .md
+                    ) {
+                        NSLog("🔘 Next button tapped, hasNext=\(viewModel.hasNextExercise)")
+                        nextExerciseOrComplete()
+                    }
+                } else {
+                    let _ = NSLog("🎯 [BottomNav] Rendering DEBUG text (exerciseResult is nil)")
+                    Text("DEBUG: exerciseResult is nil")
+                        .font(.caption)
+                        .foregroundColor(.red)
                 }
             }
+            .padding(LLSpacing.md)
+            .background(
+                LLColors.card.color(for: colorScheme)
+                    .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: -2)
+            )
         }
-        .padding(LLSpacing.md)
         .background(
             LLColors.card.color(for: colorScheme)
-                .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: -2)
+                .ignoresSafeArea(edges: .bottom)
         )
     }
 
     // MARK: - Feedback Overlay
 
     private var feedbackOverlay: some View {
-        VStack {
-            Spacer()
+        let iconColor = isAnswerCorrect ? LLColors.success.color(for: colorScheme) : LLColors.destructive.color(for: colorScheme)
+        let iconName = isAnswerCorrect ? "checkmark.circle.fill" : "xmark.circle.fill"
 
-            LLCard(style: .elevated, padding: .lg) {
-                VStack(spacing: LLSpacing.md) {
-                    // Icon
-                    Image(systemName: isAnswerCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .font(.system(size: 48))
-                        .foregroundColor(isAnswerCorrect ? LLColors.success.color(for: colorScheme) : LLColors.destructive.color(for: colorScheme))
-                        .scaleEffect(showFeedback ? 1 : 0.5)
-                        .animation(.spring(response: 0.5, dampingFraction: 0.6), value: showFeedback)
+        return GeometryReader { geometry in
+            VStack(spacing: 0) {
+                // Top spacer
+                Spacer()
+                    .frame(height: geometry.size.height * 0.15)
 
-                    // Message
-                    Text(feedbackMessage)
-                        .font(LLTypography.h4())
-                        .foregroundColor(LLColors.foreground.color(for: colorScheme))
-                        .multilineTextAlignment(.center)
+                // Feedback card in center
+                LLCard(style: .elevated, padding: .lg) {
+                    VStack(spacing: LLSpacing.md) {
+                        // Icon
+                        Image(systemName: iconName)
+                            .font(.system(size: 48))
+                            .foregroundColor(iconColor)
+                            .scaleEffect(showFeedback ? 1 : 0.5)
+                            .animation(.spring(response: 0.5, dampingFraction: 0.6), value: showFeedback)
 
-                    // Explanation
-                    if let explanation = viewModel.exerciseResult?.feedback.explanation {
-                        Text(explanation)
-                            .font(LLTypography.bodySmall())
-                            .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                        // Message
+                        Text(feedbackMessage)
+                            .font(LLTypography.h4())
+                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
                             .multilineTextAlignment(.center)
-                    }
 
-                    // Points Earned
-                    if let result = viewModel.exerciseResult {
-                        HStack(spacing: LLSpacing.xs) {
-                            Image(systemName: "star.fill")
-                                .foregroundColor(LLColors.warning.color(for: colorScheme))
-                            Text("+\(Int(result.score)) XP")
-                                .font(LLTypography.body())
-                                .fontWeight(.semibold)
-                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                        // Explanation
+                        if let result = viewModel.exerciseResult {
+                            if let explanation = result.feedback?.explanation ?? result.explanation {
+                                Text(explanation)
+                                    .font(LLTypography.bodySmall())
+                                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                                    .multilineTextAlignment(.center)
+                            }
+
+                            // Points Earned
+                            let earnedPoints = result.points ?? Int(result.score)
+                            HStack(spacing: LLSpacing.xs) {
+                                Image(systemName: "star.fill")
+                                    .foregroundColor(LLColors.warning.color(for: colorScheme))
+                                Text("+\(earnedPoints) XP")
+                                    .font(LLTypography.body())
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                            }
                         }
                     }
                 }
-            }
-            .padding(LLSpacing.lg)
-            .transition(.move(edge: .bottom).combined(with: .opacity))
+                .padding(.horizontal, LLSpacing.lg)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
 
-            Spacer()
-                .frame(height: 150)
+                // Bottom spacer (leaves room for bottom navigation)
+                Spacer()
+                    .frame(height: geometry.size.height * 0.25)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(
+                Color.black.opacity(0.3)
+                    .onTapGesture {
+                        dismissFeedback()
+                    }
+            )
         }
-        .background(
-            Color.black.opacity(0.3)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    dismissFeedback()
-                }
-        )
+        .allowsHitTesting(true)
     }
 
     // MARK: - Phase Completion Overlay
@@ -476,10 +533,65 @@ struct LessonPhaseView: View {
         totalScore = viewModel.exercises.reduce(0) { $0 + $1.points }
     }
 
-    private func submitExercise(_ response: ResponseValue) {
-        Task {
-            guard let exercise = currentExercise else { return }
+    private func loadAndRestoreProgress() async {
+        NSLog("📊 [PhaseView] Loading step progress for phase \(phase.phaseNumber)...")
 
+        // Load step progress from backend
+        await viewModel.loadStepProgress(
+            roadmapId: roadmapId,
+            lessonId: lessonId,
+            phaseNumber: phase.phaseNumber
+        )
+
+        // Restore position from progress
+        if let progress = viewModel.phaseStepProgress {
+            let restoredStep = progress.currentStep ?? 0
+            let restoredCompleted = progress.completedSteps ?? []
+
+            NSLog("📊 [PhaseView] Restoring progress - Step: \(restoredStep), Completed: \(restoredCompleted)")
+
+            // Clamp to valid range
+            let validStep = max(0, min(restoredStep, viewModel.exercises.count - 1))
+
+            DispatchQueue.main.async {
+                self.currentExerciseIndex = validStep
+                self.completedSteps = restoredCompleted
+                self.isLoadingProgress = false
+            }
+
+            NSLog("✅ [PhaseView] Progress restored - Now on step \(validStep)")
+        } else {
+            NSLog("ℹ️ [PhaseView] No saved progress - starting from beginning")
+            DispatchQueue.main.async {
+                self.isLoadingProgress = false
+            }
+        }
+    }
+
+    private func saveCurrentProgress() async {
+        // Don't save if no exercises loaded
+        guard !viewModel.exercises.isEmpty else { return }
+
+        NSLog("💾 [PhaseView] Saving progress - Step: \(currentExerciseIndex), Completed: \(completedSteps)")
+
+        await viewModel.saveStepProgress(
+            roadmapId: roadmapId,
+            lessonId: lessonId,
+            phaseNumber: phase.phaseNumber,
+            currentStep: currentExerciseIndex,
+            completedSteps: completedSteps
+        )
+    }
+
+    private func submitExercise(_ response: ResponseValue) {
+        NSLog("🎯 [PhaseView] submitExercise called")
+        Task {
+            guard let exercise = currentExercise else {
+                NSLog("❌ [PhaseView] No current exercise!")
+                return
+            }
+
+            NSLog("🎯 [PhaseView] Calling viewModel.submitExercise...")
             await viewModel.submitExercise(
                 roadmapId: roadmapId,
                 lessonId: lessonId,
@@ -487,15 +599,30 @@ struct LessonPhaseView: View {
                 responseValue: response
             )
 
+            NSLog("🎯 [PhaseView] After await, checking viewModel.exerciseResult...")
+            NSLog("🎯 [PhaseView] viewModel.exerciseResult is \(viewModel.exerciseResult != nil ? "SET" : "NIL")")
+
             if let result = viewModel.exerciseResult {
+                NSLog("✅ [PhaseView] Exercise result received: correct=\(result.isCorrect), score=\(result.score)")
                 isAnswerCorrect = result.isCorrect
-                feedbackMessage = result.feedback.message
-                score += Int(result.score)
+                // Use feedback.message if available, otherwise use explanation, otherwise use a default message
+                feedbackMessage = result.feedback?.message ?? result.explanation ?? (result.isCorrect ? "Correct!" : "Incorrect")
+                let earnedPoints = result.points ?? Int(result.score)
+                score += earnedPoints
 
                 if result.isCorrect {
                     correctAnswers += 1
                     showConfetti = true
                     UINotificationFeedbackGenerator().notificationOccurred(.success)
+
+                    // Mark exercise as completed when answered correctly
+                    if !completedSteps.contains(currentExerciseIndex) {
+                        completedSteps.append(currentExerciseIndex)
+                        // Save progress after successful completion
+                        Task {
+                            await saveCurrentProgress()
+                        }
+                    }
 
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                         showConfetti = false
@@ -511,6 +638,8 @@ struct LessonPhaseView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     dismissFeedback()
                 }
+            } else {
+                NSLog("❌ [PhaseView] No exercise result after submission!")
             }
         }
     }
@@ -540,11 +669,22 @@ struct LessonPhaseView: View {
 
     private func nextExercise() {
         guard viewModel.hasNextExercise else { return }
+
+        // Mark current exercise as completed before moving
+        if !completedSteps.contains(currentExerciseIndex) {
+            completedSteps.append(currentExerciseIndex)
+        }
+
         withAnimation {
             currentExerciseIndex += 1
             viewModel.exerciseResult = nil
         }
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
+
+        // Save progress after navigation
+        Task {
+            await saveCurrentProgress()
+        }
     }
 
     private func nextExerciseOrComplete() {

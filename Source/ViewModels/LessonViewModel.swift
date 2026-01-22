@@ -34,6 +34,7 @@ class LessonViewModel: ObservableObject {
     @Published var progressStats: ProgressStats?
     @Published var roadmapProgress: RoadmapProgress?
     @Published var exerciseResult: ExerciseResult?
+    @Published var phaseStepProgress: LessonPhaseProgress?
 
     // UI State
     @Published var isLoading = false
@@ -343,6 +344,7 @@ class LessonViewModel: ObservableObject {
         exerciseId: String,
         responseValue: ResponseValue
     ) async {
+        NSLog("🎯 [ViewModel] submitExercise called for exercise: \(exerciseId)")
         isSubmitting = true
         errorMessage = nil
 
@@ -358,6 +360,7 @@ class LessonViewModel: ObservableObject {
         )
 
         do {
+            NSLog("🎯 [ViewModel] Calling lessonService.submitExercise...")
             exerciseResult = try await lessonService.submitExercise(
                 roadmapId: roadmapId,
                 lessonId: lessonId,
@@ -365,19 +368,29 @@ class LessonViewModel: ObservableObject {
                 response: response
             )
 
+            NSLog("🎯 [ViewModel] exerciseResult SET: \(exerciseResult != nil ? "YES" : "NO")")
+            if let result = exerciseResult {
+                NSLog("🎯 [ViewModel] Result details - correct: \(result.isCorrect), score: \(result.score), points: \(result.points ?? -1)")
+            }
+
             if exerciseResult?.passed ?? false {
-                successMessage = "Correct! \(exerciseResult?.feedback.message ?? "")"
+                let message = exerciseResult?.feedback?.message ?? exerciseResult?.explanation ?? ""
+                successMessage = "Correct! \(message)"
                 showSuccess = true
             }
 
-            NSLog("✅ Exercise submitted - Score: \(exerciseResult?.percentageScore ?? 0)%")
+            let percentage = exerciseResult?.percentageScore ?? Int((exerciseResult?.score ?? 0) * 100)
+            NSLog("✅ Exercise submitted - Score: \(percentage)%")
         } catch {
+            exerciseResult = nil
+            NSLog("🎯 [ViewModel] exerciseResult set to NIL due to error")
             errorMessage = "Failed to submit exercise: \(error.localizedDescription)"
             showError = true
             NSLog("❌ Error submitting exercise: \(error)")
         }
 
         isSubmitting = false
+        NSLog("🎯 [ViewModel] submitExercise completed, exerciseResult is \(exerciseResult != nil ? "SET" : "NIL")")
     }
 
     /// Complete a phase
@@ -436,10 +449,34 @@ class LessonViewModel: ObservableObject {
                 currentStep: currentStep,
                 completedSteps: completedSteps
             )
-            NSLog("✅ Step progress saved")
+            NSLog("✅ Step progress saved - Phase \(phaseNumber), Step \(currentStep)")
         } catch {
             NSLog("⚠️ Failed to save step progress: \(error)")
             // Don't show error to user - this is background save
+        }
+    }
+
+    /// Load step progress for a specific phase
+    func loadStepProgress(
+        roadmapId: String,
+        lessonId: String,
+        phaseNumber: Int
+    ) async {
+        do {
+            phaseStepProgress = try await lessonService.fetchStepProgress(
+                roadmapId: roadmapId,
+                lessonId: lessonId,
+                phaseNumber: phaseNumber
+            )
+            if let progress = phaseStepProgress {
+                NSLog("✅ Loaded step progress - Current step: \(progress.currentStep ?? 0), Completed steps: \(progress.completedSteps ?? [])")
+            } else {
+                NSLog("ℹ️ No step progress found - starting from beginning")
+            }
+        } catch {
+            NSLog("⚠️ Error loading step progress: \(error)")
+            // Don't show error - progress may not exist yet
+            phaseStepProgress = nil
         }
     }
 

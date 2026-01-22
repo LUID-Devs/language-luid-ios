@@ -12,10 +12,18 @@ enum AppConfig {
     // MARK: - API Configuration
 
     /// Base API URL (language-luid-backend)
-    /// Note: Using 127.0.0.1 instead of localhost for iOS Simulator compatibility.
-    /// In the simulator, localhost refers to the simulator itself, not the host Mac.
-    /// 127.0.0.1 properly routes to the Mac's loopback interface where the backend runs.
-    static let apiBaseURL = "http://127.0.0.1:5001/api"
+    /// Uses 127.0.0.1 for simulator (Mac's localhost)
+    /// Uses Mac's local IP for physical devices (so they can connect over WiFi)
+    static var apiBaseURL: String {
+        #if targetEnvironment(simulator)
+        // Simulator: Use localhost
+        return "http://127.0.0.1:5001/api"
+        #else
+        // Physical device: Use Mac's local IP address
+        // Make sure your Mac and iPhone are on the same WiFi network!
+        return "http://192.168.8.39:5001/api"
+        #endif
+    }
 
     /// API timeout in seconds
     static let apiTimeout: TimeInterval = 30

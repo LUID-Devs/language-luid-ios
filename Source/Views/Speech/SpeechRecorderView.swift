@@ -117,7 +117,7 @@ struct SpeechRecorderView: View {
                                 // Reset recorder for retry
                                 audioRecorder.reset()
                             },
-                            onContinue: result.passed ? {
+                            onContinue: result.validation.passed ? {
                                 showResult = false
                                 onValidationPassed(result)
                             } : nil
@@ -329,7 +329,7 @@ struct SpeechRecorderView: View {
                 showResult = true
 
                 // Call appropriate callback
-                if result.passed {
+                if result.validation.passed {
                     // Don't call onValidationPassed here, let user click Continue button
                 } else {
                     onValidationFailed?(result)
@@ -365,10 +365,10 @@ struct SpeechRecorderView: View {
         expectedText: "Hola, ¿cómo estás?",
         languageCode: "es",
         onValidationPassed: { result in
-            print("Validation passed: \(result.overallScore)")
+            print("Validation passed: \(result.validation.score)")
         },
         onValidationFailed: { result in
-            print("Validation failed: \(result.overallScore)")
+            print("Validation failed: \(result.validation.score)")
         }
     )
     .padding()
@@ -382,7 +382,7 @@ struct SpeechRecorderView: View {
         languageCode: "fr",
         isCompact: true,
         onValidationPassed: { result in
-            print("Validation passed: \(result.overallScore)")
+            print("Validation passed: \(result.validation.score)")
         }
     )
     .padding()

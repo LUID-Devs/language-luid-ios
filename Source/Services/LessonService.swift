@@ -370,8 +370,9 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("✅ Exercise submitted - Score: \(response.data.percentageScore)%")
-            os_log("✅ Exercise submitted - Score: %{public}d%%", log: logger, type: .info, response.data.percentageScore)
+            let percentage = response.data.percentageScore ?? Int((response.data.score / (response.data.maxScore ?? 1.0)) * 100)
+            NSLog("✅ Exercise submitted - Score: \(percentage)%")
+            os_log("✅ Exercise submitted - Score: %{public}d%%", log: logger, type: .info, percentage)
 
             return response.data
         } catch {
@@ -516,6 +517,50 @@ class LessonService {
             NSLog("❌ Failed to fetch phase progress: \(error.localizedDescription)")
             os_log("❌ Failed to fetch phase progress: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
+        }
+    }
+
+    /// Fetch step progress for a specific phase
+    /// Gets step progress from the phase-progress summary endpoint
+    /// - Parameters:
+    ///   - roadmapId: Roadmap UUID (not used, kept for consistency)
+    ///   - lessonId: Lesson UUID
+    ///   - phaseNumber: Phase number (1-4)
+    func fetchStepProgress(
+        roadmapId: String,
+        lessonId: String,
+        phaseNumber: Int
+    ) async throws -> LessonPhaseProgress? {
+        NSLog("📊 Fetching step progress for phase \(phaseNumber)...")
+        os_log("📊 Fetching step progress...", log: logger, type: .info)
+
+        do {
+            // Use the phase-progress endpoint which includes stepProgress
+            let response: PhaseProgressSummaryResponse = try await apiClient.get(
+                "/lessons/\(lessonId)/phase-progress",
+                requiresAuth: true
+            )
+
+            // Extract step progress for this specific phase from the response
+            if let stepProgressDict = response.data.stepProgress {
+                let phaseKey = "phase\(phaseNumber)"
+                if let stepProgress = stepProgressDict[phaseKey] {
+                    NSLog("✅ Fetched step progress - Current: \(stepProgress.currentStep ?? 0), Completed: \(stepProgress.completedSteps ?? [])")
+                    os_log("✅ Fetched step progress", log: logger, type: .info)
+                    return stepProgress
+                } else {
+                    NSLog("ℹ️ No step progress found for phase \(phaseNumber)")
+                    return nil
+                }
+            }
+
+            NSLog("ℹ️ No step progress data in response")
+            return nil
+        } catch {
+            NSLog("⚠️ Failed to fetch step progress: \(error.localizedDescription)")
+            os_log("⚠️ Failed to fetch step progress: %{public}@", log: logger, type: .error, error.localizedDescription)
+            // Return nil instead of throwing - step progress may not exist yet
+            return nil
         }
     }
 

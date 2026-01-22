@@ -7,34 +7,91 @@
 
 import Foundation
 
-// MARK: - Speech Validation Response
+// MARK: - Speech Validation Response (matches backend structure)
 
 struct SpeechValidationResponse: Codable {
     let success: Bool
-    let passed: Bool
-    let transcription: String?
-    let overallScore: Double
-    let rating: ValidationRating
+    let validation: ValidationResult
     let feedback: ValidationFeedback
-    let wordAnalysis: [WordAnalysis]?
-    let pronunciationDetails: PronunciationDetails?
-    let attemptCount: Int
-    let canRetry: Bool
-    let languageMismatch: Bool?
-
-    enum CodingKeys: String, CodingKey {
-        case success, passed, transcription
-        case overallScore = "overall_score"
-        case rating, feedback
-        case wordAnalysis = "word_analysis"
-        case pronunciationDetails = "pronunciation_details"
-        case attemptCount = "attempt_count"
-        case canRetry = "can_retry"
-        case languageMismatch = "language_mismatch"
-    }
+    let progression: ProgressionInfo
+    let details: ValidationDetails
 }
 
-// MARK: - Validation Rating
+// MARK: - Validation Result
+
+struct ValidationResult: Codable {
+    let id: String?
+    let stepIndex: Int
+    let attemptNumber: Int
+    let transcription: String
+    let expectedText: String
+    let score: Double
+    let scorePercentage: Int
+    let accuracy: Double
+    let passed: Bool
+    let scoreLevel: String
+    let languageMismatch: Bool
+}
+
+// MARK: - Validation Feedback
+
+struct ValidationFeedback: Codable {
+    let overall: String
+    let level: String
+    let suggestions: [String]
+    let encouragement: String?
+    let details: [String]?
+}
+
+// MARK: - Progression Info
+
+struct ProgressionInfo: Codable {
+    let canProceed: Bool
+    let reason: String
+    let message: String
+    let suggestions: [String]?
+}
+
+// MARK: - Validation Details
+
+struct ValidationDetails: Codable {
+    let wordAnalysis: WordAnalysisDetails?
+    let processingTime: Int
+    let languageInfo: LanguageInfo
+}
+
+// MARK: - Word Analysis Details
+
+struct WordAnalysisDetails: Codable {
+    let accuracy: Double
+    let totalExpected: Int
+    let totalSpoken: Int
+    let matchCount: Int
+    let matches: [String]
+    let missing: [String]
+    let extra: [String]
+    let incorrect: [String]
+    let alignment: [WordAlignment]
+}
+
+// MARK: - Word Alignment
+
+struct WordAlignment: Codable {
+    let type: String
+    let expected: String
+    let spoken: String?
+    let position: Int
+}
+
+// MARK: - Language Info
+
+struct LanguageInfo: Codable {
+    let expected: String
+    let detected: String?
+    let match: Bool
+}
+
+// MARK: - Validation Rating Helper
 
 enum ValidationRating: String, Codable {
     case excellent = "excellent"
@@ -72,61 +129,22 @@ enum ValidationRating: String, Codable {
         case .poor: return "xmark.circle.fill"
         }
     }
-}
 
-// MARK: - Validation Feedback
-
-struct ValidationFeedback: Codable {
-    let message: String
-    let suggestions: [String]
-    let encouragement: String?
-
-    var allSuggestions: String {
-        suggestions.joined(separator: "\n• ")
-    }
-}
-
-// MARK: - Word Analysis
-
-struct WordAnalysis: Codable, Identifiable {
-    let word: String
-    let expected: String?
-    let actual: String?
-    let correct: Bool
-    let score: Double?
-
-    var id: String { word }
-
-    enum CodingKeys: String, CodingKey {
-        case word, expected, actual, correct, score
-    }
-}
-
-// MARK: - Pronunciation Details
-
-struct PronunciationDetails: Codable {
-    let phonemes: [PhonemeAnalysis]?
-    let accuracy: Double?
-    let fluency: Double?
-    let prosody: Double?
-    let completeness: Double?
-
-    enum CodingKeys: String, CodingKey {
-        case phonemes, accuracy, fluency, prosody, completeness
-    }
-}
-
-// MARK: - Phoneme Analysis
-
-struct PhonemeAnalysis: Codable, Identifiable {
-    let phoneme: String
-    let score: Double
-    let feedback: String?
-
-    var id: String { phoneme }
-
-    enum CodingKeys: String, CodingKey {
-        case phoneme, score, feedback
+    init(from scoreLevel: String) {
+        switch scoreLevel.lowercased() {
+        case "excellent":
+            self = .excellent
+        case "good":
+            self = .good
+        case "acceptable":
+            self = .acceptable
+        case "needs_improvement", "fair":
+            self = .needsImprovement
+        case "poor":
+            self = .poor
+        default:
+            self = .acceptable
+        }
     }
 }
 

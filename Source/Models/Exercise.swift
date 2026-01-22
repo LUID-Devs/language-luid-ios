@@ -299,37 +299,49 @@ enum ResponseValue: Codable {
 // MARK: - Exercise Result (Feedback)
 
 struct ExerciseResult: Codable, Identifiable {
-    let id: String
-    let exerciseId: String
-    let userId: String?
+    // Backend response fields
     let isCorrect: Bool
     let score: Double
-    let maxScore: Double
-    let percentageScore: Int
-    let feedback: ExerciseFeedback
-    let correctAnswer: String?
-    let userAnswer: String?
     let partialCredit: Bool
+    let correctAnswer: String?
+    let explanation: String?
+    let points: Int?
+
+    // Optional fields (may not be in backend response)
+    let id: String?
+    let exerciseId: String?
+    let userId: String?
+    let maxScore: Double?
+    let percentageScore: Int?
+    let feedback: ExerciseFeedback?
+    let userAnswer: String?
     let timeSpent: Int?
     let hintsUsed: Int?
-    let attemptNumber: Int
-    let createdAt: Date
+    let attemptNumber: Int?
+    let createdAt: Date?
 
     enum CodingKeys: String, CodingKey {
-        case id, exerciseId, userId, isCorrect
+        case id, exerciseId, userId, isCorrect = "correct"
         case score, maxScore, percentageScore, feedback
-        case correctAnswer, userAnswer, partialCredit
+        case correctAnswer = "expectedResponse", userAnswer, partialCredit = "partial"
         case timeSpent, hintsUsed, attemptNumber, createdAt
+        case explanation, points
     }
 
     // MARK: - Computed Properties
 
+    // Generate an ID from exerciseId if available, otherwise use UUID
+    var computedId: String {
+        id ?? exerciseId ?? UUID().uuidString
+    }
+
     var passed: Bool {
-        isCorrect || (partialCredit && percentageScore >= 70)
+        isCorrect || (partialCredit && (percentageScore ?? 0) >= 70)
     }
 
     var scoreLevel: ScoreLevel {
-        switch percentageScore {
+        let percentage = percentageScore ?? Int((score / (maxScore ?? 1.0)) * 100)
+        switch percentage {
         case 90...100:
             return .excellent
         case 80..<90:
@@ -547,11 +559,15 @@ extension Exercise {
 
 extension ExerciseResult {
     static let mockCorrect = ExerciseResult(
+        isCorrect: true,
+        score: 10,
+        partialCredit: false,
+        correctAnswer: "famoso",
+        explanation: "Famoso is a direct cognate from 'famous'.",
+        points: 10,
         id: "result-1",
         exerciseId: "ex-1",
         userId: "user-123",
-        isCorrect: true,
-        score: 10,
         maxScore: 10,
         percentageScore: 100,
         feedback: ExerciseFeedback(
@@ -561,9 +577,7 @@ extension ExerciseResult {
             highlights: nil,
             explanation: "Famoso is a direct cognate from 'famous'."
         ),
-        correctAnswer: "famoso",
         userAnswer: "famoso",
-        partialCredit: false,
         timeSpent: 5,
         hintsUsed: 0,
         attemptNumber: 1,
@@ -571,11 +585,15 @@ extension ExerciseResult {
     )
 
     static let mockPartialCredit = ExerciseResult(
+        isCorrect: false,
+        score: 7,
+        partialCredit: true,
+        correctAnswer: "famoso",
+        explanation: "The correct spelling is 'famoso' with an 'o' at the end.",
+        points: 7,
         id: "result-2",
         exerciseId: "ex-2",
         userId: "user-123",
-        isCorrect: false,
-        score: 7,
         maxScore: 10,
         percentageScore: 70,
         feedback: ExerciseFeedback(
@@ -585,9 +603,7 @@ extension ExerciseResult {
             highlights: ["famos"],
             explanation: "The correct spelling is 'famoso' with an 'o' at the end."
         ),
-        correctAnswer: "famoso",
         userAnswer: "famos",
-        partialCredit: true,
         timeSpent: 12,
         hintsUsed: 1,
         attemptNumber: 1,

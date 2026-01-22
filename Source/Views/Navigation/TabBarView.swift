@@ -8,6 +8,19 @@
 
 import SwiftUI
 
+// MARK: - Tab Bar Visibility Environment Key
+
+private struct TabBarVisibilityKey: EnvironmentKey {
+    static let defaultValue: Binding<Bool> = .constant(true)
+}
+
+extension EnvironmentValues {
+    var tabBarVisible: Binding<Bool> {
+        get { self[TabBarVisibilityKey.self] }
+        set { self[TabBarVisibilityKey.self] = newValue }
+    }
+}
+
 @MainActor
 final class TabRouter: ObservableObject {
     @Published var selectedTab: TabBarView.Tab = .dashboard
@@ -51,6 +64,7 @@ struct TabBarView: View {
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var tabRouter = TabRouter()
     @StateObject private var drawerRouter = DrawerRouter()
+    @State private var isTabBarVisible = true
 
     // MARK: - Tab Definition
 
@@ -106,13 +120,18 @@ struct TabBarView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .environment(\.tabBarVisible, $isTabBarVisible)
 
-            // Custom Tab Bar
-            CustomTabBar(selectedTab: $tabRouter.selectedTab)
+            // Custom Tab Bar (conditionally visible)
+            if isTabBarVisible {
+                CustomTabBar(selectedTab: $tabRouter.selectedTab)
+                    .transition(.move(edge: .bottom))
+            }
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .environmentObject(tabRouter)
         .environmentObject(drawerRouter)
+        .animation(.easeInOut(duration: 0.25), value: isTabBarVisible)
         .safeAreaInset(edge: .top) {
             HStack {
                 Button {
