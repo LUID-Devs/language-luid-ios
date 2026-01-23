@@ -74,6 +74,12 @@ struct RoadmapProgressResponse: Codable {
     let data: RoadmapProgress
 }
 
+struct SaveStepProgressResponse: Codable {
+    let success: Bool
+    let message: String?
+    // We don't need to decode the data since we just care about success
+}
+
 // MARK: - Lesson Service
 
 @MainActor
@@ -439,6 +445,7 @@ class LessonService {
         stepScores: [String: Double]? = nil
     ) async throws {
         NSLog("💾 Saving step progress for phase \(phaseNumber)...")
+        NSLog("💾 Values being saved - currentStep: \(currentStep), completedSteps: \(completedSteps)")
         os_log("💾 Saving step progress...", log: logger, type: .info)
 
         var parameters: [String: Any] = [
@@ -450,16 +457,24 @@ class LessonService {
         }
 
         do {
-            let _: SuccessResponse<LessonPhaseProgress> = try await apiClient.put(
+            // Backend returns a custom response format with success and message
+            // We don't need the full data, just confirmation that it was saved
+            let response: SaveStepProgressResponse = try await apiClient.put(
                 "\(APIEndpoint.roadmaps)/\(roadmapId)/lessons/\(lessonId)/phases/\(phaseNumber)/steps",
                 parameters: parameters,
                 requiresAuth: true
             )
 
-            NSLog("✅ Step progress saved - Current: \(currentStep)")
-            os_log("✅ Step progress saved", log: logger, type: .info)
+            if response.success {
+                NSLog("✅ Step progress saved - Current: \(currentStep), Completed: \(completedSteps)")
+                os_log("✅ Step progress saved", log: logger, type: .info)
+            } else {
+                NSLog("⚠️ Save response success=false")
+                throw APIError.unknown
+            }
         } catch {
-            NSLog("❌ Failed to save step progress: \(error.localizedDescription)")
+            NSLog("❌ Failed to save step progress: \(error)")
+            NSLog("❌ Error type: \(type(of: error))")
             os_log("❌ Failed to save step progress: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -521,9 +536,9 @@ class LessonService {
     }
 
     /// Fetch step progress for a specific phase
-    /// Gets step progress from the phase-progress summary endpoint
+    /// Gets step progress from the user lesson progress endpoint
     /// - Parameters:
-    ///   - roadmapId: Roadmap UUID (not used, kept for consistency)
+    ///   - roadmapId: Roadmap UUID
     ///   - lessonId: Lesson UUID
     ///   - phaseNumber: Phase number (1-4)
     func fetchStepProgress(
@@ -532,32 +547,52 @@ class LessonService {
         phaseNumber: Int
     ) async throws -> LessonPhaseProgress? {
         NSLog("📊 Fetching step progress for phase \(phaseNumber)...")
+        NSLog("📊 Roadmap ID: \(roadmapId), Lesson ID: \(lessonId), Phase: \(phaseNumber)")
         os_log("📊 Fetching step progress...", log: logger, type: .info)
 
         do {
-            // Use the phase-progress endpoint which includes stepProgress
-            let response: PhaseProgressSummaryResponse = try await apiClient.get(
-                "/lessons/\(lessonId)/phase-progress",
+            // Use the correct endpoint that includes stepProgress
+            let response: UserLessonProgressResponse = try await apiClient.get(
+                "\(APIEndpoint.roadmaps)/\(roadmapId)/lessons/\(lessonId)/progress",
                 requiresAuth: true
             )
 
-            // Extract step progress for this specific phase from the response
+            NSLog("📊 API Response - Current Phase: \(response.data.currentPhase)")
+            NSLog("📊 API Response - Has stepProgress dict: \(response.data.stepProgress != nil)")
+
             if let stepProgressDict = response.data.stepProgress {
+                NSLog("📊 StepProgress keys: \(Array(stepProgressDict.keys))")
+
                 let phaseKey = "phase\(phaseNumber)"
+                NSLog("📊 Looking for key: '\(phaseKey)'")
+
                 if let stepProgress = stepProgressDict[phaseKey] {
-                    NSLog("✅ Fetched step progress - Current: \(stepProgress.currentStep ?? 0), Completed: \(stepProgress.completedSteps ?? [])")
+                    NSLog("✅ Found step progress for \(phaseKey)!")
+                    NSLog("✅ Current step: \(stepProgress.currentStep ?? -1)")
+                    NSLog("✅ Completed steps: \(stepProgress.completedSteps ?? [])")
+                    if let scores = stepProgress.stepScores {
+                        NSLog("✅ Step scores keys: \(Array(scores.keys))")
+                    }
                     os_log("✅ Fetched step progress", log: logger, type: .info)
                     return stepProgress
                 } else {
-                    NSLog("ℹ️ No step progress found for phase \(phaseNumber)")
+                    NSLog("⚠️ Key '\(phaseKey)' not found in stepProgress dict!")
+                    NSLog("⚠️ Available keys: \(Array(stepProgressDict.keys))")
                     return nil
                 }
+            } else {
+                NSLog("⚠️ stepProgress is nil in API response!")
+                NSLog("⚠️ Response data: status=\(response.data.status.rawValue), currentPhase=\(response.data.currentPhase)")
             }
 
             NSLog("ℹ️ No step progress data in response")
             return nil
         } catch {
-            NSLog("⚠️ Failed to fetch step progress: \(error.localizedDescription)")
+            NSLog("❌ Failed to fetch step progress: \(error.localizedDescription)")
+            NSLog("❌ Error type: \(type(of: error))")
+            if let apiError = error as? APIError {
+                NSLog("❌ API Error: \(apiError)")
+            }
             os_log("⚠️ Failed to fetch step progress: %{public}@", log: logger, type: .error, error.localizedDescription)
             // Return nil instead of throwing - step progress may not exist yet
             return nil

@@ -30,8 +30,8 @@ struct Exercise: Codable, Identifiable, Hashable {
     let speechConfig: SpeechConfig?
     let metadata: [String: AnyCodable]?
     let isActive: Bool
-    let createdAt: Date
-    let updatedAt: Date
+    let createdAt: Date?
+    let updatedAt: Date?
 
     enum CodingKeys: String, CodingKey {
         case id, lessonId, phaseDefinitionId, exerciseType

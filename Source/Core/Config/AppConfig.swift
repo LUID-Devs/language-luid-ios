@@ -29,7 +29,8 @@ enum AppConfig {
     static let apiTimeout: TimeInterval = 30
 
     /// File upload timeout (for audio files)
-    static let uploadTimeout: TimeInterval = 60
+    /// Extended to 180 seconds to accommodate slow Google GenAI STT processing
+    static let uploadTimeout: TimeInterval = 180
 
 
     // MARK: - App Configuration

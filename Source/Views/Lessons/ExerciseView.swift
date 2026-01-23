@@ -15,6 +15,7 @@ struct ExerciseView: View {
     let exercise: Exercise
     let languageCode: String // Language locale (e.g., "es-ES", "fr-FR")
     let onSubmit: (ResponseValue) -> Void
+    let onSpeechValidationStarted: (() -> Void)? // Optional callback when speech validation starts
 
     @Environment(\.colorScheme) var colorScheme
     @State private var userResponse: ResponseValue?
@@ -176,7 +177,8 @@ struct ExerciseView: View {
                     } else {
                         NSLog("❌ [ExerciseView] userResponse is nil, cannot submit!")
                     }
-                }
+                },
+                onSpeechValidationStarted: onSpeechValidationStarted
             )
 
         case .listeningComprehension:
@@ -224,7 +226,8 @@ struct ExerciseView: View {
                     } else {
                         NSLog("❌ [ExerciseView] userResponse is nil, cannot submit!")
                     }
-                }
+                },
+                onSpeechValidationStarted: onSpeechValidationStarted
             )
         }
     }
@@ -429,6 +432,7 @@ private struct SpeechExercise: View {
     let isSubmitted: Bool
     let onRecognize: (String) -> Void
     let onAutoSubmit: () -> Void
+    let onSpeechValidationStarted: (() -> Void)?
 
     @Environment(\.colorScheme) var colorScheme
 
@@ -471,6 +475,11 @@ private struct SpeechExercise: View {
                             onRecognize(validationResponse.validation.transcription)
                             // Auto-submit after a brief delay to ensure state is updated
                             NSLog("🎯 [SpeechExercise] Scheduling auto-submit in 0.1s")
+                        },
+                        onValidationFailed: nil,
+                        onValidationStarted: {
+                            NSLog("🔊 [SpeechExercise] Validation started, notifying parent")
+                            onSpeechValidationStarted?()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                 NSLog("🎯 [SpeechExercise] Calling onAutoSubmit now")
                                 onAutoSubmit()
@@ -623,6 +632,7 @@ private struct SpeechResponseExercise: View {
     let isSubmitted: Bool
     let onRecognize: (String) -> Void
     let onAutoSubmit: () -> Void
+    let onSpeechValidationStarted: (() -> Void)?
 
     @Environment(\.colorScheme) var colorScheme
 
@@ -664,6 +674,11 @@ private struct SpeechResponseExercise: View {
                             onRecognize(validationResponse.validation.transcription)
                             // Auto-submit after a brief delay to ensure state is updated
                             NSLog("🎯 [SpeechResponseExercise] Scheduling auto-submit in 0.1s")
+                        },
+                        onValidationFailed: nil,
+                        onValidationStarted: {
+                            NSLog("🔊 [SpeechResponseExercise] Validation started, notifying parent")
+                            onSpeechValidationStarted?()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                 NSLog("🎯 [SpeechResponseExercise] Calling onAutoSubmit now")
                                 onAutoSubmit()

@@ -83,15 +83,23 @@ class APIClient {
         configuration.timeoutIntervalForRequest = AppConfig.apiTimeout
         configuration.timeoutIntervalForResource = 60
 
-        // Upload session with longer timeout
+        // Upload session with longer timeout for speech validation
+        // Speech validation involves: audio upload → S3 upload → Gemini STT (60-300s) → response
+        // During Gemini processing, no data is sent, so timeoutIntervalForRequest must be high
         let uploadConfiguration = URLSessionConfiguration.default
-        uploadConfiguration.timeoutIntervalForRequest = AppConfig.uploadTimeout
-        uploadConfiguration.timeoutIntervalForResource = 120
+        uploadConfiguration.timeoutIntervalForRequest = 300  // Must match timeoutIntervalForResource
+        uploadConfiguration.timeoutIntervalForResource = 300  // 5 minutes for slow backend processing (S3 uploads, STT)
 
         self.session = URLSession(configuration: configuration)
         self.uploadSession = URLSession(configuration: uploadConfiguration)
         self.baseURL = AppConfig.apiBaseURL
         self.keychainManager = KeychainManager.shared
+
+        // Log timeout configuration for debugging
+        NSLog("⚙️ APIClient initialized")
+        NSLog("   Standard session timeouts: request=\(configuration.timeoutIntervalForRequest)s, resource=\(configuration.timeoutIntervalForResource)s")
+        NSLog("   Upload session timeouts: request=\(uploadConfiguration.timeoutIntervalForRequest)s, resource=\(uploadConfiguration.timeoutIntervalForResource)s")
+        NSLog("   Base URL: \(baseURL)")
     }
 
     // MARK: - Request Methods

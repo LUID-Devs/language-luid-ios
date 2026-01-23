@@ -175,33 +175,53 @@ enum PhaseType: String, Codable {
 // MARK: - Lesson Phase Progress
 
 struct LessonPhaseProgress: Codable, Identifiable, Hashable {
-    let id: String
-    let userId: String
-    let lessonId: String
-    let phaseNumber: Int
-    let status: PhaseStatus
+    // Store backend's optional id as private property
+    private let _id: String?
+
+    // Optional fields - backend may not send all fields for stepProgress
+    let userId: String?
+    let lessonId: String?
+    let phaseNumber: Int?
+    let status: PhaseStatus?
     let score: Double?
     let maxScore: Double?
     let timeSpent: Int?
-    let completed: Bool
+    let completed: Bool?
     let completedAt: Date?
+
+    // Step-specific fields - these are the ones actually sent by backend
     let currentStep: Int?
     let totalSteps: Int?
     let completedSteps: [Int]?
     let stepScores: [String: Double]?
-    let attempts: Int
+
+    // Optional fields
+    let attempts: Int?
     let lastAttemptAt: Date?
-    let createdAt: Date
-    let updatedAt: Date
+    let createdAt: Date?
+    let updatedAt: Date?
 
     enum CodingKeys: String, CodingKey {
-        case id, userId, lessonId, phaseNumber, status
+        case _id = "id"
+        case userId, lessonId, phaseNumber, status
         case score, maxScore, timeSpent, completed, completedAt
         case currentStep, totalSteps, completedSteps, stepScores
         case attempts, lastAttemptAt, createdAt, updatedAt
     }
 
-    // Hashable conformance
+    // Identifiable conformance - computed ID property
+    // Uses provided ID or generates one from phaseNumber if available
+    var id: String {
+        if let _id = _id {
+            return _id
+        }
+        if let phaseNumber = phaseNumber {
+            return "phase-\(phaseNumber)"
+        }
+        return UUID().uuidString
+    }
+
+    // Hashable conformance using id
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
@@ -241,15 +261,18 @@ struct LessonPhaseProgress: Codable, Identifiable, Hashable {
     }
 
     var isAvailable: Bool {
-        status == .available || status == .inProgress || status == .current
+        guard let status = status else { return false }
+        return status == .available || status == .inProgress || status == .current
     }
 
     var isPassed: Bool {
-        completed && (score ?? 0) >= (maxScore ?? 1) * 0.7
+        guard let completed = completed else { return false }
+        return completed && (score ?? 0) >= (maxScore ?? 1) * 0.7
     }
 
     var needsRetry: Bool {
-        !completed || !isPassed
+        guard let completed = completed else { return true }
+        return !completed || !isPassed
     }
 }
 
@@ -348,11 +371,13 @@ struct PhaseState: Codable, Identifiable {
     let status: PhaseStatus
     let score: Double?
     let completed: Bool
+    let name: String?
+    let completedAt: Date?
 
     var id: Int { phase }
 
     enum CodingKeys: String, CodingKey {
-        case phase, status, score, completed
+        case phase, status, score, completed, name, completedAt
     }
 
     var scorePercentage: Int {

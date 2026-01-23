@@ -40,7 +40,8 @@ struct LessonDetailView: View {
                         LessonPhaseView(
                             roadmapId: roadmapId,
                             lessonId: lessonId,
-                            phase: phase
+                            phase: phase,
+                            selectedPhase: $selectedPhase
                         )
                     } else {
                         EmptyView()
@@ -320,6 +321,7 @@ struct LessonDetailView: View {
                     PhaseCard(
                         phase: phase,
                         progress: phaseProgress(for: phase.phaseNumber),
+                        stepProgress: phaseStepProgress(for: phase.phaseNumber),
                         onTap: {
                             // Only allow navigation if phase is not locked
                             let progress = phaseProgress(for: phase.phaseNumber)
@@ -433,6 +435,54 @@ struct LessonDetailView: View {
 
     private func phaseProgress(for phaseNumber: Int) -> PhaseState? {
         viewModel.phaseProgressSummary?.phaseStates.first { $0.phase == phaseNumber }
+    }
+
+    private func phaseStepProgress(for phaseNumber: Int) -> LessonPhaseProgress? {
+        NSLog("🔍 [LessonDetailView] Looking for step progress for phase \(phaseNumber)")
+        NSLog("🔍 [LessonDetailView] userProgress exists: \(viewModel.userProgress != nil)")
+        NSLog("🔍 [LessonDetailView] phaseProgressSummary exists: \(viewModel.phaseProgressSummary != nil)")
+
+        // Try BOTH sources - phaseProgressSummary first (primary), then userProgress (fallback)
+        var stepProgressDict: [String: LessonPhaseProgress]? = nil
+        var source = ""
+
+        if let phaseStepProgress = viewModel.phaseProgressSummary?.stepProgress {
+            stepProgressDict = phaseStepProgress
+            source = "phaseProgressSummary"
+        } else if let userStepProgress = viewModel.userProgress?.stepProgress {
+            stepProgressDict = userStepProgress
+            source = "userProgress"
+        }
+
+        if let stepProgress = stepProgressDict {
+            NSLog("🔍 [LessonDetailView] Using stepProgress from: \(source)")
+            NSLog("🔍 [LessonDetailView] Available stepProgress keys: \(stepProgress.keys.sorted())")
+
+            // Try multiple key formats
+            let possibleKeys = [
+                "\(phaseNumber)",           // "1", "2", etc.
+                "phase\(phaseNumber)",      // "phase1", "phase2", etc.
+                "Phase\(phaseNumber)",      // "Phase1", "Phase2", etc.
+            ]
+
+            for key in possibleKeys {
+                if let progress = stepProgress[key] {
+                    NSLog("✅ [LessonDetailView] Found stepProgress with key '\(key)'")
+                    if let completedSteps = progress.completedSteps {
+                        NSLog("✅ [LessonDetailView] Completed steps: \(completedSteps.count) steps - \(completedSteps)")
+                    } else {
+                        NSLog("⚠️ [LessonDetailView] completedSteps is nil")
+                    }
+                    return progress
+                }
+            }
+
+            NSLog("❌ [LessonDetailView] No stepProgress found with any key format for phase \(phaseNumber)")
+        } else {
+            NSLog("❌ [LessonDetailView] stepProgress dictionary is nil in both sources")
+        }
+
+        return nil
     }
 
     private func startLesson() {
@@ -641,6 +691,7 @@ private struct PhrasePreviewCard: View {
 private struct PhaseCard: View {
     let phase: LessonPhaseDefinition
     let progress: PhaseState?
+    let stepProgress: LessonPhaseProgress?
     let onTap: () -> Void
 
     @Environment(\.colorScheme) var colorScheme
@@ -688,33 +739,38 @@ private struct PhaseCard: View {
                 }
 
                 // Progress indicator
-                if let progress = progress, let score = progress.score {
-                    VStack(spacing: LLSpacing.xs) {
-                        HStack {
-                            Text("Score")
-                                .font(LLTypography.captionSmall())
-                                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                if let progress = progress {
+                    let calculatedScore = calculatePhaseScore()
+                    // Show progress for current, in-progress, or completed phases
+                    if progress.status == .current || progress.status == .inProgress || progress.status == .completed {
+                        VStack(spacing: LLSpacing.xs) {
+                            HStack {
+                                Text("Progress")
+                                    .font(LLTypography.captionSmall())
+                                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
 
-                            Spacer()
+                                Spacer()
 
-                            Text("\(progress.scorePercentage)%")
-                                .font(LLTypography.captionSmall())
-                                .fontWeight(.semibold)
-                                .foregroundColor(scoreColor(progress.scorePercentage))
-                        }
-
-                        GeometryReader { geometry in
-                            ZStack(alignment: .leading) {
-                                RoundedRectangle(cornerRadius: LLSpacing.radiusFull)
-                                    .fill(LLColors.muted.color(for: colorScheme))
-                                    .frame(height: 4)
-
-                                RoundedRectangle(cornerRadius: LLSpacing.radiusFull)
-                                    .fill(scoreColor(progress.scorePercentage))
-                                    .frame(width: geometry.size.width * score, height: 4)
+                                Text("\(calculatedScore.percentage)%")
+                                    .font(LLTypography.captionSmall())
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(scoreColor(calculatedScore.percentage))
                             }
+
+                            GeometryReader { geometry in
+                                ZStack(alignment: .leading) {
+                                    RoundedRectangle(cornerRadius: LLSpacing.radiusFull)
+                                        .fill(LLColors.muted.color(for: colorScheme))
+                                        .frame(height: 4)
+
+                                    RoundedRectangle(cornerRadius: LLSpacing.radiusFull)
+                                        .fill(scoreColor(calculatedScore.percentage))
+                                        .frame(width: geometry.size.width * calculatedScore.normalized, height: 4)
+                                }
+                            }
+                            .frame(height: 4)
                         }
-                        .frame(height: 4)
+                        .padding(.top, 4)
                     }
                 }
             }
@@ -723,6 +779,50 @@ private struct PhaseCard: View {
         .onTapGesture {
             onTap()
         }
+    }
+
+    private func calculatePhaseScore() -> (percentage: Int, normalized: Double) {
+        NSLog("📊 [PhaseCard] Calculating score for phase \(phase.phaseNumber)")
+        NSLog("📊 [PhaseCard] progress exists: \(progress != nil), score: \(progress?.score ?? -1)")
+        NSLog("📊 [PhaseCard] stepProgress exists: \(stepProgress != nil)")
+
+        // First, try to use the backend score if available AND meaningful (> 0 or phase completed)
+        // For in-progress phases with score: 0.0, we want to calculate from stepProgress instead
+        if let progress = progress, let score = progress.score, (score > 0 || progress.completed) {
+            let percentage = progress.scorePercentage
+            NSLog("📊 [PhaseCard] Using backend score: \(percentage)% (score: \(score))")
+            return (percentage, score)
+        }
+
+        // Otherwise, calculate from step progress (completed exercises / total exercises)
+        if let stepProgress = stepProgress {
+            NSLog("📊 [PhaseCard] stepProgress found, checking completedSteps...")
+            if let completedSteps = stepProgress.completedSteps {
+                let totalExercises = phase.exerciseCount
+                let completedCount = completedSteps.count
+
+                NSLog("📊 [PhaseCard] Completed steps: \(completedSteps)")
+                NSLog("📊 [PhaseCard] Total exercises: \(totalExercises), Completed: \(completedCount)")
+
+                guard totalExercises > 0 else {
+                    NSLog("⚠️ [PhaseCard] totalExercises is 0, returning 0%")
+                    return (0, 0.0)
+                }
+
+                let percentage = Int((Double(completedCount) / Double(totalExercises)) * 100)
+                let normalized = Double(completedCount) / Double(totalExercises)
+
+                NSLog("✅ [PhaseCard] Calculated: \(percentage)% (\(completedCount)/\(totalExercises))")
+                return (percentage, normalized)
+            } else {
+                NSLog("⚠️ [PhaseCard] completedSteps is nil")
+            }
+        } else {
+            NSLog("⚠️ [PhaseCard] stepProgress is nil")
+        }
+
+        NSLog("❌ [PhaseCard] Returning default 0%")
+        return (0, 0.0)
     }
 
     private func scoreColor(_ percentage: Int) -> Color {

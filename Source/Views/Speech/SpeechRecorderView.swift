@@ -29,6 +29,9 @@ struct SpeechRecorderView: View {
     /// Optional callback when validation fails
     let onValidationFailed: ((SpeechValidationResponse) -> Void)?
 
+    /// Optional callback when validation starts
+    let onValidationStarted: (() -> Void)?
+
     /// Compact mode (smaller UI)
     let isCompact: Bool
 
@@ -38,6 +41,7 @@ struct SpeechRecorderView: View {
     @State private var validationService = SpeechValidationService.shared
 
     @State private var isValidating: Bool = false
+    @State private var isSavingProgress: Bool = false
     @State private var validationResult: SpeechValidationResponse?
     @State private var showResult: Bool = false
     @State private var errorMessage: String?
@@ -54,7 +58,8 @@ struct SpeechRecorderView: View {
         languageCode: String,
         isCompact: Bool = false,
         onValidationPassed: @escaping (SpeechValidationResponse) -> Void,
-        onValidationFailed: ((SpeechValidationResponse) -> Void)? = nil
+        onValidationFailed: ((SpeechValidationResponse) -> Void)? = nil,
+        onValidationStarted: (() -> Void)? = nil
     ) {
         self.lessonId = lessonId
         self.stepIndex = stepIndex
@@ -63,6 +68,7 @@ struct SpeechRecorderView: View {
         self.isCompact = isCompact
         self.onValidationPassed = onValidationPassed
         self.onValidationFailed = onValidationFailed
+        self.onValidationStarted = onValidationStarted
     }
 
     // MARK: - Body
@@ -94,8 +100,8 @@ struct SpeechRecorderView: View {
             // Recording controls
             recordingControls
 
-            // Validation loading
-            if isValidating {
+            // Validation and progress saving loading
+            if isValidating || isSavingProgress {
                 validationLoadingView
             }
 
@@ -118,8 +124,8 @@ struct SpeechRecorderView: View {
                                 audioRecorder.reset()
                             },
                             onContinue: result.validation.passed ? {
+                                // Just dismiss the modal - progress was already saved automatically
                                 showResult = false
-                                onValidationPassed(result)
                             } : nil
                         )
                     }
@@ -249,7 +255,7 @@ struct SpeechRecorderView: View {
             ProgressView()
                 .scaleEffect(1.2)
 
-            Text("Validating your pronunciation...")
+            Text(isSavingProgress ? "Saving your progress..." : "Validating your pronunciation...")
                 .font(.caption)
                 .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
         }
@@ -312,6 +318,10 @@ struct SpeechRecorderView: View {
                 showError = false
                 errorMessage = nil
 
+                // Notify parent that validation started
+                onValidationStarted?()
+                NSLog("🔊 [SpeechRecorder] Validation started, notified parent")
+
                 // Validate speech
                 let result = try await validationService.validateSpeech(
                     audioFileURL: audioFileURL,
@@ -328,15 +338,26 @@ struct SpeechRecorderView: View {
                 validationResult = result
                 showResult = true
 
-                // Call appropriate callback
+                // Auto-submit if validation passed
                 if result.validation.passed {
-                    // Don't call onValidationPassed here, let user click Continue button
+                    // Show saving progress state
+                    isSavingProgress = true
+
+                    // Call the callback to save progress automatically
+                    onValidationPassed(result)
+
+                    // Hide saving state after a brief delay
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        isSavingProgress = false
+                    }
                 } else {
+                    // Only call failure callback for failed validations
                     onValidationFailed?(result)
                 }
 
             } catch {
                 isValidating = false
+                isSavingProgress = false
                 errorMessage = error.localizedDescription
                 showError = true
             }

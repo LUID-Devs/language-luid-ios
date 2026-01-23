@@ -14,6 +14,7 @@ struct LessonPhaseView: View {
     let roadmapId: String
     let lessonId: String
     let phase: LessonPhaseDefinition
+    @Binding var selectedPhase: LessonPhaseDefinition?
 
     @StateObject private var viewModel = LessonViewModel()
     @EnvironmentObject var authViewModel: AuthViewModel
@@ -35,6 +36,8 @@ struct LessonPhaseView: View {
     @State private var feedbackMessage = ""
     @State private var showConfetti = false
     @State private var isLoadingProgress = true
+    @State private var exercisesLoadedSuccessfully = false
+    @State private var isSpeechValidationInProgress = false
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -105,23 +108,48 @@ struct LessonPhaseView: View {
         .onAppear {
             // Hide tab bar when entering lesson phase
             tabBarVisible.wrappedValue = false
-
-            // Load step progress and restore position
-            Task {
-                await loadAndRestoreProgress()
-            }
         }
         .onDisappear {
             // Show tab bar when leaving lesson phase
             tabBarVisible.wrappedValue = true
 
-            // Save progress when leaving
-            Task {
-                await saveCurrentProgress()
+            // CRITICAL: Use detached task to ensure progress saves even if parent view dismisses
+            // Capture values before the closure to avoid capturing @State wrappers
+            let currentStep = currentExerciseIndex
+            let completed = completedSteps
+            let loaded = exercisesLoadedSuccessfully
+            let roadmap = roadmapId
+            let lesson = lessonId
+            let phaseNum = phase.phaseNumber
+
+            Task.detached { [weak viewModel] in
+                guard let viewModel = viewModel, loaded else {
+                    NSLog("⚠️ [onDisappear] Skipping save - no viewModel or not loaded")
+                    return
+                }
+
+                // Check exercises count on main actor
+                let hasExercises = await MainActor.run { !viewModel.exercises.isEmpty }
+                guard hasExercises else {
+                    NSLog("⚠️ [onDisappear] Skipping save - no exercises")
+                    return
+                }
+
+                NSLog("💾 [onDisappear] Saving progress (detached task)...")
+                await viewModel.saveStepProgress(
+                    roadmapId: roadmap,
+                    lessonId: lesson,
+                    phaseNumber: phaseNum,
+                    currentStep: currentStep,
+                    completedSteps: completed
+                )
             }
         }
         .task {
+            // CRITICAL FIX: Load exercises BEFORE restoring progress
+            // This ensures exercises.count is accurate when clamping the restored index
             await loadExercises()
+            await loadAndRestoreProgress()
         }
         .onReceive(timer) { _ in
             elapsedSeconds += 1
@@ -129,8 +157,30 @@ struct LessonPhaseView: View {
         .confirmationDialog("Exit Phase", isPresented: $showExitConfirmation, titleVisibility: .visible) {
             Button("Keep Learning", role: .cancel) {}
             Button("Exit", role: .destructive) {
+                // Capture values before the task closure
+                let currentStep = currentExerciseIndex
+                let completed = completedSteps
+                let loaded = exercisesLoadedSuccessfully
+                let roadmap = roadmapId
+                let lesson = lessonId
+                let phaseNum = phase.phaseNumber
+
                 Task {
-                    await saveCurrentProgress()
+                    guard loaded, !viewModel.exercises.isEmpty else {
+                        NSLog("⚠️ [Exit] Skipping save - no valid data")
+                        dismiss()
+                        return
+                    }
+
+                    NSLog("💾 [Exit] Saving progress before dismiss...")
+                    await viewModel.saveStepProgress(
+                        roadmapId: roadmap,
+                        lessonId: lesson,
+                        phaseNumber: phaseNum,
+                        currentStep: currentStep,
+                        completedSteps: completed
+                    )
+                    NSLog("✅ [Exit] Progress saved, dismissing...")
                     dismiss()
                 }
             }
@@ -240,6 +290,10 @@ struct LessonPhaseView: View {
                     languageCode: languageLocale,
                     onSubmit: { response in
                         submitExercise(response)
+                    },
+                    onSpeechValidationStarted: {
+                        NSLog("🔊 [PhaseView] Speech validation started, blocking phase completion")
+                        isSpeechValidationInProgress = true
                     }
                 )
                 .id(exercise.id) // Force view recreation when exercise changes
@@ -525,11 +579,20 @@ struct LessonPhaseView: View {
     // MARK: - Actions
 
     private func loadExercises() async {
+        NSLog("📚 [PhaseView] Loading exercises for phase \(phase.phaseNumber)...")
         await viewModel.loadExercises(
             roadmapId: roadmapId,
             lessonId: lessonId,
             phaseNumber: phase.phaseNumber
         )
+
+        if !viewModel.exercises.isEmpty {
+            exercisesLoadedSuccessfully = true
+            NSLog("✅ [PhaseView] Exercises loaded successfully - Count: \(viewModel.exercises.count)")
+        } else {
+            NSLog("⚠️ [PhaseView] No exercises loaded!")
+        }
+
         totalScore = viewModel.exercises.reduce(0) { $0 + $1.points }
     }
 
@@ -569,8 +632,41 @@ struct LessonPhaseView: View {
     }
 
     private func saveCurrentProgress() async {
-        // Don't save if no exercises loaded
-        guard !viewModel.exercises.isEmpty else { return }
+        // Don't save if exercises never loaded successfully
+        guard exercisesLoadedSuccessfully else {
+            NSLog("⚠️ [PhaseView] Skipping save - exercises never loaded successfully")
+            return
+        }
+
+        // Don't save if no exercises in viewModel
+        guard !viewModel.exercises.isEmpty else {
+            NSLog("⚠️ [PhaseView] Skipping save - exercises array is empty")
+            return
+        }
+
+        // Check if task is cancelled before saving
+        guard !Task.isCancelled else {
+            NSLog("⚠️ [PhaseView] Task cancelled - using detached task to save anyway")
+            // Capture values to avoid @State wrapper issues
+            let currentStep = currentExerciseIndex
+            let completed = completedSteps
+            let roadmap = roadmapId
+            let lesson = lessonId
+            let phaseNum = phase.phaseNumber
+
+            // Use detached task to complete the save even if parent is cancelled
+            await Task.detached { [weak viewModel] in
+                guard let viewModel = viewModel else { return }
+                await viewModel.saveStepProgress(
+                    roadmapId: roadmap,
+                    lessonId: lesson,
+                    phaseNumber: phaseNum,
+                    currentStep: currentStep,
+                    completedSteps: completed
+                )
+            }.value
+            return
+        }
 
         NSLog("💾 [PhaseView] Saving progress - Step: \(currentExerciseIndex), Completed: \(completedSteps)")
 
@@ -586,6 +682,12 @@ struct LessonPhaseView: View {
     private func submitExercise(_ response: ResponseValue) {
         NSLog("🎯 [PhaseView] submitExercise called")
         Task {
+            // Ensure flag is always cleared, even if an error occurs
+            defer {
+                isSpeechValidationInProgress = false
+                NSLog("🔊 [PhaseView] Speech validation completed, unblocking phase completion")
+            }
+
             guard let exercise = currentExercise else {
                 NSLog("❌ [PhaseView] No current exercise!")
                 return
@@ -688,6 +790,12 @@ struct LessonPhaseView: View {
     }
 
     private func nextExerciseOrComplete() {
+        // Prevent action if speech validation is in progress
+        guard !isSpeechValidationInProgress else {
+            NSLog("⚠️ [PhaseView] Blocked nextExerciseOrComplete - speech validation in progress")
+            return
+        }
+
         if viewModel.hasNextExercise {
             nextExercise()
         } else {
@@ -696,6 +804,12 @@ struct LessonPhaseView: View {
     }
 
     private func completePhase() {
+        // Prevent completion if speech validation is in progress
+        guard !isSpeechValidationInProgress else {
+            NSLog("⚠️ [PhaseView] Blocked completePhase - speech validation in progress")
+            return
+        }
+
         let finalScore = Double(score) / Double(totalScore)
 
         Task {
@@ -720,8 +834,46 @@ struct LessonPhaseView: View {
     }
 
     private func moveToNextPhase() {
-        // Navigate to next phase (implementation depends on navigation setup)
-        dismiss()
+        Task {
+            withAnimation {
+                showPhaseCompletion = false
+            }
+
+            let nextPhaseNumber = phase.phaseNumber + 1
+            guard nextPhaseNumber <= 4 else {
+                NSLog("ℹ️ [PhaseView] No more phases, dismissing to lesson overview")
+                dismiss()
+                return
+            }
+
+            NSLog("🔍 [PhaseView] Current phases count: \(viewModel.lessonPhases.count)")
+            NSLog("🔍 [PhaseView] Looking for phase \(nextPhaseNumber)")
+
+            // ALWAYS reload phases to ensure we have fresh data with exercises
+            NSLog("📥 [PhaseView] Reloading phases from backend...")
+            await viewModel.loadLessonPhases(roadmapId: roadmapId, lessonId: lessonId)
+            NSLog("📥 [PhaseView] Phases reloaded. Count: \(viewModel.lessonPhases.count)")
+
+            // Log all available phases
+            for p in viewModel.lessonPhases {
+                NSLog("📝 [PhaseView] Available phase: \(p.phaseNumber) - \(p.phaseName)")
+            }
+
+            // Find next phase and update the binding to trigger navigation
+            if let nextPhase = viewModel.lessonPhases.first(where: { $0.phaseNumber == nextPhaseNumber }) {
+                NSLog("✅ [PhaseView] Found phase \(nextPhaseNumber): \(nextPhase.phaseName)")
+                NSLog("✅ [PhaseView] Phase has \(nextPhase.exercises?.count ?? 0) exercises")
+
+                // CRITICAL: Just update the binding - SwiftUI will automatically navigate
+                // Don't call dismiss() as that would set selectedPhase = nil and cancel navigation
+                selectedPhase = nextPhase
+                NSLog("✅ [PhaseView] selectedPhase updated to phase \(nextPhaseNumber)")
+            } else {
+                NSLog("❌ [PhaseView] Could not find phase \(nextPhaseNumber) among \(viewModel.lessonPhases.count) phases")
+                NSLog("❌ [PhaseView] Available phase numbers: \(viewModel.lessonPhases.map { $0.phaseNumber })")
+                dismiss()
+            }
+        }
     }
 
     private func showHint() {

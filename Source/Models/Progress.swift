@@ -32,6 +32,7 @@ struct UserLessonProgress: Codable, Identifiable, Hashable {
     let lastAccessedAt: Date?  // Optional for "not_started" response
     let createdAt: Date?  // Optional for "not_started" response
     let updatedAt: Date?  // Optional for "not_started" response
+    let stepProgress: [String: LessonPhaseProgress]?  // Step progress for each phase
 
     enum CodingKeys: String, CodingKey {
         case id, userId, lessonId, roadmapId, status
@@ -40,7 +41,7 @@ struct UserLessonProgress: Codable, Identifiable, Hashable {
         case exercisesCompleted, totalExercises, accuracy
         case consecutiveDays, lastPhaseCompleted
         case startedAt, completedAt, lastAccessedAt
-        case createdAt, updatedAt
+        case createdAt, updatedAt, stepProgress
     }
 
     // Hashable conformance
