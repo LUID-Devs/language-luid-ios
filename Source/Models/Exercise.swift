@@ -206,6 +206,30 @@ struct ExerciseOption: Codable, Identifiable, Hashable {
         case id, text, isCorrect, explanation, audioUrl
     }
 
+    // Custom decoding to handle both String and Int for id, and optional isCorrect
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // Try to decode id as String first, fallback to Int
+        if let idString = try? container.decode(String.self, forKey: .id) {
+            self.id = idString
+        } else if let idInt = try? container.decode(Int.self, forKey: .id) {
+            self.id = String(idInt)
+        } else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .id,
+                in: container,
+                debugDescription: "ID must be either String or Int"
+            )
+        }
+
+        self.text = try container.decode(String.self, forKey: .text)
+        // isCorrect is optional for ordering exercises, default to false
+        self.isCorrect = try container.decodeIfPresent(Bool.self, forKey: .isCorrect) ?? false
+        self.explanation = try container.decodeIfPresent(String.self, forKey: .explanation)
+        self.audioUrl = try container.decodeIfPresent(String.self, forKey: .audioUrl)
+    }
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

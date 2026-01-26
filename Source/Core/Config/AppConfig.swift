@@ -21,7 +21,7 @@ enum AppConfig {
         #else
         // Physical device: Use Mac's local IP address
         // Make sure your Mac and iPhone are on the same WiFi network!
-        return "http://192.168.8.39:5001/api"
+        return "http://192.168.1.169:5001/api"
         #endif
     }
 

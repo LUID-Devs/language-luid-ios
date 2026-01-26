@@ -296,7 +296,10 @@ class LessonViewModel: ObservableObject {
             currentExercise = exercises.first
             currentExerciseIndex = 0
             exerciseStartTime = Date()
-            NSLog("✅ Loaded \(exercises.count) exercises")
+            NSLog("✅ Loaded \(exercises.count) exercises for phase \(phaseNumber ?? -1)")
+            if let first = exercises.first {
+                NSLog("   First exercise: \(first.prompt)")
+            }
         } catch is CancellationError {
             // Task was explicitly cancelled - this is normal, don't show error
             NSLog("ℹ️ Exercise loading cancelled (view dismissed)")

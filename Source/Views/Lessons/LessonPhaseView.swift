@@ -61,7 +61,10 @@ struct LessonPhaseView: View {
                 // Exercise Container
                 if viewModel.isLoading {
                     loadingState
-                } else if let exercise = currentExercise {
+                } else if !exercisesLoadedSuccessfully {
+                    // Still loading initial data
+                    loadingState
+                } else if !viewModel.exercises.isEmpty, let exercise = currentExercise {
                     exerciseContainer(exercise)
                 } else {
                     emptyState
@@ -145,11 +148,40 @@ struct LessonPhaseView: View {
                 )
             }
         }
-        .task {
-            // CRITICAL FIX: Load exercises BEFORE restoring progress
-            // This ensures exercises.count is accurate when clamping the restored index
-            await loadExercises()
-            await loadAndRestoreProgress()
+        .task(id: selectedPhase?.id) {
+            // CRITICAL: This triggers whenever selectedPhase.id changes (Phase 1 → Phase 2)
+            // Automatically resets and reloads everything
+            guard let currentPhase = selectedPhase else {
+                NSLog("⚠️ [PhaseView] Task triggered but selectedPhase is nil")
+                return
+            }
+            NSLog("🎬 [PhaseView] Task triggered for phase \(currentPhase.phaseNumber) (id: \(currentPhase.id))")
+            NSLog("🎬 [PhaseView] Phase name: \(currentPhase.phaseName)")
+
+            // Reset all state variables
+            NSLog("🔄 [PhaseView] Resetting all state variables...")
+            currentExerciseIndex = 0
+            completedSteps = []
+            score = 0
+            correctAnswers = 0
+            elapsedSeconds = 0
+            startTime = Date()
+            exercisesLoadedSuccessfully = false
+            viewModel.exerciseResult = nil
+            showFeedback = false
+            showPhaseCompletion = false
+            showConfetti = false
+
+            // Load exercises BEFORE restoring progress
+            NSLog("📥 [PhaseView] Loading exercises for phase \(currentPhase.phaseNumber)...")
+            await loadExercises(for: currentPhase)
+            NSLog("📥 [PhaseView] Loaded \(viewModel.exercises.count) exercises")
+            if let first = viewModel.exercises.first {
+                NSLog("   📝 First exercise prompt: \(first.prompt)")
+            }
+
+            await loadAndRestoreProgress(for: currentPhase)
+            NSLog("✅ [PhaseView] Phase \(currentPhase.phaseNumber) ready with \(viewModel.exercises.count) exercises")
         }
         .onReceive(timer) { _ in
             elapsedSeconds += 1
@@ -307,7 +339,7 @@ struct LessonPhaseView: View {
 
     private var bottomNavigation: some View {
         let hasResult = viewModel.exerciseResult != nil
-        let _ = NSLog("🎯 [BottomNav] Rendering - exerciseResult is \(hasResult ? "SET" : "NIL")")
+        let _ = NSLog("🎯 [BottomNav] Rendering - exerciseResult is \(hasResult ? "SET" : "NIL"), currentIndex=\(currentExerciseIndex), total=\(viewModel.exercises.count), hasNext=\(hasNextExercise)")
 
         return VStack(spacing: 0) {
             HStack(spacing: LLSpacing.md) {
@@ -317,7 +349,7 @@ struct LessonPhaseView: View {
                     icon: Image(systemName: "chevron.left"),
                     style: .outline,
                     size: .md,
-                    isDisabled: !viewModel.hasPreviousExercise
+                    isDisabled: !hasPreviousExercise
                 ) {
                     previousExercise()
                 }
@@ -335,21 +367,21 @@ struct LessonPhaseView: View {
 
                 // Check/Next Button
                 if hasResult {
-                    let _ = NSLog("🎯 [BottomNav] Rendering Next button")
+                    let buttonLabel = hasNextExercise ? "Next" : "Complete"
+                    let _ = NSLog("🎯 [BottomNav] Rendering '\(buttonLabel)' button (hasNext=\(hasNextExercise))")
                     LLButton(
-                        viewModel.hasNextExercise ? "Next" : "Complete",
-                        icon: Image(systemName: viewModel.hasNextExercise ? "chevron.right" : "checkmark"),
+                        buttonLabel,
+                        icon: Image(systemName: hasNextExercise ? "chevron.right" : "checkmark"),
                         style: .primary,
                         size: .md
                     ) {
-                        NSLog("🔘 Next button tapped, hasNext=\(viewModel.hasNextExercise)")
+                        NSLog("🔘 \(buttonLabel) button tapped, hasNext=\(hasNextExercise)")
                         nextExerciseOrComplete()
                     }
                 } else {
-                    let _ = NSLog("🎯 [BottomNav] Rendering DEBUG text (exerciseResult is nil)")
-                    Text("DEBUG: exerciseResult is nil")
+                    let _ = NSLog("🎯 [BottomNav] No result yet - waiting for answer")
+                    Text("")
                         .font(.caption)
-                        .foregroundColor(.red)
                 }
             }
             .padding(LLSpacing.md)
@@ -454,6 +486,18 @@ struct LessonPhaseView: View {
                         .font(LLTypography.h2())
                         .foregroundColor(LLColors.foreground.color(for: colorScheme))
 
+                    // Auto-navigation message (matches frontend toast)
+                    if phase.phaseNumber < 4 {
+                        HStack(spacing: LLSpacing.xs) {
+                            Image(systemName: "arrow.right.circle.fill")
+                                .foregroundColor(LLColors.primary.color(for: colorScheme))
+                            Text("Moving to Phase \(phase.phaseNumber + 1)...")
+                                .font(LLTypography.body())
+                                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                        }
+                        .padding(.vertical, LLSpacing.xs)
+                    }
+
                     Divider()
 
                     // Stats
@@ -462,32 +506,6 @@ struct LessonPhaseView: View {
                         StatRow(label: "Accuracy", value: accuracyFormatted, icon: "target")
                         StatRow(label: "Time", value: timeFormatted, icon: "clock.fill")
                         StatRow(label: "XP Earned", value: "+\(score)", icon: "sparkles")
-                    }
-
-                    Divider()
-
-                    // Buttons
-                    VStack(spacing: LLSpacing.sm) {
-                        if phase.phaseNumber < 4 {
-                            LLButton(
-                                "Next Phase",
-                                icon: Image(systemName: "arrow.right"),
-                                style: .primary,
-                                size: .lg,
-                                fullWidth: true
-                            ) {
-                                moveToNextPhase()
-                            }
-                        }
-
-                        LLButton(
-                            "Back to Lesson",
-                            style: .outline,
-                            size: .lg,
-                            fullWidth: true
-                        ) {
-                            dismiss()
-                        }
                     }
                 }
             }
@@ -531,9 +549,21 @@ struct LessonPhaseView: View {
         return viewModel.exercises[currentExerciseIndex]
     }
 
+    /// Check if there's a next exercise (based on VIEW's currentExerciseIndex, not ViewModel's)
+    private var hasNextExercise: Bool {
+        currentExerciseIndex < viewModel.exercises.count - 1
+    }
+
+    /// Check if there's a previous exercise (based on VIEW's currentExerciseIndex)
+    private var hasPreviousExercise: Bool {
+        currentExerciseIndex > 0
+    }
+
     private var exerciseProgress: Double {
         guard !viewModel.exercises.isEmpty else { return 0 }
-        return Double(currentExerciseIndex + 1) / Double(viewModel.exercises.count)
+        let progress = Double(currentExerciseIndex + 1) / Double(viewModel.exercises.count)
+        NSLog("📊 [Progress] currentIndex=\(currentExerciseIndex), total=\(viewModel.exercises.count), progress=\(progress * 100)%")
+        return progress
     }
 
     private var timeFormatted: String {
@@ -578,12 +608,12 @@ struct LessonPhaseView: View {
 
     // MARK: - Actions
 
-    private func loadExercises() async {
-        NSLog("📚 [PhaseView] Loading exercises for phase \(phase.phaseNumber)...")
+    private func loadExercises(for currentPhase: LessonPhaseDefinition) async {
+        NSLog("📚 [PhaseView] Loading exercises for phase \(currentPhase.phaseNumber)...")
         await viewModel.loadExercises(
             roadmapId: roadmapId,
             lessonId: lessonId,
-            phaseNumber: phase.phaseNumber
+            phaseNumber: currentPhase.phaseNumber
         )
 
         if !viewModel.exercises.isEmpty {
@@ -596,14 +626,14 @@ struct LessonPhaseView: View {
         totalScore = viewModel.exercises.reduce(0) { $0 + $1.points }
     }
 
-    private func loadAndRestoreProgress() async {
-        NSLog("📊 [PhaseView] Loading step progress for phase \(phase.phaseNumber)...")
+    private func loadAndRestoreProgress(for currentPhase: LessonPhaseDefinition) async {
+        NSLog("📊 [PhaseView] Loading step progress for phase \(currentPhase.phaseNumber)...")
 
         // Load step progress from backend
         await viewModel.loadStepProgress(
             roadmapId: roadmapId,
             lessonId: lessonId,
-            phaseNumber: phase.phaseNumber
+            phaseNumber: currentPhase.phaseNumber
         )
 
         // Restore position from progress
@@ -616,13 +646,25 @@ struct LessonPhaseView: View {
             // Clamp to valid range
             let validStep = max(0, min(restoredStep, viewModel.exercises.count - 1))
 
+            // Recalculate score based on completed exercises
+            var restoredScore = 0
+            var restoredCorrectAnswers = 0
+            for stepIndex in restoredCompleted {
+                guard stepIndex < viewModel.exercises.count else { continue }
+                let exercise = viewModel.exercises[stepIndex]
+                restoredScore += exercise.points
+                restoredCorrectAnswers += 1
+            }
+
             DispatchQueue.main.async {
                 self.currentExerciseIndex = validStep
                 self.completedSteps = restoredCompleted
+                self.score = restoredScore
+                self.correctAnswers = restoredCorrectAnswers
                 self.isLoadingProgress = false
             }
 
-            NSLog("✅ [PhaseView] Progress restored - Now on step \(validStep)")
+            NSLog("✅ [PhaseView] Progress restored - Step: \(validStep), Score: \(restoredScore)/\(totalScore), Correct: \(restoredCorrectAnswers)")
         } else {
             NSLog("ℹ️ [PhaseView] No saved progress - starting from beginning")
             DispatchQueue.main.async {
@@ -644,6 +686,11 @@ struct LessonPhaseView: View {
             return
         }
 
+        guard let currentPhase = selectedPhase else {
+            NSLog("⚠️ [PhaseView] Skipping save - selectedPhase is nil")
+            return
+        }
+
         // Check if task is cancelled before saving
         guard !Task.isCancelled else {
             NSLog("⚠️ [PhaseView] Task cancelled - using detached task to save anyway")
@@ -652,7 +699,7 @@ struct LessonPhaseView: View {
             let completed = completedSteps
             let roadmap = roadmapId
             let lesson = lessonId
-            let phaseNum = phase.phaseNumber
+            let phaseNum = currentPhase.phaseNumber
 
             // Use detached task to complete the save even if parent is cancelled
             await Task.detached { [weak viewModel] in
@@ -673,7 +720,7 @@ struct LessonPhaseView: View {
         await viewModel.saveStepProgress(
             roadmapId: roadmapId,
             lessonId: lessonId,
-            phaseNumber: phase.phaseNumber,
+            phaseNumber: currentPhase.phaseNumber,
             currentStep: currentExerciseIndex,
             completedSteps: completedSteps
         )
@@ -753,7 +800,11 @@ struct LessonPhaseView: View {
     }
 
     private func previousExercise() {
-        guard viewModel.hasPreviousExercise else { return }
+        guard hasPreviousExercise else {
+            NSLog("❌ [PhaseView] previousExercise blocked - no previous exercise")
+            return
+        }
+        NSLog("⬅️ [PhaseView] Moving to previous exercise (\(currentExerciseIndex - 1)/\(viewModel.exercises.count))")
         withAnimation {
             currentExerciseIndex -= 1
             viewModel.exerciseResult = nil
@@ -762,7 +813,8 @@ struct LessonPhaseView: View {
     }
 
     private func skipExercise() {
-        if viewModel.hasNextExercise {
+        NSLog("⏭️ [PhaseView] skipExercise - hasNext=\(hasNextExercise)")
+        if hasNextExercise {
             nextExercise()
         } else {
             completePhase()
@@ -770,13 +822,17 @@ struct LessonPhaseView: View {
     }
 
     private func nextExercise() {
-        guard viewModel.hasNextExercise else { return }
+        guard hasNextExercise else {
+            NSLog("❌ [PhaseView] nextExercise blocked - no next exercise")
+            return
+        }
 
         // Mark current exercise as completed before moving
         if !completedSteps.contains(currentExerciseIndex) {
             completedSteps.append(currentExerciseIndex)
         }
 
+        NSLog("➡️ [PhaseView] Moving to next exercise (\(currentExerciseIndex + 1)/\(viewModel.exercises.count))")
         withAnimation {
             currentExerciseIndex += 1
             viewModel.exerciseResult = nil
@@ -796,9 +852,13 @@ struct LessonPhaseView: View {
             return
         }
 
-        if viewModel.hasNextExercise {
+        NSLog("🎯 [PhaseView] nextExerciseOrComplete - currentIndex=\(currentExerciseIndex), total=\(viewModel.exercises.count), hasNext=\(hasNextExercise)")
+
+        if hasNextExercise {
+            NSLog("➡️ [PhaseView] Has next exercise, calling nextExercise()")
             nextExercise()
         } else {
+            NSLog("✅ [PhaseView] Last exercise, calling completePhase()")
             completePhase()
         }
     }
@@ -810,13 +870,18 @@ struct LessonPhaseView: View {
             return
         }
 
+        guard let currentPhase = selectedPhase else {
+            NSLog("❌ [PhaseView] Cannot complete phase - selectedPhase is nil")
+            return
+        }
+
         let finalScore = Double(score) / Double(totalScore)
 
         Task {
             await viewModel.completePhase(
                 roadmapId: roadmapId,
                 lessonId: lessonId,
-                phaseNumber: phase.phaseNumber,
+                phaseNumber: currentPhase.phaseNumber,
                 score: finalScore
             )
 
@@ -827,19 +892,37 @@ struct LessonPhaseView: View {
             showConfetti = true
             UINotificationFeedbackGenerator().notificationOccurred(.success)
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                showConfetti = false
+            // Auto-navigate to next phase after showing completion stats
+            // Matches frontend behavior: automatic navigation without manual button tap
+            if currentPhase.phaseNumber < 4 {
+                NSLog("✅ [PhaseView] Phase \(currentPhase.phaseNumber) completed! Auto-navigating to Phase \(currentPhase.phaseNumber + 1) in 3 seconds...")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    showConfetti = false
+                    // Automatically move to next phase
+                    moveToNextPhase()
+                }
+            } else {
+                // Last phase - just stop confetti
+                NSLog("✅ [PhaseView] Final phase completed! Lesson finished.")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    showConfetti = false
+                }
             }
         }
     }
 
     private func moveToNextPhase() {
+        guard let currentPhase = selectedPhase else {
+            NSLog("❌ [PhaseView] Cannot move to next phase - selectedPhase is nil")
+            return
+        }
+
         Task {
             withAnimation {
                 showPhaseCompletion = false
             }
 
-            let nextPhaseNumber = phase.phaseNumber + 1
+            let nextPhaseNumber = currentPhase.phaseNumber + 1
             guard nextPhaseNumber <= 4 else {
                 NSLog("ℹ️ [PhaseView] No more phases, dismissing to lesson overview")
                 dismiss()

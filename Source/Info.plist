@@ -93,6 +93,16 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Language Luid needs permission to save screenshots of your learning achievements and progress to your photo library.</string>
 
+	<!-- Privacy - Local Network Usage -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Language Luid needs access to devices on your local network to connect to the development server for testing and learning features.</string>
+
+	<!-- Bonjour Services (required for local network access) -->
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_http._tcp</string>
+	</array>
+
 	<!-- App Transport Security -->
 	<key>NSAppTransportSecurity</key>
 	<dict>
@@ -104,6 +114,14 @@
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<!-- Allow HTTP for local development on Mac -->
+			<key>192.168.1.169</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
