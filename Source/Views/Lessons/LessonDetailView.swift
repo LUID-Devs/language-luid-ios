@@ -143,11 +143,15 @@ struct LessonDetailView: View {
             Text(lesson.title)
                 .font(LLTypography.h2())
                 .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.leading)
 
             if let subtitle = lesson.subtitle {
                 Text(subtitle)
                     .font(LLTypography.body())
                     .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.leading)
             }
         }
     }
@@ -200,6 +204,8 @@ struct LessonDetailView: View {
             Text(description)
                 .font(LLTypography.body())
                 .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.leading)
                 .lineSpacing(4)
         }
     }
@@ -438,26 +444,16 @@ struct LessonDetailView: View {
     }
 
     private func phaseStepProgress(for phaseNumber: Int) -> LessonPhaseProgress? {
-        NSLog("🔍 [LessonDetailView] Looking for step progress for phase \(phaseNumber)")
-        NSLog("🔍 [LessonDetailView] userProgress exists: \(viewModel.userProgress != nil)")
-        NSLog("🔍 [LessonDetailView] phaseProgressSummary exists: \(viewModel.phaseProgressSummary != nil)")
-
         // Try BOTH sources - phaseProgressSummary first (primary), then userProgress (fallback)
         var stepProgressDict: [String: LessonPhaseProgress]? = nil
-        var source = ""
 
         if let phaseStepProgress = viewModel.phaseProgressSummary?.stepProgress {
             stepProgressDict = phaseStepProgress
-            source = "phaseProgressSummary"
         } else if let userStepProgress = viewModel.userProgress?.stepProgress {
             stepProgressDict = userStepProgress
-            source = "userProgress"
         }
 
         if let stepProgress = stepProgressDict {
-            NSLog("🔍 [LessonDetailView] Using stepProgress from: \(source)")
-            NSLog("🔍 [LessonDetailView] Available stepProgress keys: \(stepProgress.keys.sorted())")
-
             // Try multiple key formats
             let possibleKeys = [
                 "\(phaseNumber)",           // "1", "2", etc.
@@ -467,19 +463,9 @@ struct LessonDetailView: View {
 
             for key in possibleKeys {
                 if let progress = stepProgress[key] {
-                    NSLog("✅ [LessonDetailView] Found stepProgress with key '\(key)'")
-                    if let completedSteps = progress.completedSteps {
-                        NSLog("✅ [LessonDetailView] Completed steps: \(completedSteps.count) steps - \(completedSteps)")
-                    } else {
-                        NSLog("⚠️ [LessonDetailView] completedSteps is nil")
-                    }
                     return progress
                 }
             }
-
-            NSLog("❌ [LessonDetailView] No stepProgress found with any key format for phase \(phaseNumber)")
-        } else {
-            NSLog("❌ [LessonDetailView] stepProgress dictionary is nil in both sources")
         }
 
         return nil
@@ -505,16 +491,9 @@ struct LessonDetailView: View {
 
     private func continueLesson() {
         // Navigate to current phase
-        NSLog("🔵 continueLesson() called")
-        NSLog("🔵 viewModel.currentPhase: \(viewModel.currentPhase?.phaseNumber ?? -1)")
-        NSLog("🔵 viewModel.phaseProgressSummary?.currentPhase: \(viewModel.phaseProgressSummary?.currentPhase ?? -1)")
-        NSLog("🔵 viewModel.lessonPhases count: \(viewModel.lessonPhases.count)")
-
         if let currentPhase = viewModel.currentPhase {
-            NSLog("🔵 Setting selectedPhase to phase \(currentPhase.phaseNumber)")
             selectedPhase = currentPhase
         } else {
-            NSLog("❌ viewModel.currentPhase is nil, falling back to first phase")
             // Fallback: if currentPhase is nil, use first phase
             if let firstPhase = viewModel.lessonPhases.first {
                 selectedPhase = firstPhase
@@ -579,10 +558,14 @@ private struct MetadataItem: View {
                 .font(LLTypography.h4())
                 .fontWeight(.bold)
                 .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
 
             Text(label)
                 .font(LLTypography.captionSmall())
                 .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
         }
         .frame(maxWidth: .infinity)
     }
@@ -631,19 +614,26 @@ private struct VocabularyPreviewCard: View {
                     .font(LLTypography.body())
                     .fontWeight(.semibold)
                     .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.leading)
 
                 if let pronunciation = item.pronunciation {
                     Text(pronunciation)
                         .font(LLTypography.captionSmall())
                         .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
 
             Spacer()
 
-            Text(item.translation)
-                .font(LLTypography.body())
-                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+            VStack(alignment: .trailing, spacing: 0) {
+                Text(item.translation)
+                    .font(LLTypography.body())
+                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.trailing)
+            }
         }
         .padding(LLSpacing.sm)
         .background(
@@ -664,18 +654,24 @@ private struct PhrasePreviewCard: View {
                 .font(LLTypography.body())
                 .fontWeight(.semibold)
                 .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.leading)
 
             Text(phrase.translation)
                 .font(LLTypography.bodySmall())
                 .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.leading)
 
             if let context = phrase.usageContext {
-                HStack(spacing: LLSpacing.xs) {
+                HStack(alignment: .top, spacing: LLSpacing.xs) {
                     Image(systemName: "info.circle.fill")
                         .font(.system(size: 10))
 
                     Text(context)
                         .font(LLTypography.captionSmall())
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
                 }
                 .foregroundColor(LLColors.info.color(for: colorScheme))
             }
@@ -722,12 +718,16 @@ private struct PhaseCard: View {
                     .font(LLTypography.body())
                     .fontWeight(.semibold)
                     .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.leading)
 
                 if let description = phase.description {
                     Text(description)
                         .font(LLTypography.bodySmall())
                         .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
+                        .lineSpacing(2)
                 }
 
                 HStack(spacing: LLSpacing.lg) {
@@ -782,46 +782,30 @@ private struct PhaseCard: View {
     }
 
     private func calculatePhaseScore() -> (percentage: Int, normalized: Double) {
-        NSLog("📊 [PhaseCard] Calculating score for phase \(phase.phaseNumber)")
-        NSLog("📊 [PhaseCard] progress exists: \(progress != nil), score: \(progress?.score ?? -1)")
-        NSLog("📊 [PhaseCard] stepProgress exists: \(stepProgress != nil)")
-
         // First, try to use the backend score if available AND meaningful (> 0 or phase completed)
         // For in-progress phases with score: 0.0, we want to calculate from stepProgress instead
         if let progress = progress, let score = progress.score, (score > 0 || progress.completed) {
             let percentage = progress.scorePercentage
-            NSLog("📊 [PhaseCard] Using backend score: \(percentage)% (score: \(score))")
             return (percentage, score)
         }
 
         // Otherwise, calculate from step progress (completed exercises / total exercises)
         if let stepProgress = stepProgress {
-            NSLog("📊 [PhaseCard] stepProgress found, checking completedSteps...")
             if let completedSteps = stepProgress.completedSteps {
                 let totalExercises = phase.exerciseCount
                 let completedCount = completedSteps.count
 
-                NSLog("📊 [PhaseCard] Completed steps: \(completedSteps)")
-                NSLog("📊 [PhaseCard] Total exercises: \(totalExercises), Completed: \(completedCount)")
-
                 guard totalExercises > 0 else {
-                    NSLog("⚠️ [PhaseCard] totalExercises is 0, returning 0%")
                     return (0, 0.0)
                 }
 
                 let percentage = Int((Double(completedCount) / Double(totalExercises)) * 100)
                 let normalized = Double(completedCount) / Double(totalExercises)
 
-                NSLog("✅ [PhaseCard] Calculated: \(percentage)% (\(completedCount)/\(totalExercises))")
                 return (percentage, normalized)
-            } else {
-                NSLog("⚠️ [PhaseCard] completedSteps is nil")
             }
-        } else {
-            NSLog("⚠️ [PhaseCard] stepProgress is nil")
         }
 
-        NSLog("❌ [PhaseCard] Returning default 0%")
         return (0, 0.0)
     }
 

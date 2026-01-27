@@ -260,7 +260,6 @@ struct AudioPlayerControl: View {
                 let errorDetails = error.localizedDescription
                 errorMessage = "TTS Error: \(errorDetails). Check network connection and backend status."
                 showError = true
-                print("❌ TTS Error: \(errorDetails)")
                 return
             }
         }
@@ -276,7 +275,6 @@ struct AudioPlayerControl: View {
         } catch {
             errorMessage = "Playback error: \(error.localizedDescription)"
             showError = true
-            print("❌ Playback Error: \(error.localizedDescription)")
         }
     }
 

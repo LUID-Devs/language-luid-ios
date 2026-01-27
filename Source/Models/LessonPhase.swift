@@ -72,7 +72,12 @@ struct LessonPhaseDefinition: Codable, Identifiable, Hashable {
     }
 
     var exerciseCount: Int {
-        maxExercises
+        // Return actual exercise count if exercises array is available,
+        // otherwise fall back to maxExercises
+        if let exercises = exercises {
+            return exercises.count
+        }
+        return maxExercises
     }
 
     var estimatedDurationFormatted: String {

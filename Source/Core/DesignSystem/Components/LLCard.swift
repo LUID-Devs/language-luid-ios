@@ -114,14 +114,9 @@ struct LLCard<Content: View>: View {
                 Button(action: onTap) {
                     cardContent
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(CardPressButtonStyle(isPressed: $isPressed))
                 .scaleEffect(isPressed ? 0.98 : 1.0)
                 .animation(.easeInOut(duration: 0.1), value: isPressed)
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { _ in isPressed = true }
-                        .onEnded { _ in isPressed = false }
-                )
             } else {
                 cardContent
             }
@@ -315,12 +310,20 @@ struct LLInteractiveCard<Content: View>: View {
                 .scaleEffect(isPressed ? 0.98 : 1.0)
                 .animation(.easeInOut(duration: 0.1), value: isPressed)
         }
-        .buttonStyle(PlainButtonStyle())
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in isPressed = true }
-                .onEnded { _ in isPressed = false }
-        )
+        .buttonStyle(CardPressButtonStyle(isPressed: $isPressed))
+    }
+}
+
+// MARK: - Custom Button Style
+
+struct CardPressButtonStyle: ButtonStyle {
+    @Binding var isPressed: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .onChange(of: configuration.isPressed) { newValue in
+                isPressed = newValue
+            }
     }
 }
 

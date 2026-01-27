@@ -237,12 +237,7 @@ private struct FilterChip: View {
             )
             .scaleEffect(isPressed ? 0.95 : 1.0)
         }
-        .buttonStyle(PlainButtonStyle())
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in isPressed = true }
-                .onEnded { _ in isPressed = false }
-        )
+        .buttonStyle(PressableButtonStyle(isPressed: $isPressed))
         .animation(.easeInOut(duration: 0.1), value: isPressed)
     }
 }
@@ -343,14 +338,7 @@ private struct LessonCard: View {
                 }
             }
         }
-        .buttonStyle(PlainButtonStyle())
-        .scaleEffect(isPressed ? 0.98 : 1.0)
-        .animation(.easeInOut(duration: 0.1), value: isPressed)
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in isPressed = true }
-                .onEnded { _ in isPressed = false }
-        )
+        .buttonStyle(ScalableButtonStyle(isPressed: $isPressed, scale: 0.98))
         .disabled(lesson.isLocked)
         .opacity(lesson.isLocked ? 0.6 : 1.0)
     }
@@ -407,14 +395,7 @@ private struct LessonGridCard: View {
                 .frame(height: 150)
             }
         }
-        .buttonStyle(PlainButtonStyle())
-        .scaleEffect(isPressed ? 0.95 : 1.0)
-        .animation(.easeInOut(duration: 0.1), value: isPressed)
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in isPressed = true }
-                .onEnded { _ in isPressed = false }
-        )
+        .buttonStyle(ScalableButtonStyle(isPressed: $isPressed, scale: 0.95))
         .disabled(lesson.isLocked)
         .opacity(lesson.isLocked ? 0.6 : 1.0)
     }
@@ -548,6 +529,33 @@ private struct ProgressBar: View {
             }
         }
         .frame(height: 6)
+    }
+}
+
+// MARK: - Custom Button Styles
+
+struct PressableButtonStyle: ButtonStyle {
+    @Binding var isPressed: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .onChange(of: configuration.isPressed) { newValue in
+                isPressed = newValue
+            }
+    }
+}
+
+struct ScalableButtonStyle: ButtonStyle {
+    @Binding var isPressed: Bool
+    let scale: CGFloat
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? scale : 1.0)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+            .onChange(of: configuration.isPressed) { newValue in
+                isPressed = newValue
+            }
     }
 }
 

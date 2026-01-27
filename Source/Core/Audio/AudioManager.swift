@@ -74,6 +74,33 @@ final class AudioManager: NSObject, ObservableObject {
     func configureForRecording() async throws {
         os_log("Configuring audio session for recording", log: logger, type: .info)
 
+        // If already in playAndRecord mode, skip category reconfiguration
+        if audioSession.category == .playAndRecord {
+            os_log("Audio session already in playAndRecord mode, updating recording preferences only", log: logger, type: .info)
+
+            do {
+                // Still update recording-specific preferences
+                try audioSession.setPreferredInput(audioSession.availableInputs?.first { $0.portType == .builtInMic })
+                try audioSession.setPreferredSampleRate(44100.0)
+                try audioSession.setPreferredIOBufferDuration(0.005)
+
+                // Ensure session is active
+                if !isSessionActive {
+                    try audioSession.setActive(true)
+                    isSessionActive = true
+                }
+
+                currentMode = .recording
+                os_log("Recording preferences updated successfully", log: logger, type: .info)
+            } catch {
+                // Log but don't throw - preferences are optional
+                os_log("Failed to update recording preferences: %{public}@",
+                       log: logger, type: .info, error.localizedDescription)
+            }
+
+            return
+        }
+
         do {
             try audioSession.setCategory(
                 .playAndRecord,
@@ -108,6 +135,13 @@ final class AudioManager: NSObject, ObservableObject {
     func configureForPlayback() async throws {
         os_log("Configuring audio session for playback", log: logger, type: .info)
 
+        // If already in playAndRecord mode, don't reconfigure - it can handle playback too
+        if audioSession.category == .playAndRecord {
+            os_log("Audio session already in playAndRecord mode, skipping playback config completely", log: logger, type: .info)
+            // Don't try to activate or change anything - playAndRecord can handle playback
+            return
+        }
+
         do {
             try audioSession.setCategory(
                 .playback,
@@ -132,6 +166,25 @@ final class AudioManager: NSObject, ObservableObject {
     /// Configure audio session for simultaneous playback and recording
     func configureForPlaybackAndRecording() async throws {
         os_log("Configuring audio session for playback and recording", log: logger, type: .info)
+
+        // If already in playAndRecord mode, skip reconfiguration
+        if audioSession.category == .playAndRecord {
+            os_log("Audio session already in playAndRecord mode, skipping reconfiguration", log: logger, type: .info)
+
+            // Just ensure session is active
+            if !isSessionActive {
+                do {
+                    try audioSession.setActive(true)
+                    isSessionActive = true
+                } catch {
+                    // If activation fails, log but don't throw - session might already be active
+                    os_log("Session activation skipped or failed (may already be active): %{public}@",
+                           log: logger, type: .info, error.localizedDescription)
+                }
+            }
+
+            return
+        }
 
         do {
             try audioSession.setCategory(

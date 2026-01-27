@@ -115,8 +115,9 @@ final class AudioPlayer: NSObject, ObservableObject {
         completionHandler = completion
 
         do {
-            // Configure audio session
-            try await audioManager.configureForPlayback()
+            // Configure audio session for playback and recording
+            // Use playAndRecord mode to avoid conflicts with speech recorder
+            try await audioManager.configureForPlaybackAndRecording()
 
             // Handle remote vs local URLs
             let audioData: Data
@@ -158,8 +159,9 @@ final class AudioPlayer: NSObject, ObservableObject {
         completionHandler = completion
 
         do {
-            // Configure audio session
-            try await audioManager.configureForPlayback()
+            // Configure audio session for playback and recording
+            // Use playAndRecord mode to avoid conflicts with speech recorder
+            try await audioManager.configureForPlaybackAndRecording()
 
             // Play the audio data
             try await playAudioData(data)

@@ -7,6 +7,8 @@
 //
 
 import SwiftUI
+import os.log
+import NaturalLanguage
 
 struct LessonPhaseView: View {
     // MARK: - Properties
@@ -38,6 +40,7 @@ struct LessonPhaseView: View {
     @State private var isLoadingProgress = true
     @State private var exercisesLoadedSuccessfully = false
     @State private var isSpeechValidationInProgress = false
+    @State private var exerciseResetCounter = 0 // Increments to force ExerciseView reset
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -94,17 +97,15 @@ struct LessonPhaseView: View {
                 ConfettiView()
             }
         }
-        .navigationBarBackButtonHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("Phase \(phase.phaseNumber)")
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: { showExitConfirmation = true }) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .semibold))
-                        Text("Exit")
-                            .font(LLTypography.bodySmall())
-                    }
-                    .foregroundColor(LLColors.destructive.color(for: colorScheme))
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 22, weight: .regular))
+                        .foregroundColor(LLColors.destructive.color(for: colorScheme))
+                        .symbolRenderingMode(.hierarchical)
                 }
             }
         }
@@ -127,18 +128,15 @@ struct LessonPhaseView: View {
 
             Task.detached { [weak viewModel] in
                 guard let viewModel = viewModel, loaded else {
-                    NSLog("⚠️ [onDisappear] Skipping save - no viewModel or not loaded")
                     return
                 }
 
                 // Check exercises count on main actor
                 let hasExercises = await MainActor.run { !viewModel.exercises.isEmpty }
                 guard hasExercises else {
-                    NSLog("⚠️ [onDisappear] Skipping save - no exercises")
                     return
                 }
 
-                NSLog("💾 [onDisappear] Saving progress (detached task)...")
                 await viewModel.saveStepProgress(
                     roadmapId: roadmap,
                     lessonId: lesson,
@@ -152,14 +150,10 @@ struct LessonPhaseView: View {
             // CRITICAL: This triggers whenever selectedPhase.id changes (Phase 1 → Phase 2)
             // Automatically resets and reloads everything
             guard let currentPhase = selectedPhase else {
-                NSLog("⚠️ [PhaseView] Task triggered but selectedPhase is nil")
                 return
             }
-            NSLog("🎬 [PhaseView] Task triggered for phase \(currentPhase.phaseNumber) (id: \(currentPhase.id))")
-            NSLog("🎬 [PhaseView] Phase name: \(currentPhase.phaseName)")
 
             // Reset all state variables
-            NSLog("🔄 [PhaseView] Resetting all state variables...")
             currentExerciseIndex = 0
             completedSteps = []
             score = 0
@@ -173,17 +167,13 @@ struct LessonPhaseView: View {
             showConfetti = false
 
             // Load exercises BEFORE restoring progress
-            NSLog("📥 [PhaseView] Loading exercises for phase \(currentPhase.phaseNumber)...")
             await loadExercises(for: currentPhase)
-            NSLog("📥 [PhaseView] Loaded \(viewModel.exercises.count) exercises")
-            if let first = viewModel.exercises.first {
-                NSLog("   📝 First exercise prompt: \(first.prompt)")
-            }
 
             await loadAndRestoreProgress(for: currentPhase)
-            NSLog("✅ [PhaseView] Phase \(currentPhase.phaseNumber) ready with \(viewModel.exercises.count) exercises")
         }
         .onReceive(timer) { _ in
+            // Stop timer when phase is completed or when showing completion overlay
+            guard !showPhaseCompletion else { return }
             elapsedSeconds += 1
         }
         .confirmationDialog("Exit Phase", isPresented: $showExitConfirmation, titleVisibility: .visible) {
@@ -199,12 +189,10 @@ struct LessonPhaseView: View {
 
                 Task {
                     guard loaded, !viewModel.exercises.isEmpty else {
-                        NSLog("⚠️ [Exit] Skipping save - no valid data")
                         dismiss()
                         return
                     }
 
-                    NSLog("💾 [Exit] Saving progress before dismiss...")
                     await viewModel.saveStepProgress(
                         roadmapId: roadmap,
                         lessonId: lesson,
@@ -212,7 +200,6 @@ struct LessonPhaseView: View {
                         currentStep: currentStep,
                         completedSteps: completed
                     )
-                    NSLog("✅ [Exit] Progress saved, dismissing...")
                     dismiss()
                 }
             }
@@ -319,16 +306,15 @@ struct LessonPhaseView: View {
                 // Exercise View
                 ExerciseView(
                     exercise: exercise,
-                    languageCode: languageLocale,
+                    languageCode: detectLanguageForExercise(exercise),
                     onSubmit: { response in
                         submitExercise(response)
                     },
                     onSpeechValidationStarted: {
-                        NSLog("🔊 [PhaseView] Speech validation started, blocking phase completion")
                         isSpeechValidationInProgress = true
                     }
                 )
-                .id(exercise.id) // Force view recreation when exercise changes
+                .id("\(exercise.id)-\(exerciseResetCounter)") // Force recreation when exercise changes or counter increments
                 .padding(.horizontal, LLSpacing.md)
             }
             .padding(.bottom, 100) // Space for bottom navigation
@@ -339,7 +325,7 @@ struct LessonPhaseView: View {
 
     private var bottomNavigation: some View {
         let hasResult = viewModel.exerciseResult != nil
-        let _ = NSLog("🎯 [BottomNav] Rendering - exerciseResult is \(hasResult ? "SET" : "NIL"), currentIndex=\(currentExerciseIndex), total=\(viewModel.exercises.count), hasNext=\(hasNextExercise)")
+        let isCorrectAnswer = viewModel.exerciseResult?.isCorrect ?? false
 
         return VStack(spacing: 0) {
             HStack(spacing: LLSpacing.md) {
@@ -365,21 +351,18 @@ struct LessonPhaseView: View {
 
                 Spacer()
 
-                // Check/Next Button
-                if hasResult {
+                // Check/Next Button - Only show Next if answer is correct
+                if hasResult && isCorrectAnswer {
                     let buttonLabel = hasNextExercise ? "Next" : "Complete"
-                    let _ = NSLog("🎯 [BottomNav] Rendering '\(buttonLabel)' button (hasNext=\(hasNextExercise))")
                     LLButton(
                         buttonLabel,
                         icon: Image(systemName: hasNextExercise ? "chevron.right" : "checkmark"),
                         style: .primary,
                         size: .md
                     ) {
-                        NSLog("🔘 \(buttonLabel) button tapped, hasNext=\(hasNextExercise)")
                         nextExerciseOrComplete()
                     }
                 } else {
-                    let _ = NSLog("🎯 [BottomNav] No result yet - waiting for answer")
                     Text("")
                         .font(.caption)
                 }
@@ -561,8 +544,9 @@ struct LessonPhaseView: View {
 
     private var exerciseProgress: Double {
         guard !viewModel.exercises.isEmpty else { return 0 }
-        let progress = Double(currentExerciseIndex + 1) / Double(viewModel.exercises.count)
-        NSLog("📊 [Progress] currentIndex=\(currentExerciseIndex), total=\(viewModel.exercises.count), progress=\(progress * 100)%")
+        // Use completion-based progress (matching frontend behavior)
+        // Shows how many exercises have been successfully completed, not which question you're on
+        let progress = Double(completedSteps.count) / Double(viewModel.exercises.count)
         return progress
     }
 
@@ -578,38 +562,104 @@ struct LessonPhaseView: View {
         return String(format: "%.0f%%", accuracy)
     }
 
-    // Convert target language to locale code (e.g., "es" -> "es-ES", "fr" -> "fr-FR")
-    private var languageLocale: String {
-        guard let targetLanguage = authViewModel.currentUser?.targetLanguage else {
-            return "es-ES" // Default fallback
+    // REMOVED: Old implementation that used user's profile target language
+    // This was causing issues when user's profile language didn't match the lesson language
+    // New implementation: Use roadmap's language (passed as parameter) or detect from exercise text
+
+    /// Detect language for a specific exercise by analyzing its text content
+    private func detectLanguageForExercise(_ exercise: Exercise) -> String {
+        // Priority order for text to analyze:
+        // 1. expectedResponse (target language text for speech/audio exercises)
+        // 2. options.first (for multiple choice - first option is usually in target language)
+        // 3. prompt (fallback)
+
+        if let expectedResponse = exercise.expectedResponse, !expectedResponse.isEmpty {
+            return detectLanguageLocale(from: expectedResponse)
         }
 
-        // Map language codes to primary locales
+        if let options = exercise.options, !options.isEmpty, let firstOption = options.first {
+            return detectLanguageLocale(from: firstOption.text)
+        }
+
+        if !exercise.prompt.isEmpty {
+            return detectLanguageLocale(from: exercise.prompt)
+        }
+
+        // Ultimate fallback: user's target language
+        return mapLanguageToLocale(authViewModel.currentUser?.targetLanguage ?? "en")
+    }
+
+    /// Detect language from text using iOS NLLanguageRecognizer
+    /// Falls back to user's target language if detection fails
+    private func detectLanguageLocale(from text: String) -> String {
+        let logger = OSLog(subsystem: "com.luid.languageluid", category: "TTS")
+
+        // Try language detection first
+        let recognizer = NLLanguageRecognizer()
+        recognizer.processString(text)
+
+        if let detectedLanguage = recognizer.dominantLanguage {
+            let langCode = detectedLanguage.rawValue
+            os_log("🔍 TTS: Detected language '%{public}@' from text: '%{public}@'",
+                   log: logger, type: .info, langCode, text)
+
+            // Map detected language to TTS locale
+            let locale = mapLanguageToLocale(langCode)
+            os_log("🎤 TTS Language Resolution: detected='%{public}@' → locale='%{public}@'",
+                   log: logger, type: .info, langCode, locale)
+            return locale
+        }
+
+        // Fallback to user's target language
+        os_log("⚠️ TTS: Language detection failed for text: '%{public}@', using user profile",
+               log: logger, type: .info, text)
+
+        guard let targetLanguage = authViewModel.currentUser?.targetLanguage else {
+            os_log("⚠️ TTS: No targetLanguage in user profile, using device locale",
+                   log: logger, type: .error)
+            let deviceLang = Locale.current.language.languageCode?.identifier ?? "en"
+            return mapLanguageToLocale(deviceLang)
+        }
+
+        return mapLanguageToLocale(targetLanguage)
+    }
+
+    /// Map language code to primary TTS locale
+    private func mapLanguageToLocale(_ languageCode: String) -> String {
         let localeMap: [String: String] = [
-            "es": "es-ES",
-            "fr": "fr-FR",
-            "de": "de-DE",
-            "it": "it-IT",
-            "pt": "pt-PT",
-            "ja": "ja-JP",
-            "ko": "ko-KR",
-            "zh": "zh-CN",
-            "ar": "ar-SA",
-            "ru": "ru-RU",
-            "hi": "hi-IN",
-            "nl": "nl-NL",
-            "sv": "sv-SE",
-            "pl": "pl-PL",
-            "tr": "tr-TR"
+            "es": "es-ES", "spa": "es-ES",
+            "fr": "fr-FR", "fra": "fr-FR",
+            "de": "de-DE", "deu": "de-DE",
+            "it": "it-IT", "ita": "it-IT",
+            "pt": "pt-PT", "por": "pt-PT",
+            "ja": "ja-JP", "jpn": "ja-JP",
+            "ko": "ko-KR", "kor": "ko-KR",
+            "zh": "zh-CN", "zho": "zh-CN",
+            "ar": "ar-SA", "ara": "ar-SA",
+            "ru": "ru-RU", "rus": "ru-RU",
+            "hi": "hi-IN", "hin": "hi-IN",
+            "nl": "nl-NL", "nld": "nl-NL",
+            "sv": "sv-SE", "swe": "sv-SE",
+            "pl": "pl-PL", "pol": "pl-PL",
+            "tr": "tr-TR", "tur": "tr-TR",
+            "en": "en-US", "eng": "en-US"
         ]
 
-        return localeMap[targetLanguage.lowercased()] ?? "\(targetLanguage)-\(targetLanguage.uppercased())"
+        let code = languageCode.lowercased()
+        if let mapped = localeMap[code] {
+            return mapped
+        } else if code.count == 2 {
+            // Fallback pattern for 2-letter codes
+            return "\(code)-\(code.uppercased())"
+        } else {
+            // Default to English
+            return "en-US"
+        }
     }
 
     // MARK: - Actions
 
     private func loadExercises(for currentPhase: LessonPhaseDefinition) async {
-        NSLog("📚 [PhaseView] Loading exercises for phase \(currentPhase.phaseNumber)...")
         await viewModel.loadExercises(
             roadmapId: roadmapId,
             lessonId: lessonId,
@@ -618,17 +668,12 @@ struct LessonPhaseView: View {
 
         if !viewModel.exercises.isEmpty {
             exercisesLoadedSuccessfully = true
-            NSLog("✅ [PhaseView] Exercises loaded successfully - Count: \(viewModel.exercises.count)")
-        } else {
-            NSLog("⚠️ [PhaseView] No exercises loaded!")
         }
 
         totalScore = viewModel.exercises.reduce(0) { $0 + $1.points }
     }
 
     private func loadAndRestoreProgress(for currentPhase: LessonPhaseDefinition) async {
-        NSLog("📊 [PhaseView] Loading step progress for phase \(currentPhase.phaseNumber)...")
-
         // Load step progress from backend
         await viewModel.loadStepProgress(
             roadmapId: roadmapId,
@@ -640,8 +685,6 @@ struct LessonPhaseView: View {
         if let progress = viewModel.phaseStepProgress {
             let restoredStep = progress.currentStep ?? 0
             let restoredCompleted = progress.completedSteps ?? []
-
-            NSLog("📊 [PhaseView] Restoring progress - Step: \(restoredStep), Completed: \(restoredCompleted)")
 
             // Clamp to valid range
             let validStep = max(0, min(restoredStep, viewModel.exercises.count - 1))
@@ -663,10 +706,7 @@ struct LessonPhaseView: View {
                 self.correctAnswers = restoredCorrectAnswers
                 self.isLoadingProgress = false
             }
-
-            NSLog("✅ [PhaseView] Progress restored - Step: \(validStep), Score: \(restoredScore)/\(totalScore), Correct: \(restoredCorrectAnswers)")
         } else {
-            NSLog("ℹ️ [PhaseView] No saved progress - starting from beginning")
             DispatchQueue.main.async {
                 self.isLoadingProgress = false
             }
@@ -676,24 +716,20 @@ struct LessonPhaseView: View {
     private func saveCurrentProgress() async {
         // Don't save if exercises never loaded successfully
         guard exercisesLoadedSuccessfully else {
-            NSLog("⚠️ [PhaseView] Skipping save - exercises never loaded successfully")
             return
         }
 
         // Don't save if no exercises in viewModel
         guard !viewModel.exercises.isEmpty else {
-            NSLog("⚠️ [PhaseView] Skipping save - exercises array is empty")
             return
         }
 
         guard let currentPhase = selectedPhase else {
-            NSLog("⚠️ [PhaseView] Skipping save - selectedPhase is nil")
             return
         }
 
         // Check if task is cancelled before saving
         guard !Task.isCancelled else {
-            NSLog("⚠️ [PhaseView] Task cancelled - using detached task to save anyway")
             // Capture values to avoid @State wrapper issues
             let currentStep = currentExerciseIndex
             let completed = completedSteps
@@ -715,8 +751,6 @@ struct LessonPhaseView: View {
             return
         }
 
-        NSLog("💾 [PhaseView] Saving progress - Step: \(currentExerciseIndex), Completed: \(completedSteps)")
-
         await viewModel.saveStepProgress(
             roadmapId: roadmapId,
             lessonId: lessonId,
@@ -727,32 +761,74 @@ struct LessonPhaseView: View {
     }
 
     private func submitExercise(_ response: ResponseValue) {
-        NSLog("🎯 [PhaseView] submitExercise called")
         Task {
             // Ensure flag is always cleared, even if an error occurs
             defer {
                 isSpeechValidationInProgress = false
-                NSLog("🔊 [PhaseView] Speech validation completed, unblocking phase completion")
             }
 
             guard let exercise = currentExercise else {
-                NSLog("❌ [PhaseView] No current exercise!")
                 return
             }
 
-            NSLog("🎯 [PhaseView] Calling viewModel.submitExercise...")
-            await viewModel.submitExercise(
-                roadmapId: roadmapId,
-                lessonId: lessonId,
-                exerciseId: exercise.id,
-                responseValue: response
-            )
+            // Handle ordering exercises with client-side validation (like frontend does)
+            if exercise.exerciseType == .ordering {
+                // Extract user's answer array
+                guard case .array(let userWords) = response else {
+                    return
+                }
 
-            NSLog("🎯 [PhaseView] After await, checking viewModel.exerciseResult...")
-            NSLog("🎯 [PhaseView] viewModel.exerciseResult is \(viewModel.exerciseResult != nil ? "SET" : "NIL")")
+                // Build user's sentence
+                let userSentence = userWords.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+
+                // Get correct answer
+                let correctSentence = (exercise.expectedResponse ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+
+                // Compare (exact match like frontend)
+                let isCorrect = userSentence == correctSentence
+
+                // Create local result (matching ExerciseResult structure)
+                let localResult = ExerciseResult(
+                    isCorrect: isCorrect,
+                    score: isCorrect ? Double(exercise.points) : 0.0,
+                    partialCredit: false,
+                    correctAnswer: correctSentence,
+                    explanation: isCorrect ? "Perfect! You arranged the words correctly." : "Not quite right. The correct answer is: \"\(correctSentence)\"",
+                    points: isCorrect ? exercise.points : 0,
+                    id: nil,
+                    exerciseId: exercise.id,
+                    userId: nil,
+                    maxScore: Double(exercise.points),
+                    percentageScore: isCorrect ? 100 : 0,
+                    feedback: ExerciseFeedback(
+                        message: isCorrect ? "Correct!" : "Not quite right",
+                        level: isCorrect ? .excellent : .poor,
+                        suggestions: nil,
+                        highlights: nil,
+                        explanation: nil
+                    ),
+                    userAnswer: userSentence,
+                    timeSpent: nil,
+                    hintsUsed: nil,
+                    attemptNumber: nil,
+                    createdAt: nil
+                )
+
+                // Set result on viewModel so UI can access it
+                await MainActor.run {
+                    viewModel.exerciseResult = localResult
+                }
+            } else {
+                // All other exercise types: submit to backend
+                await viewModel.submitExercise(
+                    roadmapId: roadmapId,
+                    lessonId: lessonId,
+                    exerciseId: exercise.id,
+                    responseValue: response
+                )
+            }
 
             if let result = viewModel.exerciseResult {
-                NSLog("✅ [PhaseView] Exercise result received: correct=\(result.isCorrect), score=\(result.score)")
                 isAnswerCorrect = result.isCorrect
                 // Use feedback.message if available, otherwise use explanation, otherwise use a default message
                 feedbackMessage = result.feedback?.message ?? result.explanation ?? (result.isCorrect ? "Correct!" : "Incorrect")
@@ -787,8 +863,6 @@ struct LessonPhaseView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     dismissFeedback()
                 }
-            } else {
-                NSLog("❌ [PhaseView] No exercise result after submission!")
             }
         }
     }
@@ -797,23 +871,31 @@ struct LessonPhaseView: View {
         withAnimation {
             showFeedback = false
         }
+
+        // If answer was incorrect, clear the result so user can try again
+        if let result = viewModel.exerciseResult, !result.isCorrect {
+            // Delay slightly to allow feedback animation to complete
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                viewModel.exerciseResult = nil
+                // Increment counter to force ExerciseView to recreate
+                exerciseResetCounter += 1
+            }
+        }
     }
 
     private func previousExercise() {
         guard hasPreviousExercise else {
-            NSLog("❌ [PhaseView] previousExercise blocked - no previous exercise")
             return
         }
-        NSLog("⬅️ [PhaseView] Moving to previous exercise (\(currentExerciseIndex - 1)/\(viewModel.exercises.count))")
         withAnimation {
             currentExerciseIndex -= 1
             viewModel.exerciseResult = nil
+            exerciseResetCounter = 0 // Reset counter for new exercise
         }
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
 
     private func skipExercise() {
-        NSLog("⏭️ [PhaseView] skipExercise - hasNext=\(hasNextExercise)")
         if hasNextExercise {
             nextExercise()
         } else {
@@ -823,7 +905,6 @@ struct LessonPhaseView: View {
 
     private func nextExercise() {
         guard hasNextExercise else {
-            NSLog("❌ [PhaseView] nextExercise blocked - no next exercise")
             return
         }
 
@@ -831,11 +912,10 @@ struct LessonPhaseView: View {
         if !completedSteps.contains(currentExerciseIndex) {
             completedSteps.append(currentExerciseIndex)
         }
-
-        NSLog("➡️ [PhaseView] Moving to next exercise (\(currentExerciseIndex + 1)/\(viewModel.exercises.count))")
         withAnimation {
             currentExerciseIndex += 1
             viewModel.exerciseResult = nil
+            exerciseResetCounter = 0 // Reset counter for new exercise
         }
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
 
@@ -848,17 +928,12 @@ struct LessonPhaseView: View {
     private func nextExerciseOrComplete() {
         // Prevent action if speech validation is in progress
         guard !isSpeechValidationInProgress else {
-            NSLog("⚠️ [PhaseView] Blocked nextExerciseOrComplete - speech validation in progress")
             return
         }
 
-        NSLog("🎯 [PhaseView] nextExerciseOrComplete - currentIndex=\(currentExerciseIndex), total=\(viewModel.exercises.count), hasNext=\(hasNextExercise)")
-
         if hasNextExercise {
-            NSLog("➡️ [PhaseView] Has next exercise, calling nextExercise()")
             nextExercise()
         } else {
-            NSLog("✅ [PhaseView] Last exercise, calling completePhase()")
             completePhase()
         }
     }
@@ -866,12 +941,10 @@ struct LessonPhaseView: View {
     private func completePhase() {
         // Prevent completion if speech validation is in progress
         guard !isSpeechValidationInProgress else {
-            NSLog("⚠️ [PhaseView] Blocked completePhase - speech validation in progress")
             return
         }
 
         guard let currentPhase = selectedPhase else {
-            NSLog("❌ [PhaseView] Cannot complete phase - selectedPhase is nil")
             return
         }
 
@@ -895,7 +968,6 @@ struct LessonPhaseView: View {
             // Auto-navigate to next phase after showing completion stats
             // Matches frontend behavior: automatic navigation without manual button tap
             if currentPhase.phaseNumber < 4 {
-                NSLog("✅ [PhaseView] Phase \(currentPhase.phaseNumber) completed! Auto-navigating to Phase \(currentPhase.phaseNumber + 1) in 3 seconds...")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     showConfetti = false
                     // Automatically move to next phase
@@ -903,7 +975,6 @@ struct LessonPhaseView: View {
                 }
             } else {
                 // Last phase - just stop confetti
-                NSLog("✅ [PhaseView] Final phase completed! Lesson finished.")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     showConfetti = false
                 }
@@ -913,7 +984,6 @@ struct LessonPhaseView: View {
 
     private func moveToNextPhase() {
         guard let currentPhase = selectedPhase else {
-            NSLog("❌ [PhaseView] Cannot move to next phase - selectedPhase is nil")
             return
         }
 
@@ -924,36 +994,19 @@ struct LessonPhaseView: View {
 
             let nextPhaseNumber = currentPhase.phaseNumber + 1
             guard nextPhaseNumber <= 4 else {
-                NSLog("ℹ️ [PhaseView] No more phases, dismissing to lesson overview")
                 dismiss()
                 return
             }
 
-            NSLog("🔍 [PhaseView] Current phases count: \(viewModel.lessonPhases.count)")
-            NSLog("🔍 [PhaseView] Looking for phase \(nextPhaseNumber)")
-
             // ALWAYS reload phases to ensure we have fresh data with exercises
-            NSLog("📥 [PhaseView] Reloading phases from backend...")
             await viewModel.loadLessonPhases(roadmapId: roadmapId, lessonId: lessonId)
-            NSLog("📥 [PhaseView] Phases reloaded. Count: \(viewModel.lessonPhases.count)")
-
-            // Log all available phases
-            for p in viewModel.lessonPhases {
-                NSLog("📝 [PhaseView] Available phase: \(p.phaseNumber) - \(p.phaseName)")
-            }
 
             // Find next phase and update the binding to trigger navigation
             if let nextPhase = viewModel.lessonPhases.first(where: { $0.phaseNumber == nextPhaseNumber }) {
-                NSLog("✅ [PhaseView] Found phase \(nextPhaseNumber): \(nextPhase.phaseName)")
-                NSLog("✅ [PhaseView] Phase has \(nextPhase.exercises?.count ?? 0) exercises")
-
                 // CRITICAL: Just update the binding - SwiftUI will automatically navigate
                 // Don't call dismiss() as that would set selectedPhase = nil and cancel navigation
                 selectedPhase = nextPhase
-                NSLog("✅ [PhaseView] selectedPhase updated to phase \(nextPhaseNumber)")
             } else {
-                NSLog("❌ [PhaseView] Could not find phase \(nextPhaseNumber) among \(viewModel.lessonPhases.count) phases")
-                NSLog("❌ [PhaseView] Available phase numbers: \(viewModel.lessonPhases.map { $0.phaseNumber })")
                 dismiss()
             }
         }

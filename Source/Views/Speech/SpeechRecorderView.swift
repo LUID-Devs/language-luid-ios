@@ -320,7 +320,6 @@ struct SpeechRecorderView: View {
 
                 // Notify parent that validation started
                 onValidationStarted?()
-                NSLog("🔊 [SpeechRecorder] Validation started, notified parent")
 
                 // Validate speech
                 let result = try await validationService.validateSpeech(

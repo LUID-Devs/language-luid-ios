@@ -162,20 +162,13 @@ struct ExerciseView: View {
                 languageCode: languageCode,
                 isSubmitted: isAnswerSubmitted,
                 onRecognize: { text in
-                    NSLog("🎯 [ExerciseView] onRecognize called with text: \(text)")
                     userResponse = .string(text)
-                    NSLog("🎯 [ExerciseView] userResponse set to: \(text)")
                 },
                 onAutoSubmit: {
-                    NSLog("🎯 [ExerciseView] onAutoSubmit called")
-                    NSLog("🎯 [ExerciseView] userResponse is \(userResponse != nil ? "SET" : "NIL")")
                     if let response = userResponse {
-                        NSLog("🎯 [ExerciseView] Submitting response: \(response)")
                         isAnswerSubmitted = true
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         onSubmit(response)
-                    } else {
-                        NSLog("❌ [ExerciseView] userResponse is nil, cannot submit!")
                     }
                 },
                 onSpeechValidationStarted: onSpeechValidationStarted
@@ -211,20 +204,13 @@ struct ExerciseView: View {
                 languageCode: languageCode,
                 isSubmitted: isAnswerSubmitted,
                 onRecognize: { text in
-                    NSLog("🎯 [ExerciseView] onRecognize (speechResponse) called with text: \(text)")
                     userResponse = .string(text)
-                    NSLog("🎯 [ExerciseView] userResponse set to: \(text)")
                 },
                 onAutoSubmit: {
-                    NSLog("🎯 [ExerciseView] onAutoSubmit (speechResponse) called")
-                    NSLog("🎯 [ExerciseView] userResponse is \(userResponse != nil ? "SET" : "NIL")")
                     if let response = userResponse {
-                        NSLog("🎯 [ExerciseView] Submitting response: \(response)")
                         isAnswerSubmitted = true
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         onSubmit(response)
-                    } else {
-                        NSLog("❌ [ExerciseView] userResponse is nil, cannot submit!")
                     }
                 },
                 onSpeechValidationStarted: onSpeechValidationStarted
@@ -359,7 +345,8 @@ private struct OrderingExercise: View {
     let onOrder: ([String]) -> Void
 
     @Environment(\.colorScheme) var colorScheme
-    @State private var words: [String] = []
+    @State private var availableWords: [String] = []
+    @State private var selectedWords: [String] = []
 
     var body: some View {
         VStack(alignment: .leading, spacing: LLSpacing.md) {
@@ -367,29 +354,84 @@ private struct OrderingExercise: View {
                 .font(LLTypography.bodySmall())
                 .foregroundColor(LLColors.mutedForeground.adaptive)
 
-            // Word chips
-            FlowLayout(spacing: LLSpacing.sm) {
-                ForEach(Array(words.enumerated()), id: \.offset) { index, word in
-                    WordChip(
-                        text: word,
-                        index: index + 1,
-                        onTap: {
-                            // Move word to selected area
-                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            // Selected words area (answer being built)
+            if !selectedWords.isEmpty {
+                VStack(alignment: .leading, spacing: LLSpacing.xs) {
+                    Text("Your answer:")
+                        .font(LLTypography.captionSmall())
+                        .foregroundColor(LLColors.mutedForeground.adaptive)
+
+                    FlowLayout(spacing: LLSpacing.xs) {
+                        ForEach(Array(selectedWords.enumerated()), id: \.offset) { index, word in
+                            SelectedWordChip(
+                                text: word,
+                                index: index + 1,
+                                onRemove: {
+                                    removeWord(at: index)
+                                }
+                            )
                         }
-                    )
+                    }
                 }
+                .padding(LLSpacing.sm)
+                .background(
+                    RoundedRectangle(cornerRadius: LLSpacing.radiusSM)
+                        .fill(LLColors.muted.color(for: colorScheme).opacity(0.3))
+                )
             }
 
-            Text("Note: Word ordering will be interactive in Phase 6")
-                .font(LLTypography.captionSmall())
-                .foregroundColor(LLColors.warning.color(for: colorScheme))
+            // Available words
+            if !availableWords.isEmpty {
+                Text("Available words:")
+                    .font(LLTypography.captionSmall())
+                    .foregroundColor(LLColors.mutedForeground.adaptive)
+
+                FlowLayout(spacing: LLSpacing.sm) {
+                    ForEach(Array(availableWords.enumerated()), id: \.offset) { index, word in
+                        WordChip(
+                            text: word,
+                            index: selectedWords.count + 1,
+                            onTap: {
+                                selectWord(word, at: index)
+                            }
+                        )
+                    }
+                }
+            }
         }
         .onAppear {
             if let options = exercise.options {
-                words = options.map { $0.text }.shuffled()
+                availableWords = options.map { $0.text }.shuffled()
             }
         }
+    }
+
+    private func selectWord(_ word: String, at index: Int) {
+        // Move word from available to selected
+        selectedWords.append(word)
+        availableWords.remove(at: index)
+
+        // Call the callback to update userResponse
+        onOrder(selectedWords)
+
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+    }
+
+    private func removeWord(at index: Int) {
+        // Move word from selected back to available
+        let word = selectedWords[index]
+        selectedWords.remove(at: index)
+        availableWords.append(word)
+
+        // Call the callback to update userResponse
+        if selectedWords.isEmpty {
+            // Clear the response if no words selected
+            onOrder([])
+        } else {
+            onOrder(selectedWords)
+        }
+
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
 }
 
@@ -461,6 +503,42 @@ private struct SpeechExercise: View {
                     .font(LLTypography.bodySmall())
                     .foregroundColor(LLColors.mutedForeground.adaptive)
 
+                // Pronunciation Section (Phase 1 pattern recognition feature)
+                if let expectedText = exercise.expectedResponse {
+                    VStack(alignment: .center, spacing: LLSpacing.sm) {
+                        // Target word prominently displayed
+                        Text(expectedText)
+                            .font(.system(size: 42, weight: .bold))
+                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                            .multilineTextAlignment(.center)
+                            .padding(.vertical, LLSpacing.sm)
+
+                        // Listen label
+                        HStack(spacing: LLSpacing.xs) {
+                            Image(systemName: "speaker.wave.2.fill")
+                                .font(.system(size: 14))
+                            Text("Listen to the pronunciation:")
+                                .font(LLTypography.captionSmall())
+                        }
+                        .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+
+                        // Audio player with TTS
+                        AudioPlayerControl(
+                            text: expectedText,
+                            languageCode: languageCode,
+                            showSpeedControl: true,
+                            isCompact: false
+                        )
+                    }
+                    .padding(LLSpacing.md)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: LLSpacing.radiusMD)
+                            .fill(LLColors.muted.color(for: colorScheme).opacity(0.2))
+                    )
+                    .padding(.bottom, LLSpacing.sm)
+                }
+
                 // Real Speech Recorder with Validation
                 if let expectedText = exercise.expectedResponse {
                     SpeechRecorderView(
@@ -469,19 +547,12 @@ private struct SpeechExercise: View {
                         expectedText: expectedText,
                         languageCode: languageCode,
                         onValidationPassed: { validationResponse in
-                            NSLog("🎯 [SpeechExercise] onValidationPassed called")
-                            NSLog("🎯 [SpeechExercise] Transcription: \(validationResponse.validation.transcription)")
-                            // Pass the transcription back and auto-submit
                             onRecognize(validationResponse.validation.transcription)
-                            // Auto-submit after a brief delay to ensure state is updated
-                            NSLog("🎯 [SpeechExercise] Scheduling auto-submit in 0.1s")
                         },
                         onValidationFailed: nil,
                         onValidationStarted: {
-                            NSLog("🔊 [SpeechExercise] Validation started, notifying parent")
                             onSpeechValidationStarted?()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                NSLog("🎯 [SpeechExercise] Calling onAutoSubmit now")
                                 onAutoSubmit()
                             }
                         }
@@ -668,19 +739,12 @@ private struct SpeechResponseExercise: View {
                         expectedText: expectedText,
                         languageCode: languageCode,
                         onValidationPassed: { validationResponse in
-                            NSLog("🎯 [SpeechResponseExercise] onValidationPassed called")
-                            NSLog("🎯 [SpeechResponseExercise] Transcription: \(validationResponse.validation.transcription)")
-                            // Pass the transcription back and auto-submit
                             onRecognize(validationResponse.validation.transcription)
-                            // Auto-submit after a brief delay to ensure state is updated
-                            NSLog("🎯 [SpeechResponseExercise] Scheduling auto-submit in 0.1s")
                         },
                         onValidationFailed: nil,
                         onValidationStarted: {
-                            NSLog("🔊 [SpeechResponseExercise] Validation started, notifying parent")
                             onSpeechValidationStarted?()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                NSLog("🎯 [SpeechResponseExercise] Calling onAutoSubmit now")
                                 onAutoSubmit()
                             }
                         }
@@ -787,6 +851,41 @@ private struct WordChip: View {
                     .strokeBorder(LLColors.border.color(for: colorScheme), lineWidth: 1)
             )
         }
+    }
+}
+
+private struct SelectedWordChip: View {
+    let text: String
+    let index: Int
+    let onRemove: () -> Void
+
+    @Environment(\.colorScheme) var colorScheme
+
+    var body: some View {
+        HStack(spacing: LLSpacing.xs) {
+            Text("\(index)")
+                .font(LLTypography.captionSmall())
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+                .frame(width: 20, height: 20)
+                .background(Circle().fill(LLColors.primary.color(for: colorScheme)))
+
+            Text(text)
+                .font(LLTypography.body())
+                .foregroundColor(.white)
+
+            Button(action: onRemove) {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.system(size: 16))
+                    .foregroundColor(.white.opacity(0.8))
+            }
+        }
+        .padding(.horizontal, LLSpacing.sm)
+        .padding(.vertical, LLSpacing.xs)
+        .background(
+            Capsule()
+                .fill(LLColors.primary.color(for: colorScheme))
+        )
     }
 }
 

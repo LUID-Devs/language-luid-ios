@@ -114,7 +114,6 @@ class LessonService {
         limit: Int? = nil,
         offset: Int? = nil
     ) async throws -> [Lesson] {
-        NSLog("📚 Fetching lessons for roadmap: \(roadmapId)...")
         os_log("📚 Fetching lessons...", log: logger, type: .info)
 
         var parameters: [String: Any] = [:]
@@ -144,12 +143,10 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("✅ Fetched \(response.data.count) lessons")
             os_log("✅ Fetched %{public}d lessons", log: logger, type: .info, response.data.count)
 
             return response.data
         } catch {
-            NSLog("❌ Failed to fetch lessons: \(error.localizedDescription)")
             os_log("❌ Failed to fetch lessons: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -170,7 +167,6 @@ class LessonService {
         includeExercises: Bool = false,
         regionalVariantId: String? = nil
     ) async throws -> Lesson {
-        NSLog("📖 Fetching lesson: \(lessonId)...")
         os_log("📖 Fetching lesson...", log: logger, type: .info)
 
         var parameters: [String: Any] = [:]
@@ -191,12 +187,10 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("✅ Fetched lesson: \(response.data.title)")
             os_log("✅ Fetched lesson: %{public}@", log: logger, type: .info, response.data.title)
 
             return response.data
         } catch {
-            NSLog("❌ Failed to fetch lesson: \(error.localizedDescription)")
             os_log("❌ Failed to fetch lesson: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -211,7 +205,6 @@ class LessonService {
         roadmapId: String,
         lessonNumber: Int
     ) async throws -> Lesson {
-        NSLog("📖 Fetching lesson number: \(lessonNumber)...")
         os_log("📖 Fetching lesson number: %{public}d", log: logger, type: .info, lessonNumber)
 
         do {
@@ -220,12 +213,10 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("✅ Fetched lesson: \(response.data.title)")
             os_log("✅ Fetched lesson: %{public}@", log: logger, type: .info, response.data.title)
 
             return response.data
         } catch {
-            NSLog("❌ Failed to fetch lesson by number: \(error.localizedDescription)")
             os_log("❌ Failed to fetch lesson by number: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -243,8 +234,6 @@ class LessonService {
         lessonId: String
     ) async throws -> [LessonPhaseDefinition] {
         let url = "\(APIEndpoint.roadmaps)/\(roadmapId)/lessons/\(lessonId)/phases"
-        NSLog("📝 Fetching phases for lesson: \(lessonId)")
-        NSLog("📝 Full URL: \(url)")
         os_log("📝 Fetching lesson phases...", log: logger, type: .info)
 
         do {
@@ -253,14 +242,10 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("✅ Fetched \(response.data.count) phases")
             os_log("✅ Fetched %{public}d phases", log: logger, type: .info, response.data.count)
 
             return response.data
         } catch {
-            NSLog("❌ Failed to fetch lesson phases: \(error)")
-            NSLog("❌ Error type: \(type(of: error))")
-            NSLog("❌ Error description: \(error.localizedDescription)")
             os_log("❌ Failed to fetch lesson phases: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -279,7 +264,6 @@ class LessonService {
         lessonId: String,
         phaseNumber: Int? = nil
     ) async throws -> [Exercise] {
-        NSLog("💪 Fetching exercises for lesson: \(lessonId)...")
         os_log("💪 Fetching lesson exercises...", log: logger, type: .info)
 
         var parameters: [String: Any] = [:]
@@ -294,12 +278,10 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("✅ Fetched \(response.data.count) exercises")
             os_log("✅ Fetched %{public}d exercises", log: logger, type: .info, response.data.count)
 
             return response.data
         } catch {
-            NSLog("❌ Failed to fetch exercises: \(error.localizedDescription)")
             os_log("❌ Failed to fetch exercises: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -316,7 +298,6 @@ class LessonService {
         roadmapId: String,
         lessonId: String
     ) async throws -> UserLessonProgress {
-        NSLog("▶️ Starting lesson: \(lessonId)...")
         os_log("▶️ Starting lesson...", log: logger, type: .info)
 
         do {
@@ -325,12 +306,10 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("✅ Lesson started: \(response.data.lesson.title)")
             os_log("✅ Lesson started", log: logger, type: .info)
 
             return response.data.progress
         } catch {
-            NSLog("❌ Failed to start lesson: \(error.localizedDescription)")
             os_log("❌ Failed to start lesson: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -349,7 +328,6 @@ class LessonService {
         exerciseId: String,
         response: ExerciseResponse
     ) async throws -> ExerciseResult {
-        NSLog("📝 Submitting exercise: \(exerciseId)...")
         os_log("📝 Submitting exercise...", log: logger, type: .info)
 
         // Prepare parameters
@@ -377,12 +355,10 @@ class LessonService {
             )
 
             let percentage = response.data.percentageScore ?? Int((response.data.score / (response.data.maxScore ?? 1.0)) * 100)
-            NSLog("✅ Exercise submitted - Score: \(percentage)%")
             os_log("✅ Exercise submitted - Score: %{public}d%%", log: logger, type: .info, percentage)
 
             return response.data
         } catch {
-            NSLog("❌ Failed to submit exercise: \(error.localizedDescription)")
             os_log("❌ Failed to submit exercise: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -403,7 +379,6 @@ class LessonService {
         score: Double,
         timeSpent: Int? = nil
     ) async throws {
-        NSLog("✅ Completing phase \(phaseNumber) for lesson: \(lessonId)...")
         os_log("✅ Completing phase %{public}d", log: logger, type: .info, phaseNumber)
 
         var parameters: [String: Any] = ["score": score]
@@ -418,10 +393,8 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("✅ Phase \(phaseNumber) completed with score: \(Int(score * 100))%")
             os_log("✅ Phase completed with score: %{public}d%%", log: logger, type: .info, Int(score * 100))
         } catch {
-            NSLog("❌ Failed to complete phase: \(error.localizedDescription)")
             os_log("❌ Failed to complete phase: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -444,8 +417,6 @@ class LessonService {
         completedSteps: [Int],
         stepScores: [String: Double]? = nil
     ) async throws {
-        NSLog("💾 Saving step progress for phase \(phaseNumber)...")
-        NSLog("💾 Values being saved - currentStep: \(currentStep), completedSteps: \(completedSteps)")
         os_log("💾 Saving step progress...", log: logger, type: .info)
 
         var parameters: [String: Any] = [
@@ -466,15 +437,11 @@ class LessonService {
             )
 
             if response.success {
-                NSLog("✅ Step progress saved - Current: \(currentStep), Completed: \(completedSteps)")
                 os_log("✅ Step progress saved", log: logger, type: .info)
             } else {
-                NSLog("⚠️ Save response success=false")
                 throw APIError.unknown
             }
         } catch {
-            NSLog("❌ Failed to save step progress: \(error)")
-            NSLog("❌ Error type: \(type(of: error))")
             os_log("❌ Failed to save step progress: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -489,7 +456,6 @@ class LessonService {
         roadmapId: String,
         lessonId: String
     ) async throws -> UserLessonProgress {
-        NSLog("📊 Fetching user progress for lesson: \(lessonId)...")
         os_log("📊 Fetching user progress...", log: logger, type: .info)
 
         do {
@@ -498,12 +464,10 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("✅ Fetched user progress - Status: \(response.data.status.rawValue)")
             os_log("✅ Fetched user progress", log: logger, type: .info)
 
             return response.data
         } catch {
-            NSLog("❌ Failed to fetch user progress: \(error.localizedDescription)")
             os_log("❌ Failed to fetch user progress: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -515,7 +479,6 @@ class LessonService {
     func fetchPhaseProgress(
         lessonId: String
     ) async throws -> PhaseProgressSummary {
-        NSLog("📊 Fetching phase progress for lesson: \(lessonId)...")
         os_log("📊 Fetching phase progress...", log: logger, type: .info)
 
         do {
@@ -524,12 +487,10 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("✅ Fetched phase progress - Current phase: \(response.data.currentPhase)")
             os_log("✅ Fetched phase progress", log: logger, type: .info)
 
             return response.data
         } catch {
-            NSLog("❌ Failed to fetch phase progress: \(error.localizedDescription)")
             os_log("❌ Failed to fetch phase progress: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -546,8 +507,6 @@ class LessonService {
         lessonId: String,
         phaseNumber: Int
     ) async throws -> LessonPhaseProgress? {
-        NSLog("📊 Fetching step progress for phase \(phaseNumber)...")
-        NSLog("📊 Roadmap ID: \(roadmapId), Lesson ID: \(lessonId), Phase: \(phaseNumber)")
         os_log("📊 Fetching step progress...", log: logger, type: .info)
 
         do {
@@ -557,42 +516,19 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("📊 API Response - Current Phase: \(response.data.currentPhase)")
-            NSLog("📊 API Response - Has stepProgress dict: \(response.data.stepProgress != nil)")
-
             if let stepProgressDict = response.data.stepProgress {
-                NSLog("📊 StepProgress keys: \(Array(stepProgressDict.keys))")
-
                 let phaseKey = "phase\(phaseNumber)"
-                NSLog("📊 Looking for key: '\(phaseKey)'")
 
                 if let stepProgress = stepProgressDict[phaseKey] {
-                    NSLog("✅ Found step progress for \(phaseKey)!")
-                    NSLog("✅ Current step: \(stepProgress.currentStep ?? -1)")
-                    NSLog("✅ Completed steps: \(stepProgress.completedSteps ?? [])")
-                    if let scores = stepProgress.stepScores {
-                        NSLog("✅ Step scores keys: \(Array(scores.keys))")
-                    }
                     os_log("✅ Fetched step progress", log: logger, type: .info)
                     return stepProgress
                 } else {
-                    NSLog("⚠️ Key '\(phaseKey)' not found in stepProgress dict!")
-                    NSLog("⚠️ Available keys: \(Array(stepProgressDict.keys))")
                     return nil
                 }
-            } else {
-                NSLog("⚠️ stepProgress is nil in API response!")
-                NSLog("⚠️ Response data: status=\(response.data.status.rawValue), currentPhase=\(response.data.currentPhase)")
             }
 
-            NSLog("ℹ️ No step progress data in response")
             return nil
         } catch {
-            NSLog("❌ Failed to fetch step progress: \(error.localizedDescription)")
-            NSLog("❌ Error type: \(type(of: error))")
-            if let apiError = error as? APIError {
-                NSLog("❌ API Error: \(apiError)")
-            }
             os_log("⚠️ Failed to fetch step progress: %{public}@", log: logger, type: .error, error.localizedDescription)
             // Return nil instead of throwing - step progress may not exist yet
             return nil
@@ -607,7 +543,6 @@ class LessonService {
     func fetchProgressStats(
         languageId: String? = nil
     ) async throws -> ProgressStats {
-        NSLog("📊 Fetching progress stats...")
         os_log("📊 Fetching progress stats...", log: logger, type: .info)
 
         var parameters: [String: Any] = [:]
@@ -622,12 +557,10 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("✅ Fetched progress stats - Completed: \(response.data.completedLessons)")
             os_log("✅ Fetched progress stats", log: logger, type: .info)
 
             return response.data
         } catch {
-            NSLog("❌ Failed to fetch progress stats: \(error.localizedDescription)")
             os_log("❌ Failed to fetch progress stats: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }
@@ -639,7 +572,6 @@ class LessonService {
     func fetchRoadmapProgress(
         roadmapId: String
     ) async throws -> RoadmapProgress {
-        NSLog("📊 Fetching roadmap progress: \(roadmapId)...")
         os_log("📊 Fetching roadmap progress...", log: logger, type: .info)
 
         do {
@@ -648,12 +580,10 @@ class LessonService {
                 requiresAuth: true
             )
 
-            NSLog("✅ Fetched roadmap progress - Completed: \(response.data.completedLessons)/\(response.data.totalLessons)")
             os_log("✅ Fetched roadmap progress", log: logger, type: .info)
 
             return response.data
         } catch {
-            NSLog("❌ Failed to fetch roadmap progress: \(error.localizedDescription)")
             os_log("❌ Failed to fetch roadmap progress: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error
         }

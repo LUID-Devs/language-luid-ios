@@ -238,12 +238,7 @@ struct LLButton: View {
         }
         .disabled(isDisabled || isLoading)
         .opacity(isDisabled ? 0.5 : 1.0)
-        .buttonStyle(PlainButtonStyle())
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in isPressed = true }
-                .onEnded { _ in isPressed = false }
-        )
+        .buttonStyle(PressEffectButtonStyle(isPressed: $isPressed))
         .accessibilityLabel(title ?? "Button")
         .accessibilityHint(isLoading ? "Loading" : "")
         .accessibilityAddTraits(.isButton)
@@ -391,6 +386,19 @@ struct LLButtonGroup: View {
                 }
             }
         }
+    }
+}
+
+// MARK: - Custom Button Style
+
+struct PressEffectButtonStyle: ButtonStyle {
+    @Binding var isPressed: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .onChange(of: configuration.isPressed) { newValue in
+                isPressed = newValue
+            }
     }
 }
 

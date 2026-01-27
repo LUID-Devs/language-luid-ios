@@ -346,7 +346,6 @@ struct LanguageCard: View {
     let isPopular: Bool
 
     @Environment(\.colorScheme) var colorScheme
-    @State private var isPressed = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: LLSpacing.sm) {
@@ -432,8 +431,6 @@ struct LanguageCard: View {
             x: 0,
             y: LLSpacing.shadowSM
         )
-        .scaleEffect(isPressed ? 0.97 : 1.0)
-        .animation(.easeInOut(duration: 0.1), value: isPressed)
     }
 
     private func difficultyVariant(for difficulty: LanguageDifficulty) -> LLBadgeVariant {

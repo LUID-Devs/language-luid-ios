@@ -50,16 +50,7 @@ struct CEFRLevelCardView: View {
         }) {
             cardContent
         }
-        .buttonStyle(PlainButtonStyle())
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    if canStart {
-                        isPressed = true
-                    }
-                }
-                .onEnded { _ in isPressed = false }
-        )
+        .buttonStyle(CardButtonStyle(isPressed: $isPressed))
         .opacity(canStart ? 1.0 : 0.75)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityHint(accessibilityHint)
@@ -480,6 +471,21 @@ extension CEFRLevelData {
                 "Summarize and reconstruct arguments"
             ]
         }
+    }
+}
+
+// MARK: - Custom Button Style
+
+struct CardButtonStyle: ButtonStyle {
+    @Binding var isPressed: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+            .onChange(of: configuration.isPressed) { newValue in
+                isPressed = newValue
+            }
     }
 }
 

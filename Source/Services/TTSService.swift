@@ -50,25 +50,20 @@ final class TTSService {
             return cachedAudio
         }
 
-        // Prepare request (use snake_case to match backend)
+        // Prepare request (use camelCase to match frontend working implementation)
         let parameters: [String: Any] = [
             "text": text,
-            "language_code": languageCode,  // Backend expects snake_case
-            "voice_name": voiceName ?? "",
+            "languageCode": languageCode,  // Backend expects camelCase (same as frontend)
+            "voiceName": voiceName ?? "",
             "speed": speed,
-            "return_blob": false  // Get base64 encoded audio in JSON
+            "returnBlob": false  // Get JSON with base64 audio (backend returns raw binary if true)
         ]
 
         struct SynthesizeResponse: Codable {
             let success: Bool
             let audioContent: String
             let voiceUsed: String?
-
-            enum CodingKeys: String, CodingKey {
-                case success
-                case audioContent = "audio_content"
-                case voiceUsed = "voice_used"
-            }
+            // No CodingKeys needed - backend returns camelCase matching property names
         }
 
         // Make API request
@@ -115,19 +110,14 @@ final class TTSService {
 
         let parameters: [String: Any] = [
             "text": text,
-            "language_code": languageCode
+            "languageCode": languageCode  // Backend expects camelCase
         ]
 
         struct PronunciationResponse: Codable {
             let success: Bool
             let normalAudio: String
             let slowAudio: String
-
-            enum CodingKeys: String, CodingKey {
-                case success
-                case normalAudio = "normal_audio"
-                case slowAudio = "slow_audio"
-            }
+            // No CodingKeys needed - backend returns camelCase matching property names
         }
 
         let response: PronunciationResponse = try await apiClient.post(
@@ -206,11 +196,5 @@ struct TTSVoice: Codable, Identifiable {
     let description: String?
 
     var id: String { name }
-
-    enum CodingKeys: String, CodingKey {
-        case name
-        case languageCode = "language_code"
-        case gender
-        case description
-    }
+    // No CodingKeys needed - backend returns camelCase matching property names
 }

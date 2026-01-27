@@ -100,7 +100,6 @@ class LessonViewModel: ObservableObject {
                 category: category
             )
             if lessons.isEmpty {
-                NSLog("⚠️ No lessons returned. Retrying without publishedOnly filter...")
                 lessons = try await lessonService.fetchLessons(
                     roadmapId: roadmapId,
                     cefrLevel: cefrLevel,
@@ -109,11 +108,9 @@ class LessonViewModel: ObservableObject {
                 )
             }
             filteredLessons = lessons
-            NSLog("✅ Loaded \(lessons.count) lessons")
         } catch {
             errorMessage = "Failed to load lessons: \(error.localizedDescription)"
             showError = true
-            NSLog("❌ Error loading lessons: \(error)")
         }
 
         isLoading = false
@@ -147,12 +144,9 @@ class LessonViewModel: ObservableObject {
                 currentExercise = exercises.first
                 currentExerciseIndex = 0
             }
-
-            NSLog("✅ Loaded lesson: \(selectedLesson?.title ?? "Unknown")")
         } catch {
             errorMessage = "Failed to load lesson: \(error.localizedDescription)"
             showError = true
-            NSLog("❌ Error loading lesson: \(error)")
         }
 
         isLoading = false
@@ -171,11 +165,9 @@ class LessonViewModel: ObservableObject {
                 roadmapId: roadmapId,
                 lessonNumber: lessonNumber
             )
-            NSLog("✅ Loaded lesson L\(lessonNumber): \(selectedLesson?.title ?? "Unknown")")
         } catch {
             errorMessage = "Failed to load lesson: \(error.localizedDescription)"
             showError = true
-            NSLog("❌ Error loading lesson: \(error)")
         }
 
         isLoading = false
@@ -191,11 +183,9 @@ class LessonViewModel: ObservableObject {
                 lessonId: lessonId
             )
             currentPhase = lessonPhases.first
-            NSLog("✅ Loaded \(lessonPhases.count) phases")
         } catch {
             errorMessage = "Failed to load phases: \(error.localizedDescription)"
             showError = true
-            NSLog("❌ Error loading phases: \(error)")
         }
     }
 
@@ -205,34 +195,12 @@ class LessonViewModel: ObservableObject {
             phaseProgressSummary = try await lessonService.fetchPhaseProgress(
                 lessonId: lessonId
             )
-            NSLog("✅ Loaded phase progress - Current: \(phaseProgressSummary?.currentPhase ?? 0)")
-            NSLog("✅ lessonPhases count: \(lessonPhases.count)")
-            NSLog("✅ lessonPhases: \(lessonPhases.map { $0.phaseNumber })")
-
-            // Log stepProgress dictionary keys and contents
-            if let stepProgress = phaseProgressSummary?.stepProgress {
-                NSLog("✅ stepProgress dictionary has \(stepProgress.count) entries")
-                for (key, progress) in stepProgress {
-                    NSLog("✅ stepProgress['\(key)'] - completed: \(progress.completedSteps?.count ?? 0) steps")
-                }
-            } else {
-                NSLog("⚠️ stepProgress dictionary is nil")
-            }
 
             // Update currentPhase based on progress
             if let currentPhaseNum = phaseProgressSummary?.currentPhase {
-                NSLog("✅ Looking for phase number: \(currentPhaseNum)")
                 currentPhase = lessonPhases.first { $0.phaseNumber == currentPhaseNum }
-                if let currentPhase = currentPhase {
-                    NSLog("✅ Set current phase to: \(currentPhase.phaseNumber)")
-                } else {
-                    NSLog("❌ Could not find phase with number \(currentPhaseNum)")
-                }
-            } else {
-                NSLog("⚠️ phaseProgressSummary.currentPhase is nil")
             }
         } catch {
-            NSLog("⚠️ Error loading phase progress: \(error)")
             // Don't show error to user - this is optional data
         }
     }
@@ -274,7 +242,6 @@ class LessonViewModel: ObservableObject {
         do {
             // Check if task is already cancelled before making network call
             guard !Task.isCancelled else {
-                NSLog("⚠️ Task cancelled before loading exercises")
                 isLoading = false
                 return
             }
@@ -287,7 +254,6 @@ class LessonViewModel: ObservableObject {
 
             // Check if task was cancelled during the network call
             guard !Task.isCancelled else {
-                NSLog("⚠️ Task cancelled after fetching exercises")
                 // Don't update state if cancelled - keep previous state
                 isLoading = false
                 return
@@ -296,20 +262,14 @@ class LessonViewModel: ObservableObject {
             currentExercise = exercises.first
             currentExerciseIndex = 0
             exerciseStartTime = Date()
-            NSLog("✅ Loaded \(exercises.count) exercises for phase \(phaseNumber ?? -1)")
-            if let first = exercises.first {
-                NSLog("   First exercise: \(first.prompt)")
-            }
         } catch is CancellationError {
             // Task was explicitly cancelled - this is normal, don't show error
-            NSLog("ℹ️ Exercise loading cancelled (view dismissed)")
             isLoading = false
             return
         } catch {
             // Check if this is a network cancellation error (NSURLError -999)
             let nsError = error as NSError
             if nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled {
-                NSLog("ℹ️ Network request cancelled (code -999)")
                 // Don't show error to user - this is expected when view dismisses
                 isLoading = false
                 return
@@ -318,7 +278,6 @@ class LessonViewModel: ObservableObject {
             // For other errors, show to user
             errorMessage = "Failed to load exercises: \(error.localizedDescription)"
             showError = true
-            NSLog("❌ Error loading exercises: \(error)")
         }
 
         isLoading = false
@@ -370,12 +329,9 @@ class LessonViewModel: ObservableObject {
 
             // Reload phase progress to update currentPhase
             await loadPhaseProgress(lessonId: lessonId)
-
-            NSLog("✅ Lesson started")
         } catch {
             errorMessage = "Failed to start lesson: \(error.localizedDescription)"
             showError = true
-            NSLog("❌ Error starting lesson: \(error)")
         }
 
         isLoading = false
@@ -404,7 +360,6 @@ class LessonViewModel: ObservableObject {
         )
 
         do {
-            NSLog("🎯 [ViewModel] Calling lessonService.submitExercise...")
             exerciseResult = try await lessonService.submitExercise(
                 roadmapId: roadmapId,
                 lessonId: lessonId,
@@ -412,32 +367,21 @@ class LessonViewModel: ObservableObject {
                 response: response
             )
 
-            NSLog("🎯 [ViewModel] exerciseResult SET: \(exerciseResult != nil ? "YES" : "NO")")
-            if let result = exerciseResult {
-                NSLog("🎯 [ViewModel] Result details - correct: \(result.isCorrect), score: \(result.score), points: \(result.points ?? -1)")
-            }
-
             if exerciseResult?.passed ?? false {
                 let message = exerciseResult?.feedback?.message ?? exerciseResult?.explanation ?? ""
                 successMessage = "Correct! \(message)"
                 showSuccess = true
             }
 
-            let percentage = exerciseResult?.percentageScore ?? Int((exerciseResult?.score ?? 0) * 100)
-            NSLog("✅ Exercise submitted - Score: \(percentage)%")
-
             // Reload user progress to sync with backend updates
             await loadUserProgress(roadmapId: roadmapId, lessonId: lessonId)
         } catch {
             exerciseResult = nil
-            NSLog("🎯 [ViewModel] exerciseResult set to NIL due to error")
             errorMessage = "Failed to submit exercise: \(error.localizedDescription)"
             showError = true
-            NSLog("❌ Error submitting exercise: \(error)")
         }
 
         isSubmitting = false
-        NSLog("🎯 [ViewModel] submitExercise completed, exerciseResult is \(exerciseResult != nil ? "SET" : "NIL")")
     }
 
     /// Complete a phase
@@ -469,12 +413,9 @@ class LessonViewModel: ObservableObject {
 
             // Reload progress
             await loadUserProgress(roadmapId: roadmapId, lessonId: lessonId)
-
-            NSLog("✅ Phase completed")
         } catch {
             errorMessage = "Failed to complete phase: \(error.localizedDescription)"
             showError = true
-            NSLog("❌ Error completing phase: \(error)")
         }
 
         isLoading = false
@@ -496,9 +437,7 @@ class LessonViewModel: ObservableObject {
                 currentStep: currentStep,
                 completedSteps: completedSteps
             )
-            NSLog("✅ Step progress saved - Phase \(phaseNumber), Step \(currentStep)")
         } catch {
-            NSLog("❌ Failed to save step progress: \(error)")
             // Show error to user so they know progress wasn't saved
             errorMessage = "Progress save failed. Please check your connection and try again."
             showError = true
@@ -517,13 +456,7 @@ class LessonViewModel: ObservableObject {
                 lessonId: lessonId,
                 phaseNumber: phaseNumber
             )
-            if let progress = phaseStepProgress {
-                NSLog("✅ Loaded step progress - Current step: \(progress.currentStep ?? 0), Completed steps: \(progress.completedSteps ?? [])")
-            } else {
-                NSLog("ℹ️ No step progress found - starting from beginning")
-            }
         } catch {
-            NSLog("⚠️ Error loading step progress: \(error)")
             // Don't show error - progress may not exist yet
             phaseStepProgress = nil
         }
@@ -536,23 +469,7 @@ class LessonViewModel: ObservableObject {
                 roadmapId: roadmapId,
                 lessonId: lessonId
             )
-            NSLog("✅ Loaded user progress - Status: \(userProgress?.status.rawValue ?? "unknown")")
-            NSLog("✅ Current phase: \(userProgress?.currentPhase ?? -1)")
-
-            // Log stepProgress dictionary from userProgress
-            if let stepProgress = userProgress?.stepProgress {
-                NSLog("✅ userProgress.stepProgress dictionary has \(stepProgress.count) entries")
-                for (key, progress) in stepProgress {
-                    NSLog("✅ userProgress.stepProgress['\(key)'] - currentStep: \(progress.currentStep ?? -1), completed: \(progress.completedSteps?.count ?? 0) steps")
-                    if let completedSteps = progress.completedSteps {
-                        NSLog("✅   Completed step indices: \(completedSteps)")
-                    }
-                }
-            } else {
-                NSLog("⚠️ userProgress.stepProgress dictionary is nil")
-            }
         } catch {
-            NSLog("⚠️ Error loading user progress: \(error)")
             // Don't show error - progress may not exist yet
         }
     }
@@ -563,9 +480,7 @@ class LessonViewModel: ObservableObject {
             progressStats = try await lessonService.fetchProgressStats(
                 languageId: languageId
             )
-            NSLog("✅ Loaded progress stats")
         } catch {
-            NSLog("⚠️ Error loading progress stats: \(error)")
         }
     }
 
@@ -575,9 +490,7 @@ class LessonViewModel: ObservableObject {
             roadmapProgress = try await lessonService.fetchRoadmapProgress(
                 roadmapId: roadmapId
             )
-            NSLog("✅ Loaded roadmap progress")
         } catch {
-            NSLog("⚠️ Error loading roadmap progress: \(error)")
         }
     }
 
