@@ -16,11 +16,13 @@ struct LessonListView: View {
     let languageName: String
 
     @StateObject private var viewModel = LessonViewModel()
+    @StateObject private var revenueCatManager = RevenueCatManager.shared
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
 
     @State private var selectedFilter: LessonCategory? = nil
     @State private var showGridView = false
+    @State private var showPaywall = false
 
     // MARK: - Body
 
@@ -64,6 +66,17 @@ struct LessonListView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(viewModel.errorMessage ?? "An error occurred")
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView {
+                // Reload lessons when premium is granted
+                Task {
+                    await viewModel.loadLessons(
+                        roadmapId: roadmapId,
+                        cefrLevel: cefrLevel
+                    )
+                }
+            }
         }
     }
 
@@ -126,7 +139,7 @@ struct LessonListView: View {
     private var listView: some View {
         LazyVStack(spacing: LLSpacing.md) {
             ForEach(Array(viewModel.filteredLessons.enumerated()), id: \.element.id) { index, lesson in
-                LessonCard(lesson: lesson)
+                LessonCard(lesson: lesson, showPaywall: $showPaywall)
                     .transition(.asymmetric(
                         insertion: .scale.combined(with: .opacity),
                         removal: .opacity
@@ -143,7 +156,7 @@ struct LessonListView: View {
             GridItem(.flexible(), spacing: LLSpacing.md)
         ], spacing: LLSpacing.md) {
             ForEach(Array(viewModel.filteredLessons.enumerated()), id: \.element.id) { index, lesson in
-                LessonGridCard(lesson: lesson)
+                LessonGridCard(lesson: lesson, showPaywall: $showPaywall)
                     .transition(.scale.combined(with: .opacity))
                     .animation(.spring(response: 0.4, dampingFraction: 0.8).delay(Double(index) * 0.05), value: viewModel.filteredLessons.count)
             }
@@ -244,17 +257,39 @@ private struct FilterChip: View {
 
 // MARK: - Lesson Card
 
+@MainActor
 private struct LessonCard: View {
     let lesson: Lesson
+    @Binding var showPaywall: Bool
 
     @Environment(\.colorScheme) var colorScheme
     @State private var isPressed = false
 
     var body: some View {
-        NavigationLink(destination: LessonDetailView(
-            roadmapId: lesson.roadmapId,
-            lessonId: lesson.id
-        )) {
+        Group {
+            if lesson.isLockedByPaywall {
+                // Show paywall button for locked lessons
+                Button(action: {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    showPaywall = true
+                }) {
+                    cardContent
+                }
+            } else {
+                // Normal navigation for accessible lessons
+                NavigationLink(destination: LessonDetailView(
+                    roadmapId: lesson.roadmapId,
+                    lessonId: lesson.id
+                )) {
+                    cardContent
+                }
+            }
+        }
+        .buttonStyle(ScalableButtonStyle(isPressed: $isPressed, scale: 0.98))
+        .opacity(lesson.isLockedByPaywall ? 0.8 : 1.0)
+    }
+
+    private var cardContent: some View {
             LLCard(style: .elevated, padding: .none) {
                 VStack(alignment: .leading, spacing: 0) {
                     // Header Section
@@ -279,8 +314,14 @@ private struct LessonCard: View {
 
                         Spacer()
 
-                        // Status Icon
-                        StatusIcon(status: lesson.status)
+                        // Status Icon or Lock Icon
+                        if lesson.isLockedByPaywall {
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 20))
+                                .foregroundColor(LLColors.warning.color(for: colorScheme))
+                        } else {
+                            StatusIcon(status: lesson.status)
+                        }
                     }
                     .padding(LLSpacing.md)
 
@@ -291,6 +332,10 @@ private struct LessonCard: View {
                     VStack(spacing: LLSpacing.sm) {
                         // Badges Row
                         HStack(spacing: LLSpacing.xs) {
+                            if lesson.requiresPremium {
+                                LLBadge("Premium", variant: .warning, size: .sm)
+                            }
+
                             LLBadge(lesson.category.displayName, variant: .info, size: .sm)
 
                             if let type = lesson.lessonType {
@@ -337,67 +382,89 @@ private struct LessonCard: View {
                     .padding(LLSpacing.md)
                 }
             }
-        }
-        .buttonStyle(ScalableButtonStyle(isPressed: $isPressed, scale: 0.98))
-        .disabled(lesson.isLocked)
-        .opacity(lesson.isLocked ? 0.6 : 1.0)
     }
 }
 
 // MARK: - Lesson Grid Card
 
+@MainActor
 private struct LessonGridCard: View {
     let lesson: Lesson
+    @Binding var showPaywall: Bool
 
     @Environment(\.colorScheme) var colorScheme
     @State private var isPressed = false
 
     var body: some View {
-        NavigationLink(destination: LessonDetailView(
-            roadmapId: lesson.roadmapId,
-            lessonId: lesson.id
-        )) {
-            LLCard(style: .elevated, padding: .md) {
-                VStack(alignment: .leading, spacing: LLSpacing.sm) {
-                    // Status and Number
-                    HStack {
-                        LessonNumberBadge(number: lesson.lessonNumber, status: lesson.status)
-                        Spacer()
-                        StatusIcon(status: lesson.status)
-                    }
-
-                    // Title
-                    Text(lesson.title)
-                        .font(LLTypography.bodySmall())
-                        .fontWeight(.semibold)
-                        .foregroundColor(LLColors.foreground.color(for: colorScheme))
-                        .lineLimit(2)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    Spacer()
-
-                    // Category Badge
-                    LLBadge(lesson.category.displayName, variant: .info, size: .sm)
-
-                    // Stats
-                    HStack(spacing: LLSpacing.sm) {
-                        Image(systemName: "clock")
-                            .font(.system(size: 10))
-                        Text(lesson.estimatedDurationFormatted)
-                            .font(LLTypography.captionSmall())
-
-                        Spacer()
-
-                        DifficultyBadge(difficulty: lesson.difficulty)
-                    }
-                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+        Group {
+            if lesson.isLockedByPaywall {
+                Button(action: {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    showPaywall = true
+                }) {
+                    gridCardContent
                 }
-                .frame(height: 150)
+            } else {
+                NavigationLink(destination: LessonDetailView(
+                    roadmapId: lesson.roadmapId,
+                    lessonId: lesson.id
+                )) {
+                    gridCardContent
+                }
             }
         }
         .buttonStyle(ScalableButtonStyle(isPressed: $isPressed, scale: 0.95))
-        .disabled(lesson.isLocked)
-        .opacity(lesson.isLocked ? 0.6 : 1.0)
+        .opacity(lesson.isLockedByPaywall ? 0.8 : 1.0)
+    }
+
+    private var gridCardContent: some View {
+        LLCard(style: .elevated, padding: .md) {
+            VStack(alignment: .leading, spacing: LLSpacing.sm) {
+                // Status and Number
+                HStack {
+                    LessonNumberBadge(number: lesson.lessonNumber, status: lesson.status)
+                    Spacer()
+                    if lesson.isLockedByPaywall {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 16))
+                            .foregroundColor(LLColors.warning.color(for: colorScheme))
+                    } else {
+                        StatusIcon(status: lesson.status)
+                    }
+                }
+
+                // Title
+                Text(lesson.title)
+                    .font(LLTypography.bodySmall())
+                    .fontWeight(.semibold)
+                    .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                    .lineLimit(2)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                Spacer()
+
+                // Badges
+                if lesson.requiresPremium {
+                    LLBadge("Premium", variant: .warning, size: .sm)
+                } else {
+                    LLBadge(lesson.category.displayName, variant: .info, size: .sm)
+                }
+
+                // Stats
+                HStack(spacing: LLSpacing.sm) {
+                    Image(systemName: "clock")
+                        .font(.system(size: 10))
+                    Text(lesson.estimatedDurationFormatted)
+                        .font(LLTypography.captionSmall())
+
+                    Spacer()
+
+                    DifficultyBadge(difficulty: lesson.difficulty)
+                }
+                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+            }
+            .frame(height: 150)
+        }
     }
 }
 

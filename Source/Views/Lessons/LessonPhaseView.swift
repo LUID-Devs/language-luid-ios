@@ -22,7 +22,6 @@ struct LessonPhaseView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
-    @Environment(\.tabBarVisible) private var tabBarVisible
 
     @State private var currentExerciseIndex = 0
     @State private var completedSteps: [Int] = []
@@ -107,16 +106,11 @@ struct LessonPhaseView: View {
                         .foregroundColor(LLColors.destructive.color(for: colorScheme))
                         .symbolRenderingMode(.hierarchical)
                 }
+                .accessibilityLabel("Exit phase")
+                .accessibilityHint("Double tap to exit the current lesson phase")
             }
         }
-        .onAppear {
-            // Hide tab bar when entering lesson phase
-            tabBarVisible.wrappedValue = false
-        }
         .onDisappear {
-            // Show tab bar when leaving lesson phase
-            tabBarVisible.wrappedValue = true
-
             // CRITICAL: Use detached task to ensure progress saves even if parent view dismisses
             // Capture values before the closure to avoid capturing @State wrappers
             let currentStep = currentExerciseIndex
@@ -562,66 +556,62 @@ struct LessonPhaseView: View {
         return String(format: "%.0f%%", accuracy)
     }
 
-    // REMOVED: Old implementation that used user's profile target language
-    // This was causing issues when user's profile language didn't match the lesson language
-    // New implementation: Use roadmap's language (passed as parameter) or detect from exercise text
-
-    /// Detect language for a specific exercise by analyzing its text content
+    /// Get language locale for exercise TTS
+    /// PRIMARY: Uses user's target language (the language they're learning)
+    /// FALLBACK: Only detects from text if user profile is unavailable
     private func detectLanguageForExercise(_ exercise: Exercise) -> String {
+        let logger = OSLog(subsystem: "com.luid.languageluid", category: "TTS")
+
+        // PRIMARY: Use user's target language (the language they're learning)
+        // This is correct for most cases - if user is learning Spanish, all lessons should use Spanish TTS
+        if let targetLanguage = authViewModel.currentUser?.targetLanguage {
+            let locale = mapLanguageToLocale(targetLanguage)
+            os_log("🎤 TTS Language: Using user.targetLanguage='%{public}@' → locale='%{public}@'",
+                   log: logger, type: .info, targetLanguage, locale)
+            return locale
+        }
+
+        // FALLBACK: Try to detect language from exercise text
+        // This helps when user profile is not available
+        // Note: Detection doesn't work well for cognates (words that are the same in multiple languages)
+        os_log("⚠️ TTS: No targetLanguage in user profile, attempting text detection",
+               log: logger, type: .info)
+
         // Priority order for text to analyze:
         // 1. expectedResponse (target language text for speech/audio exercises)
         // 2. options.first (for multiple choice - first option is usually in target language)
         // 3. prompt (fallback)
 
+        var textToDetect: String? = nil
+
         if let expectedResponse = exercise.expectedResponse, !expectedResponse.isEmpty {
-            return detectLanguageLocale(from: expectedResponse)
+            textToDetect = expectedResponse
+        } else if let options = exercise.options, !options.isEmpty, let firstOption = options.first {
+            textToDetect = firstOption.text
+        } else if !exercise.prompt.isEmpty {
+            textToDetect = exercise.prompt
         }
 
-        if let options = exercise.options, !options.isEmpty, let firstOption = options.first {
-            return detectLanguageLocale(from: firstOption.text)
+        if let text = textToDetect {
+            let recognizer = NLLanguageRecognizer()
+            recognizer.processString(text)
+
+            if let detectedLanguage = recognizer.dominantLanguage {
+                let langCode = detectedLanguage.rawValue
+                let locale = mapLanguageToLocale(langCode)
+                os_log("🔍 TTS: Detected language '%{public}@' from text → locale='%{public}@'",
+                       log: logger, type: .info, langCode, locale)
+                return locale
+            }
         }
 
-        if !exercise.prompt.isEmpty {
-            return detectLanguageLocale(from: exercise.prompt)
-        }
-
-        // Ultimate fallback: user's target language
-        return mapLanguageToLocale(authViewModel.currentUser?.targetLanguage ?? "en")
-    }
-
-    /// Detect language from text using iOS NLLanguageRecognizer
-    /// Falls back to user's target language if detection fails
-    private func detectLanguageLocale(from text: String) -> String {
-        let logger = OSLog(subsystem: "com.luid.languageluid", category: "TTS")
-
-        // Try language detection first
-        let recognizer = NLLanguageRecognizer()
-        recognizer.processString(text)
-
-        if let detectedLanguage = recognizer.dominantLanguage {
-            let langCode = detectedLanguage.rawValue
-            os_log("🔍 TTS: Detected language '%{public}@' from text: '%{public}@'",
-                   log: logger, type: .info, langCode, text)
-
-            // Map detected language to TTS locale
-            let locale = mapLanguageToLocale(langCode)
-            os_log("🎤 TTS Language Resolution: detected='%{public}@' → locale='%{public}@'",
-                   log: logger, type: .info, langCode, locale)
-            return locale
-        }
-
-        // Fallback to user's target language
-        os_log("⚠️ TTS: Language detection failed for text: '%{public}@', using user profile",
-               log: logger, type: .info, text)
-
-        guard let targetLanguage = authViewModel.currentUser?.targetLanguage else {
-            os_log("⚠️ TTS: No targetLanguage in user profile, using device locale",
-                   log: logger, type: .error)
-            let deviceLang = Locale.current.language.languageCode?.identifier ?? "en"
-            return mapLanguageToLocale(deviceLang)
-        }
-
-        return mapLanguageToLocale(targetLanguage)
+        // ULTIMATE FALLBACK: Use device locale
+        os_log("⚠️ TTS: All language detection methods failed, using device locale",
+               log: logger, type: .error)
+        let deviceLang = Locale.current.language.languageCode?.identifier ?? "en"
+        let locale = mapLanguageToLocale(deviceLang)
+        os_log("🎤 TTS: Using device locale → '%{public}@'", log: logger, type: .info, locale)
+        return locale
     }
 
     /// Map language code to primary TTS locale
@@ -832,22 +822,25 @@ struct LessonPhaseView: View {
                 isAnswerCorrect = result.isCorrect
                 // Use feedback.message if available, otherwise use explanation, otherwise use a default message
                 feedbackMessage = result.feedback?.message ?? result.explanation ?? (result.isCorrect ? "Correct!" : "Incorrect")
-                let earnedPoints = result.points ?? Int(result.score)
-                score += earnedPoints
 
                 if result.isCorrect {
-                    correctAnswers += 1
-                    showConfetti = true
-                    UINotificationFeedbackGenerator().notificationOccurred(.success)
-
-                    // Mark exercise as completed when answered correctly
-                    if !completedSteps.contains(currentExerciseIndex) {
+                    // Only add points if this exercise hasn't been completed yet
+                    // This prevents score from exceeding totalScore when retrying exercises
+                    let alreadyCompleted = completedSteps.contains(currentExerciseIndex)
+                    if !alreadyCompleted {
+                        let earnedPoints = result.points ?? Int(result.score)
+                        score += earnedPoints
+                        correctAnswers += 1
                         completedSteps.append(currentExerciseIndex)
+
                         // Save progress after successful completion
                         Task {
                             await saveCurrentProgress()
                         }
                     }
+
+                    showConfetti = true
+                    UINotificationFeedbackGenerator().notificationOccurred(.success)
 
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                         showConfetti = false
@@ -948,7 +941,12 @@ struct LessonPhaseView: View {
             return
         }
 
-        let finalScore = Double(score) / Double(totalScore)
+        // Calculate score as ratio, ensuring it's between 0.0 and 1.0
+        // Clamp to prevent backend validation errors if score somehow exceeds totalScore
+        let rawScore = totalScore > 0 ? Double(score) / Double(totalScore) : 0.0
+        let finalScore = min(max(rawScore, 0.0), 1.0)
+
+        NSLog("📊 Phase completion score: %d / %d = %.2f (clamped to %.2f)", score, totalScore, rawScore, finalScore)
 
         Task {
             await viewModel.completePhase(
@@ -1000,6 +998,10 @@ struct LessonPhaseView: View {
 
             // ALWAYS reload phases to ensure we have fresh data with exercises
             await viewModel.loadLessonPhases(roadmapId: roadmapId, lessonId: lessonId)
+
+            // CRITICAL: Reload phase progress to update lock/unlock states after phase completion
+            // Without this, LessonDetailView shows stale lock states when user navigates back
+            await viewModel.loadPhaseProgress(lessonId: lessonId)
 
             // Find next phase and update the binding to trigger navigation
             if let nextPhase = viewModel.lessonPhases.first(where: { $0.phaseNumber == nextPhaseNumber }) {

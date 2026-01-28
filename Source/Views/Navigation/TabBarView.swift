@@ -3,23 +3,12 @@
 //  LanguageLuid
 //
 //  Main tab bar navigation with 4 tabs
-//  Custom styled tab bar using Language Luid design system
+//  Refactored to use native iOS TabView for better HIG compliance
 //
 
 import SwiftUI
 
-// MARK: - Tab Bar Visibility Environment Key
-
-private struct TabBarVisibilityKey: EnvironmentKey {
-    static let defaultValue: Binding<Bool> = .constant(true)
-}
-
-extension EnvironmentValues {
-    var tabBarVisible: Binding<Bool> {
-        get { self[TabBarVisibilityKey.self] }
-        set { self[TabBarVisibilityKey.self] = newValue }
-    }
-}
+// MARK: - Tab Router
 
 @MainActor
 final class TabRouter: ObservableObject {
@@ -58,13 +47,12 @@ enum DrawerSheet: Identifiable {
     }
 }
 
-/// Main tab bar view with 4 navigation tabs
+/// Main tab bar view with 4 navigation tabs - Native iOS implementation
 struct TabBarView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var tabRouter = TabRouter()
     @StateObject private var drawerRouter = DrawerRouter()
-    @State private var isTabBarVisible = true
 
     // MARK: - Tab Definition
 
@@ -105,58 +93,15 @@ struct TabBarView: View {
     // MARK: - Body
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            // Main Content
-            Group {
-                switch tabRouter.selectedTab {
-                case .dashboard:
-                    DashboardView()
-                case .languages:
-                    LanguagesListView()
-                case .lessons:
-                    LessonsView()
-                case .profile:
-                    ProfileView()
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .environment(\.tabBarVisible, $isTabBarVisible)
-
-            // Custom Tab Bar (conditionally visible)
-            if isTabBarVisible {
-                CustomTabBar(selectedTab: $tabRouter.selectedTab)
-                    .transition(.move(edge: .bottom))
-            }
+        TabView(selection: $tabRouter.selectedTab) {
+            dashboardTab
+            languagesTab
+            lessonsTab
+            profileTab
         }
-        .ignoresSafeArea(.keyboard, edges: .bottom)
+        .tint(LLColors.primary.color(for: colorScheme))
         .environmentObject(tabRouter)
         .environmentObject(drawerRouter)
-        .animation(.easeInOut(duration: 0.25), value: isTabBarVisible)
-        .safeAreaInset(edge: .top) {
-            HStack {
-                Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        drawerRouter.isOpen = true
-                    }
-                } label: {
-                    Image(systemName: "line.3.horizontal")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(LLColors.foreground.color(for: colorScheme))
-                        .padding(12)
-                        .background(
-                            Circle()
-                                .fill(LLColors.card.color(for: colorScheme))
-                                .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 2)
-                        )
-                }
-
-                Spacer()
-            }
-            .padding(.horizontal, LLSpacing.lg)
-            .padding(.top, LLSpacing.sm)
-            .padding(.bottom, LLSpacing.sm)
-            .background(LLColors.background.color(for: colorScheme))
-        }
         .overlay {
             DrawerOverlay(
                 authViewModel: authViewModel,
@@ -168,6 +113,70 @@ struct TabBarView: View {
             NavigationStack {
                 drawerSheetView(sheet)
             }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        drawerRouter.isOpen = true
+                    }
+                } label: {
+                    Label("Menu", systemImage: "line.3.horizontal")
+                        .labelStyle(.iconOnly)
+                }
+                .accessibilityLabel("Open menu")
+                .accessibilityHint("Double tap to open the navigation menu")
+            }
+        }
+    }
+
+    // MARK: - Tab Views
+
+    private var dashboardTab: some View {
+        NavigationStack {
+            DashboardView()
+        }
+        .tabItem {
+            Label(Tab.dashboard.title, systemImage: Tab.dashboard.filledIcon)
+        }
+        .tag(Tab.dashboard)
+    }
+
+    private var languagesTab: some View {
+        NavigationStack {
+            LanguagesListView()
+        }
+        .tabItem {
+            Label(Tab.languages.title, systemImage: Tab.languages.filledIcon)
+        }
+        .tag(Tab.languages)
+    }
+
+    private var lessonsTab: some View {
+        NavigationStack {
+            LessonsView()
+        }
+        .tabItem {
+            Label(Tab.lessons.title, systemImage: Tab.lessons.filledIcon)
+        }
+        .tag(Tab.lessons)
+    }
+
+    @ViewBuilder
+    private var profileTab: some View {
+        let tab = NavigationStack {
+            ProfileView()
+        }
+        .tabItem {
+            Label(Tab.profile.title, systemImage: Tab.profile.filledIcon)
+        }
+        .tag(Tab.profile)
+
+        if !authViewModel.isEmailVerified {
+            tab.badge(1)
+        } else {
+            tab
         }
     }
 
@@ -193,170 +202,6 @@ struct TabBarView: View {
         case .cookies:
             CookiePolicyView()
         }
-    }
-}
-
-// MARK: - Custom Tab Bar
-
-/// Custom styled tab bar
-struct CustomTabBar: View {
-    @Binding var selectedTab: TabBarView.Tab
-    @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var authViewModel: AuthViewModel
-
-    // Badge counts (can be connected to view models later)
-    @State private var notificationBadge: Int = 0
-
-    var body: some View {
-        VStack(spacing: 0) {
-            // Top Border
-            Rectangle()
-                .fill(LLColors.border.color(for: colorScheme))
-                .frame(height: 0.5)
-
-            // Tab Bar Content
-            HStack(spacing: 0) {
-                ForEach(TabBarView.Tab.allCases, id: \.self) { tab in
-                    TabBarButton(
-                        tab: tab,
-                        isSelected: selectedTab == tab,
-                        badgeCount: badgeCount(for: tab),
-                        action: {
-                            selectedTab = tab
-                            // Haptic feedback
-                            let impact = UIImpactFeedbackGenerator(style: .light)
-                            impact.impactOccurred()
-                        }
-                    )
-                }
-            }
-            .frame(height: 60)
-            .padding(.bottom, 0)
-            .background(
-                LLColors.card.color(for: colorScheme)
-                    .shadow(
-                        color: Color.black.opacity(0.05),
-                        radius: 10,
-                        x: 0,
-                        y: -5
-                    )
-                    .ignoresSafeArea(edges: .bottom)
-            )
-        }
-        .background(
-            LLColors.card.color(for: colorScheme)
-                .ignoresSafeArea(edges: .bottom)
-        )
-    }
-
-    /// Get badge count for specific tab
-    private func badgeCount(for tab: TabBarView.Tab) -> Int? {
-        switch tab {
-        case .dashboard:
-            return notificationBadge > 0 ? notificationBadge : nil
-        case .profile:
-            // Show badge if email not verified
-            return !authViewModel.isEmailVerified ? 1 : nil
-        default:
-            return nil
-        }
-    }
-}
-
-// MARK: - Tab Bar Button
-
-/// Individual tab bar button
-struct TabBarButton: View {
-    let tab: TabBarView.Tab
-    let isSelected: Bool
-    let badgeCount: Int?
-    let action: () -> Void
-
-    @Environment(\.colorScheme) var colorScheme
-
-    var body: some View {
-        Button(action: action) {
-            VStack(spacing: 4) {
-                ZStack(alignment: .topTrailing) {
-                    // Icon
-                    Image(systemName: isSelected ? tab.filledIcon : tab.icon)
-                        .font(.system(size: 24, weight: isSelected ? .semibold : .regular))
-                        .foregroundColor(iconColor)
-                        .frame(height: 24)
-
-                    // Badge
-                    if let count = badgeCount {
-                        BadgeView(count: count)
-                            .offset(x: 12, y: -8)
-                    }
-                }
-
-                // Label
-                Text(tab.title)
-                    .font(LLTypography.captionSmall())
-                    .foregroundColor(labelColor)
-                    .lineLimit(1)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
-        }
-        .buttonStyle(TabBarButtonStyle())
-    }
-
-    private var iconColor: Color {
-        isSelected
-            ? LLColors.primary.color(for: colorScheme)
-            : LLColors.mutedForeground.color(for: colorScheme)
-    }
-
-    private var labelColor: Color {
-        isSelected
-            ? LLColors.foreground.color(for: colorScheme)
-            : LLColors.mutedForeground.color(for: colorScheme)
-    }
-}
-
-// MARK: - Badge View
-
-/// Badge notification indicator
-struct BadgeView: View {
-    let count: Int
-    @Environment(\.colorScheme) var colorScheme
-
-    var body: some View {
-        if count > 0 {
-            ZStack {
-                Circle()
-                    .fill(LLColors.destructive.color(for: colorScheme))
-                    .frame(width: badgeSize, height: badgeSize)
-
-                if count <= 99 {
-                    Text("\(count)")
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(LLColors.destructiveForeground.color(for: colorScheme))
-                } else {
-                    Text("99+")
-                        .font(.system(size: 8, weight: .bold))
-                        .foregroundColor(LLColors.destructiveForeground.color(for: colorScheme))
-                }
-            }
-        }
-    }
-
-    private var badgeSize: CGFloat {
-        count > 9 ? 20 : 16
-    }
-}
-
-// MARK: - Tab Bar Button Style
-
-/// Custom button style for tab bar buttons
-struct TabBarButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .opacity(configuration.isPressed ? 0.6 : 1.0)
-            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
-            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
     }
 }
 
@@ -391,7 +236,6 @@ struct LanguagesView: View {
                     .padding(.horizontal, LLSpacing.lg)
                 }
                 .padding(.top, LLSpacing.lg)
-                .padding(.bottom, 80) // Tab bar padding
             }
             .background(LLColors.background.color(for: colorScheme))
             .navigationTitle("Languages")
@@ -407,43 +251,40 @@ struct LessonsView: View {
     @EnvironmentObject var drawerRouter: DrawerRouter
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: LLSpacing.lg) {
-                    LLCard(style: .standard, padding: .lg) {
-                        VStack(spacing: LLSpacing.md) {
-                            Image(systemName: "book.fill")
-                                .font(.system(size: 48))
-                                .foregroundColor(LLColors.primary.color(for: colorScheme))
+        ScrollView {
+            VStack(spacing: LLSpacing.lg) {
+                LLCard(style: .standard, padding: .lg) {
+                    VStack(spacing: LLSpacing.md) {
+                        Image(systemName: "book.fill")
+                            .font(.system(size: 48))
+                            .foregroundColor(LLColors.primary.color(for: colorScheme))
 
-                            Text("Lessons Coming Soon")
-                                .font(LLTypography.h4())
-                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                        Text("Lessons Coming Soon")
+                            .font(LLTypography.h4())
+                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
 
-                            Text("Access your language lessons and exercises")
-                                .font(LLTypography.body())
-                                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-                                .multilineTextAlignment(.center)
+                        Text("Access your language lessons and exercises")
+                            .font(LLTypography.body())
+                            .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                            .multilineTextAlignment(.center)
 
-                            LLButton("Browse Languages", style: .primary, size: .sm) {
-                                tabRouter.selectedTab = .languages
-                            }
-
-                            LLButton("Open Settings", style: .outline, size: .sm) {
-                                drawerRouter.sheet = .settings
-                            }
+                        LLButton("Browse Languages", style: .primary, size: .sm) {
+                            tabRouter.selectedTab = .languages
                         }
-                        .padding(LLSpacing.xl)
+
+                        LLButton("Open Settings", style: .outline, size: .sm) {
+                            drawerRouter.sheet = .settings
+                        }
                     }
-                    .padding(.horizontal, LLSpacing.lg)
+                    .padding(LLSpacing.xl)
                 }
-                .padding(.top, LLSpacing.lg)
-                .padding(.bottom, 80) // Tab bar padding
+                .padding(.horizontal, LLSpacing.lg)
             }
-            .background(LLColors.background.color(for: colorScheme))
-            .navigationTitle("Lessons")
-            .navigationBarTitleDisplayMode(.large)
+            .padding(.top, LLSpacing.lg)
         }
+        .background(LLColors.background.color(for: colorScheme))
+        .navigationTitle("Lessons")
+        .navigationBarTitleDisplayMode(.large)
     }
 }
 
@@ -455,97 +296,94 @@ struct ProfileView: View {
     @EnvironmentObject var drawerRouter: DrawerRouter
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: LLSpacing.lg) {
-                    // User Info Card
-                    LLCard(style: .standard, padding: .lg) {
-                        VStack(spacing: LLSpacing.md) {
-                            // Avatar
-                            ZStack {
-                                Circle()
-                                    .fill(LLColors.primary.color(for: colorScheme))
-                                    .frame(width: 80, height: 80)
+        ScrollView {
+            VStack(spacing: LLSpacing.lg) {
+                // User Info Card
+                LLCard(style: .standard, padding: .lg) {
+                    VStack(spacing: LLSpacing.md) {
+                        // Avatar
+                        ZStack {
+                            Circle()
+                                .fill(LLColors.primary.color(for: colorScheme))
+                                .frame(width: 80, height: 80)
 
-                                Text(authViewModel.currentUser?.initials ?? "U")
-                                    .font(.system(size: 32, weight: .semibold))
-                                    .foregroundColor(LLColors.primaryForeground.color(for: colorScheme))
-                            }
+                            Text(authViewModel.currentUser?.initials ?? "U")
+                                .font(.system(size: 32, weight: .semibold))
+                                .foregroundColor(LLColors.primaryForeground.color(for: colorScheme))
+                        }
 
-                            // Name
-                            Text(authViewModel.userDisplayName)
-                                .font(LLTypography.h4())
-                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                        // Name
+                        Text(authViewModel.userDisplayName)
+                            .font(LLTypography.h4())
+                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
 
-                            // Email
-                            Text(authViewModel.userEmail)
+                        // Email
+                        Text(authViewModel.userEmail)
+                            .font(LLTypography.body())
+                            .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+
+                        // Stats
+                        HStack(spacing: LLSpacing.xl) {
+                            StatItem(
+                                value: "\(authViewModel.currentUser?.totalXp ?? 0)",
+                                label: "XP"
+                            )
+                            StatItem(
+                                value: "\(authViewModel.currentUser?.currentStreak ?? 0)",
+                                label: "Day Streak"
+                            )
+                            StatItem(
+                                value: "\(authViewModel.currentUser?.lessonsCompleted ?? 0)",
+                                label: "Lessons"
+                            )
+                        }
+                        .padding(.top, LLSpacing.md)
+                    }
+                    .padding(LLSpacing.md)
+                }
+                .padding(.horizontal, LLSpacing.lg)
+
+                // Quick links
+                VStack(spacing: LLSpacing.sm) {
+                    NavigationLink {
+                        CreditsDetailView()
+                    } label: {
+                        HStack {
+                            Image(systemName: "creditcard.fill")
+                                .foregroundColor(LLColors.primary.color(for: colorScheme))
+                            Text("Credits & Subscription")
                                 .font(LLTypography.body())
+                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                            Spacer()
+                            Image(systemName: "chevron.right")
                                 .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-
-                            // Stats
-                            HStack(spacing: LLSpacing.xl) {
-                                StatItem(
-                                    value: "\(authViewModel.currentUser?.totalXp ?? 0)",
-                                    label: "XP"
-                                )
-                                StatItem(
-                                    value: "\(authViewModel.currentUser?.currentStreak ?? 0)",
-                                    label: "Day Streak"
-                                )
-                                StatItem(
-                                    value: "\(authViewModel.currentUser?.lessonsCompleted ?? 0)",
-                                    label: "Lessons"
-                                )
-                            }
-                            .padding(.top, LLSpacing.md)
                         }
                         .padding(LLSpacing.md)
+                        .background(
+                            RoundedRectangle(cornerRadius: LLSpacing.radiusMD)
+                                .fill(LLColors.card.color(for: colorScheme))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: LLSpacing.radiusMD)
+                                .stroke(LLColors.border.color(for: colorScheme), lineWidth: 1)
+                        )
                     }
-                    .padding(.horizontal, LLSpacing.lg)
 
-                    // Quick links
-                    VStack(spacing: LLSpacing.sm) {
-                        NavigationLink {
-                            CreditsDetailView()
-                        } label: {
-                            HStack {
-                                Image(systemName: "creditcard.fill")
-                                    .foregroundColor(LLColors.primary.color(for: colorScheme))
-                                Text("Credits & Subscription")
-                                    .font(LLTypography.body())
-                                    .foregroundColor(LLColors.foreground.color(for: colorScheme))
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-                            }
-                            .padding(LLSpacing.md)
-                            .background(
-                                RoundedRectangle(cornerRadius: LLSpacing.radiusMD)
-                                    .fill(LLColors.card.color(for: colorScheme))
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: LLSpacing.radiusMD)
-                                    .stroke(LLColors.border.color(for: colorScheme), lineWidth: 1)
-                            )
-                        }
-
-                        LLButton("Manage Languages", style: .outline, size: .sm) {
-                            tabRouter.selectedTab = .languages
-                        }
-
-                        LLButton("Account Settings", style: .outline, size: .sm) {
-                            drawerRouter.sheet = .settings
-                        }
+                    LLButton("Manage Languages", style: .outline, size: .sm) {
+                        tabRouter.selectedTab = .languages
                     }
-                    .padding(.horizontal, LLSpacing.lg)
+
+                    LLButton("Account Settings", style: .outline, size: .sm) {
+                        drawerRouter.sheet = .settings
+                    }
                 }
-                .padding(.top, LLSpacing.lg)
-                .padding(.bottom, 80) // Tab bar padding
+                .padding(.horizontal, LLSpacing.lg)
             }
-            .background(LLColors.background.color(for: colorScheme))
-            .navigationTitle("Profile")
-            .navigationBarTitleDisplayMode(.large)
+            .padding(.top, LLSpacing.lg)
         }
+        .background(LLColors.background.color(for: colorScheme))
+        .navigationTitle("Profile")
+        .navigationBarTitleDisplayMode(.large)
     }
 }
 
@@ -569,122 +407,119 @@ struct SettingsView: View {
     ]
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: LLSpacing.lg) {
-                    LLCard(style: .standard, padding: .lg) {
-                        VStack(spacing: LLSpacing.md) {
-                            Image(systemName: "gearshape.fill")
-                                .font(.system(size: 48))
-                                .foregroundColor(LLColors.primary.color(for: colorScheme))
+        ScrollView {
+            VStack(spacing: LLSpacing.lg) {
+                LLCard(style: .standard, padding: .lg) {
+                    VStack(spacing: LLSpacing.md) {
+                        Image(systemName: "gearshape.fill")
+                            .font(.system(size: 48))
+                            .foregroundColor(LLColors.primary.color(for: colorScheme))
 
-                            Text("Settings Coming Soon")
-                                .font(LLTypography.h4())
-                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                        Text("Settings Coming Soon")
+                            .font(LLTypography.h4())
+                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
 
-                            Text("Customize your learning experience")
-                                .font(LLTypography.body())
-                                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-                                .multilineTextAlignment(.center)
-                        }
-                        .padding(LLSpacing.xl)
+                        Text("Customize your learning experience")
+                            .font(LLTypography.body())
+                            .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                            .multilineTextAlignment(.center)
                     }
-                    .padding(.horizontal, LLSpacing.lg)
+                    .padding(LLSpacing.xl)
+                }
+                .padding(.horizontal, LLSpacing.lg)
 
-                    LLCard(style: .standard, padding: .lg) {
-                        VStack(alignment: .leading, spacing: LLSpacing.md) {
-                            Text("Account")
-                                .font(LLTypography.h4())
-                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                LLCard(style: .standard, padding: .lg) {
+                    VStack(alignment: .leading, spacing: LLSpacing.md) {
+                        Text("Account")
+                            .font(LLTypography.h4())
+                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
 
-                            VStack(spacing: LLSpacing.sm) {
-                                ForEach(accountLinks) { link in
-                                    NavigationLink(destination: link.destination) {
-                                        HStack {
-                                            if let icon = link.icon {
-                                                Image(systemName: icon)
-                                                    .foregroundColor(LLColors.primary.color(for: colorScheme))
-                                                    .frame(width: 20)
-                                            }
-
-                                            Text(link.title)
-                                                .font(LLTypography.body())
-                                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
-
-                                            Spacer()
-
-                                            Image(systemName: "chevron.right")
-                                                .font(.system(size: 14))
-                                                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                        VStack(spacing: LLSpacing.sm) {
+                            ForEach(accountLinks) { link in
+                                NavigationLink(destination: link.destination) {
+                                    HStack {
+                                        if let icon = link.icon {
+                                            Image(systemName: icon)
+                                                .foregroundColor(LLColors.primary.color(for: colorScheme))
+                                                .frame(width: 20)
                                         }
-                                        .padding(.vertical, 8)
+
+                                        Text(link.title)
+                                            .font(LLTypography.body())
+                                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
+
+                                        Spacer()
+
+                                        Image(systemName: "chevron.right")
+                                            .font(.system(size: 14))
+                                            .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
                                     }
+                                    .padding(.vertical, 8)
                                 }
                             }
                         }
                     }
-                    .padding(.horizontal, LLSpacing.lg)
+                }
+                .padding(.horizontal, LLSpacing.lg)
 
-                    LLCard(style: .standard, padding: .lg) {
-                        VStack(alignment: .leading, spacing: LLSpacing.md) {
-                            Text("More")
-                                .font(LLTypography.h4())
-                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
+                LLCard(style: .standard, padding: .lg) {
+                    VStack(alignment: .leading, spacing: LLSpacing.md) {
+                        Text("More")
+                            .font(LLTypography.h4())
+                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
 
-                            VStack(spacing: LLSpacing.sm) {
-                                ForEach(moreLinks) { link in
-                                    NavigationLink(destination: link.destination) {
-                                        HStack {
-                                            if let icon = link.icon {
-                                                Image(systemName: icon)
-                                                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-                                                    .frame(width: 20)
-                                            }
-
-                                            Text(link.title)
-                                                .font(LLTypography.body())
-                                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
-
-                                            Spacer()
-
-                                            Image(systemName: "chevron.right")
-                                                .font(.system(size: 14))
+                        VStack(spacing: LLSpacing.sm) {
+                            ForEach(moreLinks) { link in
+                                NavigationLink(destination: link.destination) {
+                                    HStack {
+                                        if let icon = link.icon {
+                                            Image(systemName: icon)
                                                 .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                                                .frame(width: 20)
                                         }
-                                        .padding(.vertical, 8)
+
+                                        Text(link.title)
+                                            .font(LLTypography.body())
+                                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
+
+                                        Spacer()
+
+                                        Image(systemName: "chevron.right")
+                                            .font(.system(size: 14))
+                                            .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
                                     }
+                                    .padding(.vertical, 8)
                                 }
                             }
                         }
                     }
-                    .padding(.horizontal, LLSpacing.lg)
+                }
+                .padding(.horizontal, LLSpacing.lg)
 
-                    // Logout Button
-                    LLButton(
-                        "Log Out",
-                        style: .destructive,
-                        fullWidth: false
-                    ) {
-                        showingLogoutAlert = true
-                    }
-                    .padding(.horizontal, LLSpacing.lg)
+                // Logout Button
+                LLButton(
+                    "Log Out",
+                    style: .destructive,
+                    fullWidth: false
+                ) {
+                    showingLogoutAlert = true
                 }
-                .padding(.top, LLSpacing.lg)
-                .padding(.bottom, 80) // Tab bar padding
+                .padding(.horizontal, LLSpacing.lg)
             }
-            .background(LLColors.background.color(for: colorScheme))
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.large)
-            .alert("Log Out", isPresented: $showingLogoutAlert) {
-                Button("Cancel", role: .cancel) { }
-                Button("Log Out", role: .destructive) {
-                    Task {
-                        await authViewModel.logout()
-                    }
+            .padding(.top, LLSpacing.lg)
+        }
+        .background(LLColors.background.color(for: colorScheme))
+        .navigationTitle("Settings")
+        .navigationBarTitleDisplayMode(.large)
+        .alert("Log Out", isPresented: $showingLogoutAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Log Out", role: .destructive) {
+                Task {
+                    await authViewModel.logout()
                 }
-            } message: {
-                Text("Are you sure you want to log out?")
             }
+        } message: {
+            Text("Are you sure you want to log out?")
         }
     }
 }

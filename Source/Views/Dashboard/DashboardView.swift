@@ -461,14 +461,6 @@ struct DashboardView: View {
             )
 
             statCard(
-                icon: "target",
-                value: 0,
-                label: "Accuracy",
-                suffix: "%",
-                color: LLColors.success
-            )
-
-            statCard(
                 icon: "flame.fill",
                 value: authViewModel.currentUser?.currentStreak ?? 0,
                 label: "Day Streak",

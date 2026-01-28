@@ -85,10 +85,9 @@ struct SpeechRecorderView: View {
                 AudioVisualizerView(
                     audioLevel: audioRecorder.audioLevel,
                     isRecording: audioRecorder.isRecording,
-                    barCount: isCompact ? 30 : 40,
-                    maxHeight: isCompact ? 60 : 100
+                    color: LLColors.primary.color(for: colorScheme)
                 )
-                .frame(height: isCompact ? 60 : 100)
+                .frame(height: isCompact ? 120 : 160)
                 .padding(.horizontal)
             }
 

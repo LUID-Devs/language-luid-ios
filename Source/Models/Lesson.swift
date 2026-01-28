@@ -143,6 +143,32 @@ struct Lesson: Codable, Identifiable, Hashable {
     var canStart: Bool {
         !isLocked && (isPublished || AppConfig.isDevelopment)
     }
+
+    // MARK: - Premium/Paywall Logic
+
+    /// Whether this lesson requires premium subscription
+    var requiresPremium: Bool {
+        lessonNumber > RevenueCatConfig.freeLessonLimit
+    }
+
+    /// Whether user can access this lesson (based on premium status)
+    /// Note: This checks against RevenueCatManager for current subscription status
+    @MainActor
+    var isAccessible: Bool {
+        if !requiresPremium {
+            // Free lessons are always accessible
+            return true
+        }
+
+        // Premium lessons require subscription
+        return RevenueCatManager.shared.isPremiumUser
+    }
+
+    /// Whether lesson is locked due to premium requirement
+    @MainActor
+    var isLockedByPaywall: Bool {
+        requiresPremium && !RevenueCatManager.shared.isPremiumUser
+    }
 }
 
 // MARK: - Lesson Status Enum

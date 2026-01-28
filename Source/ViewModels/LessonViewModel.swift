@@ -413,6 +413,10 @@ class LessonViewModel: ObservableObject {
 
             // Reload progress
             await loadUserProgress(roadmapId: roadmapId, lessonId: lessonId)
+
+            // CRITICAL: Reload phase progress to update lock/unlock states
+            // This ensures the next phase becomes unlocked in the UI after completion
+            await loadPhaseProgress(lessonId: lessonId)
         } catch {
             errorMessage = "Failed to complete phase: \(error.localizedDescription)"
             showError = true

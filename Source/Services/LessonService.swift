@@ -80,6 +80,18 @@ struct SaveStepProgressResponse: Codable {
     // We don't need to decode the data since we just care about success
 }
 
+struct CompletePhaseData: Codable {
+    let progress: UserLessonProgress
+    let phaseCompleted: Int
+    let lessonCompleted: Bool
+}
+
+struct CompletePhaseResponse: Codable {
+    let success: Bool
+    let data: CompletePhaseData
+    let message: String?
+}
+
 // MARK: - Lesson Service
 
 @MainActor
@@ -387,13 +399,17 @@ class LessonService {
         }
 
         do {
-            let _: SuccessResponse<UserLessonProgress> = try await apiClient.post(
+            let response: CompletePhaseResponse = try await apiClient.post(
                 "\(APIEndpoint.roadmaps)/\(roadmapId)/lessons/\(lessonId)/phases/\(phaseNumber)/complete",
                 parameters: parameters,
                 requiresAuth: true
             )
 
-            os_log("✅ Phase completed with score: %{public}d%%", log: logger, type: .info, Int(score * 100))
+            os_log("✅ Phase %{public}d completed (lesson completed: %{public}@) with score: %{public}d%%",
+                   log: logger, type: .info,
+                   response.data.phaseCompleted,
+                   response.data.lessonCompleted ? "YES" : "NO",
+                   Int(score * 100))
         } catch {
             os_log("❌ Failed to complete phase: %{public}@", log: logger, type: .error, error.localizedDescription)
             throw error

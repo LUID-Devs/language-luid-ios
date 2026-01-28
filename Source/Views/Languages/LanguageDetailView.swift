@@ -312,18 +312,6 @@ struct LanguageDetailView: View {
             )
 
             statCard(
-                icon: "trophy.fill",
-                value: "\(stats.xpEarned)",
-                label: "XP Earned"
-            )
-
-            statCard(
-                icon: "target",
-                value: "\(stats.accuracy)%",
-                label: "Accuracy"
-            )
-
-            statCard(
                 icon: "flame.fill",
                 value: "\(stats.streak)",
                 label: "Day Streak"

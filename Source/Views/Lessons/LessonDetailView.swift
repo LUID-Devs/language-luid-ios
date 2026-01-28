@@ -15,11 +15,13 @@ struct LessonDetailView: View {
     let lessonId: String
 
     @StateObject private var viewModel = LessonViewModel()
+    @StateObject private var revenueCatManager = RevenueCatManager.shared
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
 
     @State private var showStartConfirmation = false
     @State private var selectedPhase: LessonPhaseDefinition?
+    @State private var showPaywall = false
 
     // MARK: - Body
 
@@ -33,34 +35,16 @@ struct LessonDetailView: View {
             } else if let lesson = viewModel.selectedLesson {
                 lessonContent(lesson: lesson)
             }
-
-            NavigationLink(
-                destination: Group {
-                    if let phase = selectedPhase {
-                        LessonPhaseView(
-                            roadmapId: roadmapId,
-                            lessonId: lessonId,
-                            phase: phase,
-                            selectedPhase: $selectedPhase
-                        )
-                    } else {
-                        EmptyView()
-                    }
-                },
-                isActive: Binding(
-                    get: { selectedPhase != nil },
-                    set: { isActive in
-                        if !isActive {
-                            selectedPhase = nil
-                        }
-                    }
-                )
-            ) {
-                EmptyView()
-            }
-            .hidden()
         }
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(item: $selectedPhase) { phase in
+            LessonPhaseView(
+                roadmapId: roadmapId,
+                lessonId: lessonId,
+                phase: phase,
+                selectedPhase: $selectedPhase
+            )
+        }
         .task {
             await loadLessonData()
         }
@@ -68,6 +52,14 @@ struct LessonDetailView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(viewModel.errorMessage ?? "An error occurred")
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView {
+                // Reload lesson data when premium is granted
+                Task {
+                    await loadLessonData()
+                }
+            }
         }
     }
 
@@ -78,6 +70,11 @@ struct LessonDetailView: View {
             VStack(alignment: .leading, spacing: LLSpacing.lg) {
                 // Header
                 lessonHeader(lesson)
+
+                // Premium Banner (for paywall-locked lessons)
+                if lesson.isLockedByPaywall {
+                    premiumBanner
+                }
 
                 // Metadata Badges
                 metadataSection(lesson)
@@ -154,6 +151,51 @@ struct LessonDetailView: View {
                     .multilineTextAlignment(.leading)
             }
         }
+    }
+
+    // MARK: - Premium Banner
+
+    private var premiumBanner: some View {
+        LLCard(style: .elevated, padding: .md) {
+            HStack(spacing: LLSpacing.md) {
+                Image(systemName: "crown.fill")
+                    .font(.system(size: 32))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [Color.yellow, Color.orange],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+
+                VStack(alignment: .leading, spacing: LLSpacing.xs) {
+                    Text("Premium Lesson")
+                        .font(LLTypography.h4())
+                        .fontWeight(.bold)
+                        .foregroundColor(LLColors.foreground.color(for: colorScheme))
+
+                    Text("Unlock this lesson and all premium content with a subscription")
+                        .font(LLTypography.bodySmall())
+                        .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer()
+            }
+        }
+        .background(
+            RoundedRectangle(cornerRadius: LLSpacing.radiusLG)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.yellow.opacity(0.1),
+                            Color.orange.opacity(0.1)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+        )
     }
 
     // MARK: - Metadata Section
@@ -345,54 +387,74 @@ struct LessonDetailView: View {
 
     private func actionButtonsSection(_ lesson: Lesson) -> some View {
         VStack(spacing: LLSpacing.md) {
-            if viewModel.isCurrentLessonCompleted {
+            // Paywall-locked lessons: Show "Unlock Premium" button
+            if lesson.isLockedByPaywall {
                 LLButton(
-                    "Review Lesson",
-                    icon: Image(systemName: "arrow.clockwise"),
-                    style: .outline,
-                    size: .lg,
-                    fullWidth: true
-                ) {
-                    startLesson()
-                }
-            }
-
-            if viewModel.isCurrentLessonInProgress {
-                LLButton(
-                    "Continue Learning",
-                    icon: Image(systemName: "play.fill"),
+                    "Unlock Premium",
+                    icon: Image(systemName: "crown.fill"),
                     style: .primary,
                     size: .lg,
-                    isLoading: viewModel.isLoading,
                     fullWidth: true
                 ) {
-                    continueLesson()
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    showPaywall = true
                 }
-            } else if viewModel.canStartCurrentLesson {
-                LLButton(
-                    "Start Lesson",
-                    icon: Image(systemName: "play.fill"),
-                    style: .primary,
-                    size: .lg,
-                    isLoading: viewModel.isLoading,
-                    fullWidth: true
-                ) {
-                    showStartConfirmation = true
+                .accessibilityHint("Double tap to view premium subscription options")
+            } else {
+                // Normal lesson flow for accessible lessons
+                if viewModel.isCurrentLessonCompleted {
+                    LLButton(
+                        "Review Lesson",
+                        icon: Image(systemName: "arrow.clockwise"),
+                        style: .outline,
+                        size: .lg,
+                        fullWidth: true
+                    ) {
+                        startLesson()
+                    }
+                    .accessibilityHint("Double tap to review this completed lesson")
                 }
-            }
 
-            if viewModel.isCurrentLessonLocked {
-                VStack(spacing: LLSpacing.sm) {
-                    Image(systemName: "lock.fill")
-                        .font(.system(size: 32))
-                        .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-
-                    Text("Complete prerequisites to unlock")
-                        .font(LLTypography.body())
-                        .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                if viewModel.isCurrentLessonInProgress {
+                    LLButton(
+                        "Continue Learning",
+                        icon: Image(systemName: "play.fill"),
+                        style: .primary,
+                        size: .lg,
+                        isLoading: viewModel.isLoading,
+                        fullWidth: true
+                    ) {
+                        continueLesson()
+                    }
+                    .accessibilityHint("Double tap to continue where you left off")
+                } else if viewModel.canStartCurrentLesson {
+                    LLButton(
+                        "Start Lesson",
+                        icon: Image(systemName: "play.fill"),
+                        style: .primary,
+                        size: .lg,
+                        isLoading: viewModel.isLoading,
+                        fullWidth: true
+                    ) {
+                        showStartConfirmation = true
+                    }
+                    .accessibilityHint("Double tap to begin this lesson")
                 }
-                .frame(maxWidth: .infinity)
-                .padding(LLSpacing.lg)
+
+                // Locked by prerequisites (not paywall)
+                if viewModel.isCurrentLessonLocked && !lesson.isLockedByPaywall {
+                    VStack(spacing: LLSpacing.sm) {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 32))
+                            .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+
+                        Text("Complete prerequisites to unlock")
+                            .font(LLTypography.body())
+                            .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(LLSpacing.lg)
+                }
             }
         }
         .alert("Start Lesson", isPresented: $showStartConfirmation) {
@@ -513,6 +575,7 @@ private struct StatusBadge: View {
         HStack(spacing: LLSpacing.xs) {
             Image(systemName: status.icon)
                 .font(.system(size: 14))
+                .accessibilityHidden(true)
 
             Text(status.displayName)
                 .font(LLTypography.caption())
@@ -525,6 +588,9 @@ private struct StatusBadge: View {
             Capsule()
                 .fill(badgeColor.opacity(0.15))
         )
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Lesson status: \(status.displayName)")
+        .accessibilityAddTraits(.isStaticText)
     }
 
     private var badgeColor: Color {
@@ -553,6 +619,7 @@ private struct MetadataItem: View {
             Image(systemName: icon)
                 .font(.system(size: 20))
                 .foregroundColor(LLColors.primary.color(for: colorScheme))
+                .accessibilityHidden(true)
 
             Text(value)
                 .font(LLTypography.h4())
@@ -568,6 +635,9 @@ private struct MetadataItem: View {
                 .minimumScaleFactor(0.7)
         }
         .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(label): \(value)")
+        .accessibilityAddTraits(.isSummaryElement)
     }
 }
 
@@ -779,6 +849,41 @@ private struct PhaseCard: View {
         .onTapGesture {
             onTap()
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(accessibilityPhaseLabel())
+        .accessibilityHint(accessibilityPhaseHint())
+        .accessibilityAddTraits(progress?.status == .locked ? [] : .isButton)
+    }
+
+    private func accessibilityPhaseLabel() -> String {
+        var label = "Phase \(phase.phaseNumber): \(phase.phaseName)"
+
+        if let progress = progress {
+            let calculatedScore = calculatePhaseScore()
+            label += ", \(progress.status.displayName)"
+            if calculatedScore.percentage > 0 {
+                label += ", \(calculatedScore.percentage)% complete"
+            }
+        }
+
+        label += ", \(phase.exerciseCount) exercises, \(phase.estimatedDurationFormatted)"
+        return label
+    }
+
+    private func accessibilityPhaseHint() -> String {
+        if let progress = progress {
+            switch progress.status {
+            case .locked:
+                return "Complete previous phases to unlock"
+            case .completed:
+                return "Double tap to review"
+            case .current, .inProgress:
+                return "Double tap to continue"
+            case .available:
+                return "Double tap to start"
+            }
+        }
+        return "Double tap to start phase"
     }
 
     private func calculatePhaseScore() -> (percentage: Int, normalized: Double) {
