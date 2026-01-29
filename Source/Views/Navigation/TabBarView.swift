@@ -155,7 +155,7 @@ struct TabBarView: View {
 
     private var lessonsTab: some View {
         NavigationStack {
-            LessonsView()
+            ContinueLearningView()
         }
         .tabItem {
             Label(Tab.lessons.title, systemImage: Tab.lessons.filledIcon)
@@ -288,104 +288,7 @@ struct LessonsView: View {
     }
 }
 
-/// Profile placeholder view
-struct ProfileView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
-    @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var tabRouter: TabRouter
-    @EnvironmentObject var drawerRouter: DrawerRouter
-
-    var body: some View {
-        ScrollView {
-            VStack(spacing: LLSpacing.lg) {
-                // User Info Card
-                LLCard(style: .standard, padding: .lg) {
-                    VStack(spacing: LLSpacing.md) {
-                        // Avatar
-                        ZStack {
-                            Circle()
-                                .fill(LLColors.primary.color(for: colorScheme))
-                                .frame(width: 80, height: 80)
-
-                            Text(authViewModel.currentUser?.initials ?? "U")
-                                .font(.system(size: 32, weight: .semibold))
-                                .foregroundColor(LLColors.primaryForeground.color(for: colorScheme))
-                        }
-
-                        // Name
-                        Text(authViewModel.userDisplayName)
-                            .font(LLTypography.h4())
-                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
-
-                        // Email
-                        Text(authViewModel.userEmail)
-                            .font(LLTypography.body())
-                            .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-
-                        // Stats
-                        HStack(spacing: LLSpacing.xl) {
-                            StatItem(
-                                value: "\(authViewModel.currentUser?.totalXp ?? 0)",
-                                label: "XP"
-                            )
-                            StatItem(
-                                value: "\(authViewModel.currentUser?.currentStreak ?? 0)",
-                                label: "Day Streak"
-                            )
-                            StatItem(
-                                value: "\(authViewModel.currentUser?.lessonsCompleted ?? 0)",
-                                label: "Lessons"
-                            )
-                        }
-                        .padding(.top, LLSpacing.md)
-                    }
-                    .padding(LLSpacing.md)
-                }
-                .padding(.horizontal, LLSpacing.lg)
-
-                // Quick links
-                VStack(spacing: LLSpacing.sm) {
-                    NavigationLink {
-                        CreditsDetailView()
-                    } label: {
-                        HStack {
-                            Image(systemName: "creditcard.fill")
-                                .foregroundColor(LLColors.primary.color(for: colorScheme))
-                            Text("Credits & Subscription")
-                                .font(LLTypography.body())
-                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-                        }
-                        .padding(LLSpacing.md)
-                        .background(
-                            RoundedRectangle(cornerRadius: LLSpacing.radiusMD)
-                                .fill(LLColors.card.color(for: colorScheme))
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: LLSpacing.radiusMD)
-                                .stroke(LLColors.border.color(for: colorScheme), lineWidth: 1)
-                        )
-                    }
-
-                    LLButton("Manage Languages", style: .outline, size: .sm) {
-                        tabRouter.selectedTab = .languages
-                    }
-
-                    LLButton("Account Settings", style: .outline, size: .sm) {
-                        drawerRouter.sheet = .settings
-                    }
-                }
-                .padding(.horizontal, LLSpacing.lg)
-            }
-            .padding(.top, LLSpacing.lg)
-        }
-        .background(LLColors.background.color(for: colorScheme))
-        .navigationTitle("Profile")
-        .navigationBarTitleDisplayMode(.large)
-    }
-}
+// Note: ProfileView is now defined in Source/Views/Profile/ProfileView.swift
 
 /// Settings placeholder view
 struct SettingsView: View {

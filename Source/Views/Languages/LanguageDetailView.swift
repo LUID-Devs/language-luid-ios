@@ -175,7 +175,7 @@ struct LanguageDetailView: View {
 
     private var headerSection: some View {
         VStack(spacing: LLSpacing.md) {
-            // Flag, Name, and Progress
+            // Flag and Name
             HStack(alignment: .top, spacing: LLSpacing.md) {
                 // Flag
                 Text(roadmap.languageFlag)
@@ -193,17 +193,6 @@ struct LanguageDetailView: View {
                 }
 
                 Spacer()
-
-                // Overall Progress
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text("Overall Progress")
-                        .font(LLTypography.captionSmall())
-                        .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-
-                    Text("\(Int(overallProgress * 100))%")
-                        .font(.system(size: 28, weight: .bold, design: .rounded))
-                        .foregroundColor(LLColors.primary.color(for: colorScheme))
-                }
             }
 
             // Description
@@ -307,8 +296,8 @@ struct LanguageDetailView: View {
         HStack(spacing: LLSpacing.sm) {
             statCard(
                 icon: "book.fill",
-                value: "\(stats.completedLessons)/\(stats.totalLessons)",
-                label: "Lessons"
+                value: "\(stats.totalLessons)",
+                label: "Total Lessons"
             )
 
             statCard(
@@ -380,38 +369,6 @@ struct LanguageDetailView: View {
                 )
             }
 
-            // Overall Progress Bar
-            if overallProgress > 0 {
-                LLCard(style: .standard, padding: .md) {
-                    VStack(spacing: LLSpacing.sm) {
-                        HStack {
-                            Text("Overall Course Progress")
-                                .font(LLTypography.bodySmall())
-                                .fontWeight(.semibold)
-                                .foregroundColor(LLColors.foreground.color(for: colorScheme))
-
-                            Spacer()
-
-                            Text("\(stats.completedLessons) / \(stats.totalLessons) lessons")
-                                .font(LLTypography.captionSmall())
-                                .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-                        }
-
-                        GeometryReader { geometry in
-                            ZStack(alignment: .leading) {
-                                RoundedRectangle(cornerRadius: LLSpacing.radiusFull)
-                                    .fill(LLColors.muted.color(for: colorScheme))
-                                    .frame(height: 10)
-
-                                RoundedRectangle(cornerRadius: LLSpacing.radiusFull)
-                                    .fill(LLColors.primary.color(for: colorScheme))
-                                    .frame(width: geometry.size.width * overallProgress, height: 10)
-                            }
-                        }
-                        .frame(height: 10)
-                    }
-                }
-            }
 
             // CEFR Level Cards Grid
             LazyVGrid(columns: cefrGridColumns, spacing: LLSpacing.md) {
@@ -628,7 +585,7 @@ struct LanguageDetailView: View {
             // Set the roadmap
             viewModel.selectedRoadmap = roadmap
 
-            // Load curriculum groups
+            // Load curriculum groups (progress comes from CEFR progress API)
             await viewModel.loadCurriculumGroups(roadmapId: roadmap.id, includeLessons: false)
 
             // Load regional variants

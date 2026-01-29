@@ -13,27 +13,8 @@ struct LanguagesListView: View {
 
     @StateObject private var viewModel = LanguagesViewModel()
     @State private var searchText = ""
-    @State private var selectedFilter: DifficultyFilter = .all
     @State private var isRefreshing = false
     @Environment(\.colorScheme) var colorScheme
-
-    // MARK: - Filter Options
-
-    enum DifficultyFilter: String, CaseIterable {
-        case all = "All"
-        case beginner = "Beginner"
-        case intermediate = "Intermediate"
-        case advanced = "Advanced"
-
-        var languageDifficulty: LanguageDifficulty? {
-            switch self {
-            case .all: return nil
-            case .beginner: return .beginner
-            case .intermediate: return .intermediate
-            case .advanced: return .advanced
-            }
-        }
-    }
 
     // MARK: - Computed Properties
 
@@ -47,13 +28,6 @@ struct LanguagesListView: View {
                 return language?.name.localizedCaseInsensitiveContains(searchText) ?? false ||
                        language?.nativeName.localizedCaseInsensitiveContains(searchText) ?? false ||
                        roadmap.name.localizedCaseInsensitiveContains(searchText)
-            }
-        }
-
-        // Apply difficulty filter
-        if let difficulty = selectedFilter.languageDifficulty {
-            roadmaps = roadmaps.filter { roadmap in
-                roadmap.language?.difficulty == difficulty
             }
         }
 
@@ -82,22 +56,20 @@ struct LanguagesListView: View {
     // MARK: - Body
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                LLColors.background.adaptive
-                    .ignoresSafeArea()
+        ZStack {
+            LLColors.background.adaptive
+                .ignoresSafeArea()
 
-                if viewModel.isLoading && viewModel.roadmaps.isEmpty {
-                    loadingView
-                } else if let error = viewModel.errorMessage {
-                    errorView(message: error)
-                } else {
-                    contentView
-                }
+            if viewModel.isLoading && viewModel.roadmaps.isEmpty {
+                loadingView
+            } else if let error = viewModel.errorMessage {
+                errorView(message: error)
+            } else {
+                contentView
             }
-            .navigationTitle("Languages")
-            .navigationBarTitleDisplayMode(.large)
         }
+        .navigationTitle("Languages")
+        .navigationBarTitleDisplayMode(.large)
         .onAppear {
             if viewModel.roadmaps.isEmpty {
                 Task {
@@ -115,11 +87,8 @@ struct LanguagesListView: View {
                 // Search Bar
                 searchBar
 
-                // Filter Chips
-                filterChips
-
                 // Popular Languages Section
-                if searchText.isEmpty && selectedFilter == .all && !popularRoadmaps.isEmpty {
+                if searchText.isEmpty && !popularRoadmaps.isEmpty {
                     popularSection
                 }
 
@@ -172,45 +141,6 @@ struct LanguagesListView: View {
         )
     }
 
-    // MARK: - Filter Chips
-
-    private var filterChips: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: LLSpacing.sm) {
-                ForEach(DifficultyFilter.allCases, id: \.self) { filter in
-                    filterChip(for: filter)
-                }
-            }
-        }
-    }
-
-    private func filterChip(for filter: DifficultyFilter) -> some View {
-        Button(action: {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                selectedFilter = filter
-            }
-        }) {
-            Text(filter.rawValue)
-                .font(LLTypography.buttonSmall())
-                .foregroundColor(
-                    selectedFilter == filter
-                        ? LLColors.primaryForeground.color(for: colorScheme)
-                        : LLColors.foreground.color(for: colorScheme)
-                )
-                .padding(.horizontal, LLSpacing.md)
-                .frame(height: 36)
-                .background(
-                    Capsule()
-                        .fill(
-                            selectedFilter == filter
-                                ? LLColors.primary.color(for: colorScheme)
-                                : LLColors.muted.color(for: colorScheme)
-                        )
-                )
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-
     // MARK: - Popular Section
 
     private var popularSection: some View {
@@ -242,7 +172,7 @@ struct LanguagesListView: View {
 
     private var languagesGrid: some View {
         VStack(alignment: .leading, spacing: LLSpacing.md) {
-            if !searchText.isEmpty || selectedFilter != .all {
+            if !searchText.isEmpty {
                 HStack {
                     Text("\(filteredRoadmaps.count) language\(filteredRoadmaps.count == 1 ? "" : "s")")
                         .font(LLTypography.h3())
@@ -316,14 +246,13 @@ struct LanguagesListView: View {
                 .font(LLTypography.h3())
                 .foregroundColor(LLColors.foreground.color(for: colorScheme))
 
-            Text("Try adjusting your search or filters")
+            Text("Try adjusting your search")
                 .font(LLTypography.body())
                 .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
 
-            if !searchText.isEmpty || selectedFilter != .all {
-                LLButton("Clear Filters", style: .outline, size: .sm) {
+            if !searchText.isEmpty {
+                LLButton("Clear Search", style: .outline, size: .sm) {
                     searchText = ""
-                    selectedFilter = .all
                 }
             }
         }
@@ -376,15 +305,6 @@ struct LanguageCard: View {
                     .lineLimit(1)
             }
 
-            // Difficulty Badge
-            if let language = roadmap.language, let difficulty = language.difficulty {
-                LLBadge(
-                    difficulty.displayName,
-                    variant: difficultyVariant(for: difficulty),
-                    size: .sm
-                )
-            }
-
             // Brief Description
             if let description = roadmap.description {
                 Text(description)
@@ -431,14 +351,6 @@ struct LanguageCard: View {
             x: 0,
             y: LLSpacing.shadowSM
         )
-    }
-
-    private func difficultyVariant(for difficulty: LanguageDifficulty) -> LLBadgeVariant {
-        switch difficulty {
-        case .beginner: return .success
-        case .intermediate: return .info
-        case .advanced: return .warning
-        }
     }
 }
 

@@ -282,7 +282,8 @@ struct CurriculumGroup: Codable, Identifiable, Hashable {
     }
 
     var completedLessonCount: Int {
-        // This will be calculated from user progress
+        // Completed lessons are tracked via CEFR progress API, not curriculum groups
+        // This property is not used when progress data is available
         0
     }
 

@@ -56,11 +56,38 @@ struct UserLessonProgress: Codable, Identifiable, Hashable {
     // MARK: - Computed Properties
 
     var progressPercentage: Double {
-        guard let exercises = totalExercises, exercises > 0,
-              let completed = exercisesCompleted else {
-            return 0
+        // Try exercise-based calculation first
+        if let exercises = totalExercises, exercises > 0,
+           let completed = exercisesCompleted, completed > 0 {
+            return (Double(completed) / Double(exercises)) * 100
         }
-        return (Double(completed) / Double(exercises)) * 100
+
+        // Fallback to phase-based calculation
+        let totalPhases = 4.0
+
+        // If lesson is completed, return 100%
+        if isCompleted {
+            return 100.0
+        }
+
+        // Calculate based on completed phases
+        let completedPhasesCountInt = self.completedPhases?.count ?? 0
+        let completedPhasesCount = Double(completedPhasesCountInt)
+
+        // If we're in a phase that's not yet completed, add partial progress for that phase
+        // Each phase is worth 25% (100/4)
+        let baseProgress = (completedPhasesCount / totalPhases) * 100
+
+        // If we're currently in a phase (not completed), add partial progress
+        // This gives partial credit for being in phase 2, 3, or 4
+        if currentPhase > 1 && !isCompleted && currentPhase > completedPhasesCountInt {
+            // Add a small amount for being in the current phase (not yet completed)
+            // We add up to 12.5% (half of a phase) to show progress within current phase
+            let currentPhaseProgress = 12.5
+            return min(baseProgress + currentPhaseProgress, 87.5) // Cap at 87.5% to show not complete
+        }
+
+        return baseProgress
     }
 
     var scorePercentage: Int {
