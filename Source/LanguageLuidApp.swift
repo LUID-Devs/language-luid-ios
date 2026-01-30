@@ -17,13 +17,16 @@ struct LanguageLuidApp: App {
     /// Authentication view model - manages user authentication state
     @StateObject private var authViewModel = AuthViewModel()
 
+    /// User's preferred app appearance theme
+    @AppStorage(.themePreferenceKey) private var themePreference: ThemePreference = .system
+
     // MARK: - Scene Configuration
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(authViewModel)
-                .preferredColorScheme(.light) // Can be changed to support system preference
+                .preferredColorScheme(themePreference.colorScheme)
         }
     }
 }

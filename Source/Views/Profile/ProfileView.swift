@@ -15,6 +15,8 @@ struct ProfileView: View {
     @EnvironmentObject var tabRouter: TabRouter
     @EnvironmentObject var drawerRouter: DrawerRouter
 
+    @AppStorage(.themePreferenceKey) private var themePreference: ThemePreference = .system
+
     @State private var showingEditProfile = false
     @State private var showingChangePassword = false
     @State private var showingNotificationSettings = false
@@ -148,14 +150,6 @@ struct ProfileView: View {
             } label: {
                 Label("Change Password", systemImage: "key.fill")
             }
-
-            NavigationLink {
-                Text("Email Preferences")
-                    .navigationTitle("Email Preferences")
-                    .navigationBarTitleDisplayMode(.inline)
-            } label: {
-                Label("Email Preferences", systemImage: "envelope.fill")
-            }
         } header: {
             Text("Account")
         }
@@ -185,28 +179,6 @@ struct ProfileView: View {
                         .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
                 }
             }
-
-            NavigationLink {
-                GoalSettingsView()
-            } label: {
-                HStack {
-                    Label("Goal Settings", systemImage: "target")
-
-                    Spacer()
-
-                    if let dailyGoal = authViewModel.currentUser?.dailyGoalMinutes {
-                        Text("\(dailyGoal) min/day")
-                            .font(LLTypography.caption())
-                            .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-                    }
-                }
-            }
-
-            NavigationLink {
-                DailyReminderView()
-            } label: {
-                Label("Daily Reminder", systemImage: "bell.fill")
-            }
         } header: {
             Text("Learning")
         }
@@ -216,11 +188,12 @@ struct ProfileView: View {
 
     private var appSettingsSection: some View {
         Section {
-            NavigationLink {
-                NotificationSettingsView()
-            } label: {
-                Label("Notifications", systemImage: "app.badge")
-            }
+            // TODO: Re-enable when backend notification settings are implemented
+//            NavigationLink {
+//                NotificationSettingsView()
+//            } label: {
+//                Label("Notifications", systemImage: "app.badge")
+//            }
 
             NavigationLink {
                 ThemeSettingsView()
@@ -230,7 +203,7 @@ struct ProfileView: View {
 
                     Spacer()
 
-                    Text("System")
+                    Text(themePreference.displayName)
                         .font(LLTypography.caption())
                         .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
                 }
@@ -373,88 +346,57 @@ struct ProfileView: View {
 
 // MARK: - Placeholder Views
 
-/// Goal settings view
-struct GoalSettingsView: View {
-    @Environment(\.colorScheme) var colorScheme
-    @State private var dailyGoal: Double = 30
-
-    var body: some View {
-        Form {
-            Section {
-                VStack(alignment: .leading, spacing: LLSpacing.md) {
-                    HStack {
-                        Text("Daily Goal")
-                            .font(LLTypography.h4())
-                            .foregroundColor(LLColors.foreground.color(for: colorScheme))
-
-                        Spacer()
-
-                        Text("\(Int(dailyGoal)) minutes")
-                            .font(LLTypography.h4())
-                            .foregroundColor(LLColors.primary.color(for: colorScheme))
-                    }
-
-                    Slider(value: $dailyGoal, in: 5...120, step: 5)
-                        .tint(LLColors.primary.color(for: colorScheme))
-                }
-                .padding(.vertical, LLSpacing.sm)
-            } header: {
-                Text("Learning Goal")
-            } footer: {
-                Text("Set a daily learning goal to build a consistent study habit. We'll remind you to practice each day.")
-            }
-        }
-        .navigationTitle("Goal Settings")
-        .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-/// Daily reminder view
-struct DailyReminderView: View {
-    @Environment(\.colorScheme) var colorScheme
-    @State private var reminderEnabled = true
-    @State private var reminderTime = Date()
-
-    var body: some View {
-        Form {
-            Section {
-                Toggle(isOn: $reminderEnabled) {
-                    Text("Enable Reminders")
-                }
-                .tint(LLColors.primary.color(for: colorScheme))
-
-                if reminderEnabled {
-                    DatePicker("Reminder Time", selection: $reminderTime, displayedComponents: .hourAndMinute)
-                }
-            } header: {
-                Text("Daily Reminder")
-            } footer: {
-                Text("We'll send you a notification at this time each day to remind you to practice.")
-            }
-        }
-        .navigationTitle("Daily Reminder")
-        .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
 /// Theme settings view
 struct ThemeSettingsView: View {
     @Environment(\.colorScheme) var colorScheme
-    @State private var selectedTheme = "system"
+    @AppStorage(.themePreferenceKey) private var themePreference: ThemePreference = .system
 
     var body: some View {
         Form {
             Section {
-                Picker("Theme", selection: $selectedTheme) {
-                    Text("System").tag("system")
-                    Text("Light").tag("light")
-                    Text("Dark").tag("dark")
+                ForEach(ThemePreference.allCases, id: \.self) { theme in
+                    Button {
+                        themePreference = theme
+                    } label: {
+                        HStack(spacing: LLSpacing.md) {
+                            // Theme icon
+                            Image(systemName: theme.icon)
+                                .font(.system(size: 24))
+                                .foregroundColor(LLColors.primary.color(for: colorScheme))
+                                .frame(width: 44, height: 44)
+                                .background(
+                                    Circle()
+                                        .fill(LLColors.primary.color(for: colorScheme).opacity(0.1))
+                                )
+
+                            VStack(alignment: .leading, spacing: LLSpacing.xs) {
+                                Text(theme.displayName)
+                                    .font(LLTypography.bodyMedium())
+                                    .foregroundColor(LLColors.foreground.color(for: colorScheme))
+
+                                Text(theme.description)
+                                    .font(LLTypography.caption())
+                                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+
+                            Spacer()
+
+                            // Checkmark for selected theme
+                            if themePreference == theme {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(LLColors.primary.color(for: colorScheme))
+                                    .font(.system(size: 20))
+                            }
+                        }
+                        .padding(.vertical, LLSpacing.xs)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .pickerStyle(.inline)
             } header: {
                 Text("Appearance")
             } footer: {
-                Text("Choose how LanguageLuid looks. System matches your device's appearance settings.")
+                Text("Your theme preference will be applied immediately across the entire app.")
             }
         }
         .navigationTitle("Theme")

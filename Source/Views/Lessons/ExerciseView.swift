@@ -25,9 +25,6 @@ struct ExerciseView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: LLSpacing.lg) {
-            // Exercise Type Badge
-            exerciseTypeBadge
-
             // Prompt
             promptSection
 
@@ -44,26 +41,6 @@ struct ExerciseView: View {
                 submitButton
             }
         }
-    }
-
-    // MARK: - Exercise Type Badge
-
-    private var exerciseTypeBadge: some View {
-        HStack(spacing: LLSpacing.xs) {
-            Image(systemName: exercise.icon)
-                .font(.system(size: 14))
-
-            Text(exercise.displayType)
-                .font(LLTypography.caption())
-                .fontWeight(.semibold)
-        }
-        .foregroundColor(LLColors.primary.color(for: colorScheme))
-        .padding(.horizontal, LLSpacing.sm)
-        .padding(.vertical, 6)
-        .background(
-            Capsule()
-                .fill(LLColors.primary.color(for: colorScheme).opacity(0.15))
-        )
     }
 
     // MARK: - Prompt Section
@@ -151,6 +128,7 @@ struct ExerciseView: View {
         case .translation:
             TranslationExercise(
                 exercise: exercise,
+                languageCode: languageCode,
                 onTextChange: { text in
                     userResponse = .string(text)
                 }
@@ -439,6 +417,7 @@ private struct OrderingExercise: View {
 
 private struct TranslationExercise: View {
     let exercise: Exercise
+    let languageCode: String
     let onTextChange: (String) -> Void
 
     @State private var translation = ""
@@ -446,7 +425,7 @@ private struct TranslationExercise: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: LLSpacing.sm) {
-            Text("Translate to English:")
+            Text("Translate to \(targetLanguage):")
                 .font(LLTypography.bodySmall())
                 .foregroundColor(LLColors.mutedForeground.adaptive)
 
@@ -463,6 +442,26 @@ private struct TranslationExercise: View {
                 isFocused = true
             }
         }
+    }
+
+    /// Extract language name from language code (e.g., "es-ES" → "Spanish")
+    private var targetLanguage: String {
+        let languageMap: [String: String] = [
+            "es": "Spanish",
+            "fr": "French",
+            "de": "German",
+            "it": "Italian",
+            "pt": "Portuguese",
+            "ja": "Japanese",
+            "ko": "Korean",
+            "zh": "Chinese",
+            "ru": "Russian",
+            "ar": "Arabic"
+        ]
+
+        // Extract the base language code (e.g., "es" from "es-ES")
+        let baseCode = languageCode.split(separator: "-").first.map(String.init) ?? ""
+        return languageMap[baseCode] ?? "the target language"
     }
 }
 

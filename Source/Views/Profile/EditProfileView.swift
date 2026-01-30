@@ -208,12 +208,40 @@ struct EditProfileView: View {
 
     private func saveProfile() {
         isLoading = true
+        errorMessage = nil
 
-        // TODO: Implement API call to update profile
-        // Simulate API call
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            isLoading = false
-            showingSuccessAlert = true
+        print("🔵 EditProfileView: Starting save profile")
+        print("   - First Name: \(firstName)")
+        print("   - Last Name: \(lastName)")
+        print("   - Username: \(username)")
+        print("   - Native Language: \(nativeLanguage)")
+
+        Task {
+            let success = await authViewModel.updateProfile(
+                firstName: firstName,
+                lastName: lastName,
+                username: username,
+                nativeLanguage: nativeLanguage
+            )
+
+            await MainActor.run {
+                isLoading = false
+
+                print("🔵 EditProfileView: Save completed - Success: \(success)")
+                if let error = authViewModel.errorMessage {
+                    print("   - Error message: \(error)")
+                }
+
+                if success {
+                    print("✅ EditProfileView: Showing success alert")
+                    showingSuccessAlert = true
+                } else {
+                    // Show error from authViewModel
+                    let error = authViewModel.errorMessage ?? "Failed to update profile. Please try again."
+                    print("❌ EditProfileView: Showing error alert: \(error)")
+                    errorMessage = error
+                }
+            }
         }
     }
 

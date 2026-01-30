@@ -588,7 +588,6 @@ class AuthViewModel: ObservableObject {
     /// - Returns: Password strength level
     func checkPasswordStrength(_ password: String) -> PasswordStrength {
         if password.isEmpty {
-            passwordStrength = nil
             return .weak
         }
 
@@ -617,7 +616,6 @@ class AuthViewModel: ObservableObject {
             strength = .veryStrong
         }
 
-        passwordStrength = strength
         return strength
     }
 
@@ -694,6 +692,116 @@ class AuthViewModel: ObservableObject {
                 }
             }
 
+            return false
+        }
+    }
+
+    /// Update user profile
+    /// - Parameters:
+    ///   - firstName: First name
+    ///   - lastName: Last name
+    ///   - username: Username
+    ///   - nativeLanguage: Native language code
+    /// - Returns: Success status
+    @discardableResult
+    func updateProfile(
+        firstName: String?,
+        lastName: String?,
+        username: String?,
+        nativeLanguage: String?
+    ) async -> Bool {
+        guard isAuthenticated else {
+            print("⚠️ AuthViewModel: Cannot update profile - user not authenticated")
+            errorMessage = "You must be logged in to update your profile"
+            return false
+        }
+
+        print("🔐 AuthViewModel: Updating user profile...")
+
+        // Clear previous errors
+        clearError()
+        resetValidation()
+
+        isLoading = true
+
+        do {
+            let updatedUser = try await authService.updateProfile(
+                firstName: firstName,
+                lastName: lastName,
+                username: username,
+                nativeLanguage: nativeLanguage
+            )
+
+            // Update local state with new user data
+            currentUser = updatedUser
+            isLoading = false
+
+            print("✅ AuthViewModel: Profile updated successfully")
+            return true
+
+        } catch let error as AuthError {
+            handleAuthError(error)
+            isLoading = false
+            print("❌ AuthViewModel: Profile update failed - \(error.localizedDescription)")
+            return false
+
+        } catch {
+            errorMessage = "Failed to update profile. Please try again."
+            isLoading = false
+            print("❌ AuthViewModel: Profile update failed with unexpected error - \(error)")
+            return false
+        }
+    }
+
+    /// Change user password
+    /// - Parameters:
+    ///   - currentPassword: Current password
+    ///   - newPassword: New password
+    /// - Returns: Success status
+    @discardableResult
+    func changePassword(currentPassword: String, newPassword: String) async -> Bool {
+        guard isAuthenticated else {
+            print("⚠️ AuthViewModel: Cannot change password - user not authenticated")
+            errorMessage = "You must be logged in to change your password"
+            return false
+        }
+
+        print("🔐 AuthViewModel: Changing password...")
+
+        // Clear previous errors
+        clearError()
+        resetValidation()
+
+        // Validate passwords
+        if currentPassword.isEmpty {
+            validationErrors["currentPassword"] = "Current password is required"
+            return false
+        }
+
+        if let passwordError = validatePassword(newPassword) {
+            validationErrors["newPassword"] = passwordError
+            return false
+        }
+
+        isLoading = true
+
+        do {
+            try await authService.changePassword(currentPassword: currentPassword, newPassword: newPassword)
+            isLoading = false
+
+            print("✅ AuthViewModel: Password changed successfully")
+            return true
+
+        } catch let error as AuthError {
+            handleAuthError(error)
+            isLoading = false
+            print("❌ AuthViewModel: Password change failed - \(error.localizedDescription)")
+            return false
+
+        } catch {
+            errorMessage = "Failed to change password. Please try again."
+            isLoading = false
+            print("❌ AuthViewModel: Password change failed with unexpected error - \(error)")
             return false
         }
     }

@@ -140,11 +140,6 @@ struct LanguageDetailView: View {
                 // Header Section
                 headerSection
 
-                // Regional Variant Selector
-                if !viewModel.regionalVariants.isEmpty && viewModel.regionalVariants.count > 1 {
-                    regionalVariantSection
-                }
-
                 // Stats Cards
                 statsSection
 
@@ -205,107 +200,14 @@ struct LanguageDetailView: View {
         }
     }
 
-    // MARK: - Regional Variant Section
-
-    private var regionalVariantSection: some View {
-        VStack(alignment: .leading, spacing: LLSpacing.sm) {
-            HStack(spacing: LLSpacing.xs) {
-                Image(systemName: "map.fill")
-                    .font(.system(size: 14))
-                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-
-                Text("Regional Variant")
-                    .font(LLTypography.bodySmall())
-                    .fontWeight(.semibold)
-                    .foregroundColor(LLColors.foreground.color(for: colorScheme))
-            }
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: LLSpacing.sm) {
-                    ForEach(viewModel.regionalVariants) { variant in
-                        variantChip(variant)
-                    }
-                }
-            }
-
-            if let variant = viewModel.selectedVariant,
-               let description = variant.description {
-                Text(description)
-                    .font(LLTypography.captionSmall())
-                    .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
-            }
-        }
-    }
-
-    private func variantChip(_ variant: RegionalVariant) -> some View {
-        let isSelected = viewModel.selectedVariant?.id == variant.id
-
-        return Button(action: {
-            viewModel.selectVariant(variant)
-        }) {
-            HStack(spacing: LLSpacing.xs) {
-                if let flag = variant.flagEmoji {
-                    Text(flag)
-                        .font(.system(size: 16))
-                }
-
-                Text(variant.name)
-                    .font(LLTypography.buttonSmall())
-
-                if variant.isDefault {
-                    Text("Default")
-                        .font(LLTypography.captionSmall())
-                        .foregroundColor(LLColors.secondaryForeground.color(for: colorScheme))
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(
-                            Capsule()
-                                .fill(LLColors.secondary.color(for: colorScheme))
-                        )
-                }
-            }
-            .foregroundColor(
-                isSelected
-                    ? LLColors.primaryForeground.color(for: colorScheme)
-                    : LLColors.foreground.color(for: colorScheme)
-            )
-            .padding(.horizontal, LLSpacing.md)
-            .frame(height: 36)
-            .background(
-                Capsule()
-                    .fill(
-                        isSelected
-                            ? LLColors.primary.color(for: colorScheme)
-                            : LLColors.muted.color(for: colorScheme)
-                    )
-            )
-            .overlay(
-                Capsule()
-                    .strokeBorder(
-                        isSelected ? Color.clear : LLColors.border.color(for: colorScheme),
-                        lineWidth: LLSpacing.borderStandard
-                    )
-            )
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-
     // MARK: - Stats Section
 
     private var statsSection: some View {
-        HStack(spacing: LLSpacing.sm) {
-            statCard(
-                icon: "book.fill",
-                value: "\(stats.totalLessons)",
-                label: "Total Lessons"
-            )
-
-            statCard(
-                icon: "flame.fill",
-                value: "\(stats.streak)",
-                label: "Day Streak"
-            )
-        }
+        statCard(
+            icon: "book.fill",
+            value: "\(stats.totalLessons)",
+            label: "Total Lessons"
+        )
     }
 
     private func statCard(icon: String, value: String, label: String) -> some View {
@@ -505,7 +407,7 @@ struct LanguageDetailView: View {
     // MARK: - Backend Info Section
 
     private var backendInfoSection: some View {
-        Text("\(stats.totalLessons) lessons loaded from backend API | \(viewModel.curriculumGroups.count) curriculum groups | \(viewModel.regionalVariants.count) regional variants")
+        Text("\(stats.totalLessons) lessons loaded from backend API | \(viewModel.curriculumGroups.count) curriculum groups")
             .font(LLTypography.captionSmall())
             .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
             .multilineTextAlignment(.center)
@@ -588,9 +490,6 @@ struct LanguageDetailView: View {
             // Load curriculum groups (progress comes from CEFR progress API)
             await viewModel.loadCurriculumGroups(roadmapId: roadmap.id, includeLessons: false)
 
-            // Load regional variants
-            await viewModel.loadRegionalVariants(roadmapId: roadmap.id)
-
             // Load roadmap stats
             await viewModel.loadRoadmapStats(roadmapId: roadmap.id)
 
@@ -608,7 +507,6 @@ struct LanguageDetailView: View {
 
     private func refreshData() async {
         await viewModel.loadCurriculumGroups(roadmapId: roadmap.id, includeLessons: false)
-        await viewModel.loadRegionalVariants(roadmapId: roadmap.id)
         await viewModel.loadRoadmapStats(roadmapId: roadmap.id)
         await viewModel.loadCEFRProgress(roadmapId: roadmap.id)
     }

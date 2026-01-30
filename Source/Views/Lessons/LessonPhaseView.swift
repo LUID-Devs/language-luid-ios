@@ -275,24 +275,6 @@ struct LessonPhaseView: View {
                         .foregroundColor(LLColors.mutedForeground.color(for: colorScheme))
 
                     Spacer()
-
-                    if exercise.hasHints {
-                        Button(action: showHint) {
-                            HStack(spacing: LLSpacing.xs) {
-                                Image(systemName: "lightbulb.fill")
-                                    .font(.system(size: 12))
-                                Text("Hint")
-                                    .font(LLTypography.captionSmall())
-                            }
-                            .foregroundColor(LLColors.warning.color(for: colorScheme))
-                            .padding(.horizontal, LLSpacing.sm)
-                            .padding(.vertical, 6)
-                            .background(
-                                Capsule()
-                                    .fill(LLColors.warning.color(for: colorScheme).opacity(0.15))
-                            )
-                        }
-                    }
                 }
                 .padding(.horizontal, LLSpacing.md)
                 .padding(.top, LLSpacing.md)
@@ -661,6 +643,13 @@ struct LessonPhaseView: View {
         }
 
         totalScore = viewModel.exercises.reduce(0) { $0 + $1.points }
+
+        // DEBUG: Log exercises and their points
+        NSLog("📚 LOADED \(viewModel.exercises.count) EXERCISES:")
+        for (index, ex) in viewModel.exercises.enumerated() {
+            NSLog("   Exercise \(index + 1): \(ex.exerciseType.displayName) - Points: \(ex.points)")
+        }
+        NSLog("   Total possible score: \(totalScore)")
     }
 
     private func loadAndRestoreProgress(for currentPhase: LessonPhaseDefinition) async {
@@ -829,6 +818,15 @@ struct LessonPhaseView: View {
                     let alreadyCompleted = completedSteps.contains(currentExerciseIndex)
                     if !alreadyCompleted {
                         let earnedPoints = result.points ?? Int(result.score)
+
+                        // DEBUG: Log scoring details
+                        NSLog("🎯 SCORING DEBUG - Exercise: \(exercise.id)")
+                        NSLog("   - result.points: \(result.points ?? -999)")
+                        NSLog("   - result.score: \(result.score)")
+                        NSLog("   - earnedPoints: \(earnedPoints)")
+                        NSLog("   - exercise.points (expected): \(exercise.points)")
+                        NSLog("   - current total score: \(score) -> will become: \(score + earnedPoints)")
+
                         score += earnedPoints
                         correctAnswers += 1
                         completedSteps.append(currentExerciseIndex)
@@ -1012,11 +1010,6 @@ struct LessonPhaseView: View {
                 dismiss()
             }
         }
-    }
-
-    private func showHint() {
-        // Show hint alert or toast
-        UINotificationFeedbackGenerator().notificationOccurred(.warning)
     }
 }
 

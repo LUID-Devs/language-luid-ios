@@ -287,16 +287,28 @@ struct ChangePasswordView: View {
         isLoading = true
         focusedField = nil
 
-        // TODO: Implement API call to change password
-        // Simulate API call
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            isLoading = false
+        print("🔵 ChangePasswordView: Starting password change")
 
-            // Simulate validation
-            if currentPassword == "wrongpassword" {
-                errorMessage = "Current password is incorrect."
-            } else {
-                showingSuccessAlert = true
+        Task {
+            let success = await authViewModel.changePassword(
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            )
+
+            await MainActor.run {
+                isLoading = false
+
+                print("🔵 ChangePasswordView: Password change completed - Success: \(success)")
+
+                if success {
+                    print("✅ ChangePasswordView: Showing success alert")
+                    showingSuccessAlert = true
+                } else {
+                    // Show error from authViewModel
+                    let error = authViewModel.errorMessage ?? "Failed to change password. Please try again."
+                    print("❌ ChangePasswordView: Showing error alert: \(error)")
+                    errorMessage = error
+                }
             }
         }
     }
